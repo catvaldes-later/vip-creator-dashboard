@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mavely VIP Creator Intelligence Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0B0B11;
+            color: #F1F1F5;
+            overflow-x: hidden;
+        }
+
+        .dashboard {
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .header {
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #2A2A3C;
+        }
+
+        .header-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #A855F7 0%, #2DD4BF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-subtitle {
+            color: #9CA3AF;
+            font-size: 14px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            border-bottom: 1px solid #2A2A3C;
+            overflow-x: auto;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            background: transparent;
+            color: #9CA3AF;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: #F1F1F5;
+        }
+
+        .tab-btn.active {
+            color: #A855F7;
+            border-bottom-color: #A855F7;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .grid {
+            display: grid;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .mini-stat {
+            background: #14141E;
+            border: 1px solid #2A2A3C;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .mini-stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: #A855F7;
+            margin-bottom: 4px;
+        }
+
+        .mini-stat-label {
+            font-size: 12px;
+            color: #9CA3AF;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card {
+            background: #14141E;
+            border: 1px solid #2A2A3C;
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .card-alt {
+            background: #1C1C2A;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #F1F1F5;
+        }
+
+        .insight-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .insight-card {
+            background: #1C1C2A;
+            border-left: 3px solid #A855F7;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .insight-emoji {
+            font-size: 24px;
+            margin-right: 8px;
+        }
+
+        .insight-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #F1F1F5;
+        }
+
+        .insight-content {
+            font-size: 14px;
+            color: #9CA3AF;
+            line-height: 1.5;
+        }
+
+        .insight-value {
+            color: #A855F7;
+            font-weight: 600;
+        }
+
+        .risk-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .table th {
+            background: #1C1C2A;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #9CA3AF;
+            border-bottom: 1px solid #2A2A3C;
+        }
+
+        .table td {
+            padding: 12px;
+            border-bottom: 1px solid #2A2A3C;
+        }
+
+        .table tbody tr:hover {
+            background: #22223A;
+        }
+
+        .am-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-right: 8px;
+        }
+
+        .am-amina {
+            background: #421c5a;
+            color: #A855F7;
+        }
+
+        .am-marg {
+            background: #164e63;
+            color: #2DD4BF;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 14px;
+            background: #1C1C2A;
+            border: 1px solid #2A2A3C;
+            border-radius: 6px;
+            color: #9CA3AF;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background: #A855F7;
+            color: #F1F1F5;
+            border-color: #A855F7;
+        }
+
+        .filter-btn:hover {
+            border-color: #A855F7;
+            color: #A855F7;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #2A2A3C;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #A855F7 0%, #2DD4BF 100%);
+            border-radius: 3px;
+        }
+
+        .stage-section {
+            background: #1C1C2A;
+            border-left: 4px solid #A855F7;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stage-section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #F1F1F5;
+            margin-bottom: 16px;
+        }
+
+        .creator-row {
+            background: #14141E;
+            border: 1px solid #2A2A3C;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .creator-name {
+            font-weight: 600;
+            color: #F1F1F5;
+            margin-bottom: 4px;
+        }
+
+        .creator-meta {
+            color: #6B7280;
+            font-size: 12px;
+        }
+
+        .click-value {
+            cursor: pointer;
+            color: #A855F7;
+            font-weight: 600;
+        }
+
+        .click-value:hover {
+            text-decoration: underline;
+        }
+
+        .drilldown-list {
+            margin-top: 16px;
+            padding: 12px;
+            background: #0B0B11;
+            border-radius: 6px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .drilldown-item {
+            padding: 8px;
+            border-bottom: 1px solid #2A2A3C;
+            font-size: 13px;
+        }
+
+        .drilldown-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script crossorigin src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+    <script crossorigin src="https://unpkg.com/recharts@2.12.7/umd/Recharts.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.23.9/babel.min.js"></script>
+
+    <script type="text/babel">
+        const { useState, useMemo } = React;
+        const { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, AreaChart, Area } = Recharts;
+
+        const COLORS = {
+            purple: "#A855F7",
+            purpleLight: "#C084FC",
+            purpleDark: "#D8B4FE",
+            purpleGlow: "#7C3AED",
+            accent: "#2D1B69",
+            gold: "#FBBF24",
+            green: "#34D399",
+            red: "#F87171",
+            orange: "#FB923C",
+            blue: "#60A5FA",
+            pink: "#F472B6",
+            bg: "#0B0B11",
+            bgCard: "#14141E",
+            bgCardAlt: "#1C1C2A",
+            bgHover: "#22223A",
+            text: "#F1F1F5",
+            textMuted: "#9CA3AF",
+            textLight: "#6B7280",
+            border: "#2A2A3C",
+            borderLight: "#1F1F30",
+            walmart: "#0071CE",
+            walmartLight: "#0A2E52",
+            amina: "#A855F7",
+            marg: "#2DD4BF"
+        };
+
+        const RISK_MAP = {
+            "tracking-up": { bg: "#052E16", text: "#34D399", label: "TRACKING UP", icon: "▲" },
+            "tracking-down": { bg: "#422006", text: "#FBBF24", label: "TRACKING DOWN", icon: "▼" },
+            "activation": { bg: "#172554", text: "#60A5FA", label: "ACTIVATION", icon: "★" },
+            "not-enough-data": { bg: "#1C1C2A", text: "#6B7280", label: "NOT ENOUGH DATA", icon: "—" }
+        };
+
+        const CREATORS_DATA = [{"name": "JASMINE SNOOKS", "user_id": "cmevs7bip001ggb32zedrotbe", "dealname": "Jasmine Rae Snooks - Managed VIP", "playbook_start_date": "2025-09-19 0:00:00", "monthly_cgmv": {"1": 161752.23, "2": 37832.12, "3": 17402.44, "4": 5194.77, "5": 13442.71, "6": 5518.44}, "total_cgmv": 241142.71, "latest_month_cgmv": 5518.44, "latest_month_num": 6, "previous_month_cgmv": 13442.71, "am": "Amina", "current_stage": "Month 6 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "tracking-down"}, {"name": "CAITLYN BILBO", "user_id": "cmf6zs44s0004ebg8o7c4p40c", "dealname": "Amberly Crast - Managed VIP", "playbook_start_date": "2025-09-22 0:00:00", "monthly_cgmv": {"1": 642.82, "2": 6193.27, "3": 1555.73, "4": 69.35}, "total_cgmv": 8461.17, "latest_month_cgmv": 69.35, "latest_month_num": 4, "previous_month_cgmv": 1555.73, "am": "Amina", "current_stage": "Month 6 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "tracking-down"}, {"name": "COURTNEY WHITE", "user_id": "cmf42z8cs000adg1bkrjkr1ts", "dealname": "Courtney White - Managed VIP", "playbook_start_date": "2025-09-22 0:00:00", "monthly_cgmv": {}, "total_cgmv": 0, "latest_month_cgmv": 0, "latest_month_num": 0, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 6 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "good-standing"}, {"name": "OLIVIA ADKINS", "user_id": "clbmg8qfj2gf70878vn04l4c7", "dealname": "Olivia Adkins - Managed VIP", "playbook_start_date": "2025-09-22 0:00:00", "monthly_cgmv": {"1": 165446.81, "2": 331622.86, "3": 283997.67, "4": 429177.87, "5": 576311.2, "6": 148777.15}, "total_cgmv": 1935333.5599999998, "latest_month_cgmv": 148777.15, "latest_month_num": 6, "previous_month_cgmv": 576311.2, "am": "Amina", "current_stage": "Month 6 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "tracking-down"}, {"name": "CANDICE TREVINO", "user_id": "cm65k1ia2006qeuox1b86e3qe", "dealname": "Candice Trevino - Managed VIP", "playbook_start_date": "2025-09-22 0:00:00", "monthly_cgmv": {"1": 1999.79, "2": 625.27, "3": 823.4, "4": 223.18}, "total_cgmv": 3671.64, "latest_month_cgmv": 223.18, "latest_month_num": 4, "previous_month_cgmv": 823.4, "am": "Amina", "current_stage": "Month 6 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "tracking-down"}, {"name": "CANDACE POST", "user_id": "cl0adubnk1q0u0934ic67gzvn", "dealname": "Candace Post - Managed VIP", "playbook_start_date": "2025-09-22 0:00:00", "monthly_cgmv": {"1": 4899.77, "2": 3034.23, "3": 781.38, "4": 667.94, "5": 554.88}, "total_cgmv": 9938.199999999999, "latest_month_cgmv": 554.88, "latest_month_num": 5, "previous_month_cgmv": 667.94, "am": "Amina", "current_stage": "Month 6 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "good-standing"}, {"name": "AMANDA WAGNER", "user_id": "cm1un8q070jie0801fcu6agx8", "dealname": "Amanda Wagner - Managed VIP", "playbook_start_date": "2025-09-24 0:00:00", "monthly_cgmv": {"1": 16247.79, "2": 8182.54, "3": 33138.72, "4": 11684.62, "5": 16289.6, "6": 1953.52}, "total_cgmv": 87496.79000000001, "latest_month_cgmv": 1953.52, "latest_month_num": 6, "previous_month_cgmv": 16289.6, "am": "Amina", "current_stage": "Month 6 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "tracking-down"}, {"name": "CASEY SOUTHERN", "user_id": "cmf2lwl01000tbqaw4znmim3y", "dealname": "Casey Southern - Managed VIP", "playbook_start_date": "2025-10-01 0:00:00", "monthly_cgmv": {"1": 10462.6, "2": 18031.21, "3": 6118.06, "4": 5674.06}, "total_cgmv": 40285.92999999999, "latest_month_cgmv": 5674.06, "latest_month_num": 4, "previous_month_cgmv": 6118.06, "am": "Amina", "current_stage": "Month 5 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "good-standing"}, {"name": "JESSICA FRAPPAMPINA", "user_id": "cm23idhnj4sr30838mpdzhvfr", "dealname": "Jessica Frappampina - Managed VIP", "playbook_start_date": "2025-10-06 0:00:00", "monthly_cgmv": {}, "total_cgmv": 0, "latest_month_cgmv": 0, "latest_month_num": 0, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 5 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "good-standing"}, {"name": "ALEXANDRA HARPER", "user_id": "clorganuy2rdt0864euh3ok6s", "dealname": "Alexandra England - Managed VIP", "playbook_start_date": "2025-10-06 0:00:00", "monthly_cgmv": {"1": 85950.92, "2": 215983.87, "3": 197471.78, "4": 18051.54, "5": 1523.6}, "total_cgmv": 518981.7099999999, "latest_month_cgmv": 1523.6, "latest_month_num": 5, "previous_month_cgmv": 18051.54, "am": "Amina", "current_stage": "Month 5 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 150000.0, "tier2_target": 250000.0, "tier3_target": 500000.0, "risk_status": "tracking-down"}, {"name": "ROCHELLE JOHNSON", "user_id": "cmeussh5j001rf3ay8r5wck1c", "dealname": "Rochelle Johnson - Managed VIP", "playbook_start_date": "2025-10-06 0:00:00", "monthly_cgmv": {"1": 1675.92}, "total_cgmv": 1675.92, "latest_month_cgmv": 1675.92, "latest_month_num": 1, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 5 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "good-standing"}, {"name": "DEANA HOFFMAN", "user_id": "cmhawqxbt000iv8c7ar5ceoa5", "dealname": "Deana Hoffman - Managed VIP", "playbook_start_date": "2025-10-06 0:00:00", "monthly_cgmv": {"1": 68.17, "2": 1359.04, "3": 3822.12, "4": 1069.4, "5": 4596.45}, "total_cgmv": 10915.18, "latest_month_cgmv": 4596.45, "latest_month_num": 5, "previous_month_cgmv": 1069.4, "am": "Amina", "current_stage": "Month 5 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "tracking-up"}, {"name": "JANAYE ROBINSON", "user_id": "cmga5e6gd002ta1f0kkwbqi1l", "dealname": "Janaye Robinson - Managed VIP", "playbook_start_date": "2025-10-10 0:00:00", "monthly_cgmv": {}, "total_cgmv": 0, "latest_month_cgmv": 0, "latest_month_num": 0, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 5 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 20000.0, "tier2_target": 30000.0, "tier3_target": 50000.0, "risk_status": "good-standing"}, {"name": "LESLIE WUISCHPARD", "user_id": "cmfbiu1w600b0fhgqsi4yuei3", "dealname": "Leslie Wuischpard - Managed VIP", "playbook_start_date": "2025-10-13 0:00:00", "monthly_cgmv": {}, "total_cgmv": 0, "latest_month_cgmv": 0, "latest_month_num": 0, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 5 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 30000.0, "tier2_target": 60000.0, "tier3_target": 90000.0, "risk_status": "good-standing"}, {"name": "BETSY BURLESON", "user_id": "cmh4uo458000q9oh3gjvsl44y", "dealname": "Betsy Burleson - Managed VIP", "playbook_start_date": "2025-10-15 0:00:00", "monthly_cgmv": {"1": 811.51, "2": 1708.18, "3": 337.14, "4": 9272.29, "5": 530.58}, "total_cgmv": 12659.7, "latest_month_cgmv": 530.58, "latest_month_num": 5, "previous_month_cgmv": 9272.29, "am": "Amina", "current_stage": "Month 5 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "tracking-down"}, {"name": "TAYLOR MOORE", "user_id": "cm7zwkdxe001fhgye50slnbl4", "dealname": "Taylor Moore - Managed VIP", "playbook_start_date": "2025-10-17 0:00:00", "monthly_cgmv": {"1": 4015109.25, "2": 5349319.94, "3": 1249450.41, "4": 493606.36, "5": 1039152.26}, "total_cgmv": 12146638.22, "latest_month_cgmv": 1039152.26, "latest_month_num": 5, "previous_month_cgmv": 493606.36, "am": "Amina", "current_stage": "Month 5 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 250000.0, "tier2_target": 500000.0, "tier3_target": 750000.0, "risk_status": "tracking-up"}, {"name": "KAIT CURNOW", "user_id": "clndf1tje1nlb0844k1fpmi43", "dealname": "Kaitlyn Curnow - Managed VIP", "playbook_start_date": "2025-10-22 0:00:00", "monthly_cgmv": {"1": 667.08, "2": 212.18}, "total_cgmv": 879.26, "latest_month_cgmv": 212.18, "latest_month_num": 2, "previous_month_cgmv": 667.08, "am": "Amina", "current_stage": "Month 5 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "tracking-down"}, {"name": "TAYLOR HARDY", "user_id": "cmc3gc1cg0030fdkkm6hjh42g", "dealname": "Taylor Hardy - Managed VIP", "playbook_start_date": "2025-10-24 0:00:00", "monthly_cgmv": {"1": 2595.09}, "total_cgmv": 2595.09, "latest_month_cgmv": 2595.09, "latest_month_num": 1, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 5 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 25000.0, "tier2_target": 35000.0, "tier3_target": 50000.0, "risk_status": "good-standing"}, {"name": "CARALYN MIRAND KOCH", "user_id": "cmh3s3thu0052amh3tpoxwcw3", "dealname": "Caralyn Mirand-Koch - Managed VIP", "playbook_start_date": "2025-10-27 0:00:00", "monthly_cgmv": {"1": 201.51, "2": 6566.47, "3": 1152.29, "4": 387.08}, "total_cgmv": 8307.35, "latest_month_cgmv": 387.08, "latest_month_num": 4, "previous_month_cgmv": 1152.29, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "tracking-down"}, {"name": "MOJI OJEDIRAN", "user_id": "clq64qh4ikhr408108276by88", "dealname": "Moji Ojediran - Managed VIP", "playbook_start_date": "2025-10-27 0:00:00", "monthly_cgmv": {}, "total_cgmv": 0, "latest_month_cgmv": 0, "latest_month_num": 0, "previous_month_cgmv": 0, "am": "Amina", "risk_status": "good-standing"}, {"name": "STEPHANIE TRANTHAM", "user_id": "cmebu37vy0000f0agpi5q43pa", "dealname": "Stephanie Trantham - Managed VIP", "playbook_start_date": "2025-10-29 0:00:00", "monthly_cgmv": {"1": 170545.18, "2": 165479.84, "3": 85104.17, "4": 29243.36}, "total_cgmv": 450372.55, "latest_month_cgmv": 29243.36, "latest_month_num": 4, "previous_month_cgmv": 85104.17, "am": "Amina", "current_stage": "Contract Complete (VIP Management)", "current_month_type": "", "tier1_target": 200000.0, "tier2_target": 300000.0, "tier3_target": 400000.0, "total_activation_bonus": 0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0}, "risk_status": "contract-complete"}, {"name": "SANDRA HERZOG", "user_id": "clydcy3dl0q6z087507rl9g7y", "dealname": "Sandra | Tuxedo Farmhouse - Managed VIP", "playbook_start_date": "2025-10-29 0:00:00", "monthly_cgmv": {"1": 3702.82, "2": 1725.36}, "total_cgmv": 5428.18, "latest_month_cgmv": 1725.36, "latest_month_num": 2, "previous_month_cgmv": 3702.82, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "tracking-down"}, {"name": "JESSICA BARSTOW", "user_id": "cmiaitojo0002qufna2390oic", "dealname": "Jessica Barstow - Managed VIP", "playbook_start_date": "2025-10-29 0:00:00", "monthly_cgmv": {"1": 4497.95, "2": 689.83, "3": 7628.3}, "total_cgmv": 12816.08, "latest_month_cgmv": 7628.3, "latest_month_num": 3, "previous_month_cgmv": 689.83, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "tracking-up"}, {"name": "CARA MURTAUGH", "user_id": "cm1tztzqu2s3c0824zsw0sitr", "dealname": "Kisses from Cara \ud83d\udc8b - Managed VIP", "playbook_start_date": "2025-10-30 0:00:00", "monthly_cgmv": {"1": 9895.1, "2": 6447.23, "3": 4259.41, "4": 787.36}, "total_cgmv": 21389.1, "latest_month_cgmv": 787.36, "latest_month_num": 4, "previous_month_cgmv": 4259.41, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "tracking-down"}, {"name": "LEAH WHITE", "user_id": "clz3pxgbh1wzj088212ozr036", "dealname": "Leah White - Managed VIP", "playbook_start_date": "2025-10-30 0:00:00", "monthly_cgmv": {"1": 46.94, "2": 5067.29, "3": 3176.88}, "total_cgmv": 8291.11, "latest_month_cgmv": 3176.88, "latest_month_num": 3, "previous_month_cgmv": 5067.29, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 150000.0, "tier2_target": 300000.0, "tier3_target": 600000.0, "total_activation_bonus": 1000.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 250.0, "2": 250.0, "3": 250.0, "4": 0.0}, "risk_status": "tracking-down"}, {"name": "NICKY SCHMADERER", "user_id": "cmc803x1j0039ezm2hx7mpta5", "dealname": "Nicky Schmaderer - Managed VIP", "playbook_start_date": "2025-11-01 0:00:00", "monthly_cgmv": {"1": 14789.09, "2": 48219.31, "3": 17047.76, "4": 14376.64}, "total_cgmv": 94432.79999999999, "latest_month_cgmv": 14376.64, "latest_month_num": 4, "previous_month_cgmv": 17047.76, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 0.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "EMILY PRIEST", "user_id": "cmhl6ik8q003d3veuokamsrdc", "dealname": "Emily Priest - Managed VIP", "playbook_start_date": "2025-11-06 23:00:00", "monthly_cgmv": {}, "total_cgmv": 0, "latest_month_cgmv": 0, "latest_month_num": 0, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "KRYSTAL SMIT", "user_id": "cl5gu8qjaa88c08210xb73k6j", "dealname": "Krystal Smit - Managed VIP", "playbook_start_date": "2025-11-09 23:00:00", "monthly_cgmv": {"1": 778.97}, "total_cgmv": 778.97, "latest_month_cgmv": 778.97, "latest_month_num": 1, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 0.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "JESSICA SIGMON", "user_id": "cm7z71x9i001zdjxcrx7d3oue", "dealname": "Jessica Sigmon - Managed VIP", "playbook_start_date": "2025-11-09 23:00:00", "monthly_cgmv": {"1": 217.28, "2": 468.62, "3": 1204.17}, "total_cgmv": 1890.0700000000002, "latest_month_cgmv": 1204.17, "latest_month_num": 3, "previous_month_cgmv": 468.62, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 0.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0}, "risk_status": "tracking-up"}, {"name": "ERIN VOGELPOHL", "user_id": "cmhw9pxiv0006qifnhbcxnsdl", "dealname": "Erin Vogelpohl - Managed VIP", "playbook_start_date": "2025-11-11 23:00:00", "monthly_cgmv": {"1": 56909.92, "2": 278.17, "3": 215.99}, "total_cgmv": 57404.079999999994, "latest_month_cgmv": 215.99, "latest_month_num": 3, "previous_month_cgmv": 278.17, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 200000.0, "tier2_target": 350000.0, "tier3_target": 500000.0, "total_activation_bonus": 1500.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 500.0, "2": 500.0, "3": 500.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "TORI WINKLE", "user_id": "cmhnw2e7c003yt3g1m3a6roav", "dealname": "Tori Winkle - Managed VIP", "playbook_start_date": "2025-11-11 23:00:00", "monthly_cgmv": {"1": 12881.27, "2": 13493.7, "3": 1667.75, "4": 16730.38}, "total_cgmv": 44773.100000000006, "latest_month_cgmv": 16730.38, "latest_month_num": 4, "previous_month_cgmv": 1667.75, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 50000.0, "tier2_target": 75000.0, "tier3_target": 125000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "tracking-up"}, {"name": "TIFFANY MULGREW", "user_id": "cm08cp2vbp7p70894tvfkxrkd", "dealname": "Tiffany Mulgrew - Managed VIP", "playbook_start_date": "2025-11-13 23:00:00", "monthly_cgmv": {"1": 3508.33, "2": 13741.0, "3": 17811.91, "4": 1243.51}, "total_cgmv": 36304.75000000001, "latest_month_cgmv": 1243.51, "latest_month_num": 4, "previous_month_cgmv": 17811.91, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 0.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0}, "risk_status": "tracking-down"}, {"name": "JENNY REIMOLD", "user_id": "cming7xgs000dqtfseq00aajn", "dealname": "Jenny Reimold - Managed VIP", "playbook_start_date": "2025-11-13 23:00:00", "monthly_cgmv": {"1": 17083.45}, "total_cgmv": 17083.45, "latest_month_cgmv": 17083.45, "latest_month_num": 1, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 150000.0, "tier2_target": 250000.0, "tier3_target": 500000.0, "total_activation_bonus": 1000.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 250.0, "2": 250.0, "3": 250.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "LOGAN HILL", "user_id": "cm4ljrd080056itp980lrfk97", "dealname": "Logan Hill - Managed VIP", "playbook_start_date": "2025-11-13 23:00:00", "monthly_cgmv": {}, "total_cgmv": 0, "latest_month_cgmv": 0, "latest_month_num": 0, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "ANGELA HOWENSTEIN", "user_id": "cmi7rg8vd0025rpfswzgp1lg3", "dealname": "Angela Howenstein - Managed VIP", "playbook_start_date": "2025-11-16 23:00:00", "monthly_cgmv": {"1": 1187.27}, "total_cgmv": 1187.27, "latest_month_cgmv": 1187.27, "latest_month_num": 1, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "MICHELLE RILEY", "user_id": "cmhxnhggl0006s0c4qfmubvh9", "dealname": "Michelle Riley - Managed VIP", "playbook_start_date": "2025-11-16 23:00:00", "monthly_cgmv": {}, "total_cgmv": 0, "latest_month_cgmv": 0, "latest_month_num": 0, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "KATIE KEEVER", "user_id": "cli4okkoz01cy0896ietu74vu", "dealname": "Katie Keever - Managed VIP", "playbook_start_date": "2025-11-17 23:00:00", "monthly_cgmv": {"1": 32326.52, "2": 7892.68, "3": 128.17, "4": 12295.89}, "total_cgmv": 52643.259999999995, "latest_month_cgmv": 12295.89, "latest_month_num": 4, "previous_month_cgmv": 128.17, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "tracking-up"}, {"name": "DANIRA ALIHODZIC", "user_id": "cmbhttp2d002gglkbhqbj5lgo", "dealname": "Danira Alihodzic - Managed VIP", "playbook_start_date": "2025-11-18 23:00:00", "monthly_cgmv": {}, "total_cgmv": 0, "latest_month_cgmv": 0, "latest_month_num": 0, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 0.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "LAUREN HANSEN", "user_id": "ckvvf5y5f03l00880kyfiw06h", "dealname": "Lauren Hansen - Managed VIP", "playbook_start_date": "2025-11-23 23:00:00", "monthly_cgmv": {"1": 20.25, "2": 168.0}, "total_cgmv": 188.25, "latest_month_cgmv": 168.0, "latest_month_num": 2, "previous_month_cgmv": 20.25, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0}, "risk_status": "tracking-up"}, {"name": "BETH ANNE BRICE", "user_id": "cm9hdwdrd0043dr9q4cjd6hvz", "dealname": "Beth Anne Brice - Managed VIP", "playbook_start_date": "2025-11-24 23:00:00", "monthly_cgmv": {"1": 2366.86, "2": 160.0, "3": 1266.6}, "total_cgmv": 3793.46, "latest_month_cgmv": 1266.6, "latest_month_num": 3, "previous_month_cgmv": 160.0, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 10000.0, "tier2_target": 20000.0, "tier3_target": 50000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "tracking-up"}, {"name": "KAYLEE BRICE", "user_id": "cmj94f4c0000m09gc4ew0d1bq", "dealname": "Kaylee Brice - Managed VIP", "playbook_start_date": "2025-11-24 23:00:00", "monthly_cgmv": {"1": 114.39, "2": 2737.14}, "total_cgmv": 2851.5299999999997, "latest_month_cgmv": 2737.14, "latest_month_num": 2, "previous_month_cgmv": 114.39, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 10000.0, "tier2_target": 20000.0, "tier3_target": 50000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "tracking-up"}, {"name": "MORGAN BULLARD", "user_id": "cming4ttq00bksyfs6sg5dzh5", "dealname": "Morgan Bullard - Managed VIP", "playbook_start_date": "2025-11-30 23:00:00", "monthly_cgmv": {"1": 30362.35, "2": 30146.99, "3": 3085.89}, "total_cgmv": 63595.229999999996, "latest_month_cgmv": 3085.89, "latest_month_num": 3, "previous_month_cgmv": 30146.99, "am": "Amina", "current_stage": "Month 3 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 150000.0, "tier2_target": 250000.0, "tier3_target": 350000.0, "total_activation_bonus": 1000.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 250.0, "2": 250.0, "3": 250.0, "4": 0.0}, "risk_status": "tracking-down"}, {"name": "LAUREN ROSCOPF", "user_id": "cmhxom65c000arnfstldxp7hg", "dealname": "Lauren Roscopf - Managed VIP", "playbook_start_date": "2025-12-02 23:00:00", "monthly_cgmv": {}, "total_cgmv": 0, "latest_month_cgmv": 0, "latest_month_num": 0, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 3 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "NICHOLE PACLIBAR", "user_id": "cl6a9vgw2exv10852s74o9clq", "dealname": "Nichole - Managed VIP", "playbook_start_date": "2025-12-04 23:00:00", "monthly_cgmv": {"1": 2861.04, "2": 1241.56, "3": 1406.39}, "total_cgmv": 5508.990000000001, "latest_month_cgmv": 1406.39, "latest_month_num": 3, "previous_month_cgmv": 1241.56, "am": "Amina", "current_stage": "Month 3 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 250000.0, "total_activation_bonus": 0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "KATE FULLER", "user_id": "cmif5u58z0016r1c4dj68kdpi", "dealname": "Kate Fuller - Managed VIP", "playbook_start_date": "2025-12-08 23:00:00", "monthly_cgmv": {}, "total_cgmv": 0, "latest_month_cgmv": 0, "latest_month_num": 0, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 3 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 75000.0, "tier2_target": 150000.0, "tier3_target": 300000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "BROOKE ANDERSON", "user_id": "cmij0v9ux0002qpe4tkcqfz7y", "dealname": "Brooke Anderson - Managed VIP", "playbook_start_date": "2025-12-11 23:00:00", "monthly_cgmv": {"1": 4865.06, "2": 239.65, "3": 1034.97}, "total_cgmv": 6139.68, "latest_month_cgmv": 1034.97, "latest_month_num": 3, "previous_month_cgmv": 239.65, "am": "Amina", "current_stage": "Month 3 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 100000.0, "tier2_target": 250000.0, "tier3_target": 500000.0, "total_activation_bonus": 750.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 250.0, "2": 250.0, "3": 250.0, "4": 0.0}, "risk_status": "tracking-up"}, {"name": "KRISTEN FUSSELL", "user_id": "cljdm17teo51s0899s23189rw", "dealname": "Kristen Fussell - Managed VIP", "playbook_start_date": "2025-12-11 23:00:00", "monthly_cgmv": {"1": 18958.97, "2": 69874.48, "3": 83904.47}, "total_cgmv": 172737.91999999998, "latest_month_cgmv": 83904.47, "latest_month_num": 3, "previous_month_cgmv": 69874.48, "am": "Amina", "current_stage": "Month 3 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 100000.0, "tier2_target": 200000.0, "tier3_target": 500000.0, "total_activation_bonus": 0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "SYDNEY BASS", "user_id": "cme963cdw00q8du98eyw92zzy", "dealname": "Sydney Bass - Managed VIP", "playbook_start_date": "2025-12-16 23:00:00", "monthly_cgmv": {"1": 4279.11, "2": 38176.44, "3": 7195.01}, "total_cgmv": 49650.560000000005, "latest_month_cgmv": 7195.01, "latest_month_num": 3, "previous_month_cgmv": 38176.44, "am": "Amina", "current_stage": "Month 3 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 200000.0, "tier2_target": 400000.0, "tier3_target": 750000.0, "total_activation_bonus": 0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0}, "risk_status": "tracking-down"}, {"name": "PAULA WEBSTER", "user_id": "cmk4i7bmn005g67desbaef4rh", "dealname": "Paula Webster - Managed VIP", "playbook_start_date": "2026-01-11 23:00:00", "monthly_cgmv": {"1": 1378.62, "2": 333.37}, "total_cgmv": 1711.9899999999998, "latest_month_cgmv": 333.37, "latest_month_num": 2, "previous_month_cgmv": 1378.62, "am": "Marguerite", "current_stage": "Month 2 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 25000.0, "tier2_target": 75000.0, "tier3_target": 125000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "tracking-down"}];
+        const AMINA_DATA = [{"name": "JASMINE SNOOKS", "user_id": "cmevs7bip001ggb32zedrotbe", "dealname": "Jasmine Rae Snooks - Managed VIP", "playbook_start_date": "2025-09-19 0:00:00", "monthly_cgmv": {"1": 161752.23, "2": 37832.12, "3": 17402.44, "4": 5194.77, "5": 13442.71, "6": 5518.44}, "total_cgmv": 241142.71, "latest_month_cgmv": 5518.44, "latest_month_num": 6, "previous_month_cgmv": 13442.71, "am": "Amina", "current_stage": "Month 6 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "tracking-down"}, {"name": "CAITLYN BILBO", "user_id": "cmf6zs44s0004ebg8o7c4p40c", "dealname": "Amberly Crast - Managed VIP", "playbook_start_date": "2025-09-22 0:00:00", "monthly_cgmv": {"1": 642.82, "2": 6193.27, "3": 1555.73, "4": 69.35}, "total_cgmv": 8461.17, "latest_month_cgmv": 69.35, "latest_month_num": 4, "previous_month_cgmv": 1555.73, "am": "Amina", "current_stage": "Month 6 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "tracking-down"}, {"name": "COURTNEY WHITE", "user_id": "cmf42z8cs000adg1bkrjkr1ts", "dealname": "Courtney White - Managed VIP", "playbook_start_date": "2025-09-22 0:00:00", "monthly_cgmv": {}, "total_cgmv": 0, "latest_month_cgmv": 0, "latest_month_num": 0, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 6 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "good-standing"}, {"name": "OLIVIA ADKINS", "user_id": "clbmg8qfj2gf70878vn04l4c7", "dealname": "Olivia Adkins - Managed VIP", "playbook_start_date": "2025-09-22 0:00:00", "monthly_cgmv": {"1": 165446.81, "2": 331622.86, "3": 283997.67, "4": 429177.87, "5": 576311.2, "6": 148777.15}, "total_cgmv": 1935333.5599999998, "latest_month_cgmv": 148777.15, "latest_month_num": 6, "previous_month_cgmv": 576311.2, "am": "Amina", "current_stage": "Month 6 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "tracking-down"}, {"name": "CANDICE TREVINO", "user_id": "cm65k1ia2006qeuox1b86e3qe", "dealname": "Candice Trevino - Managed VIP", "playbook_start_date": "2025-09-22 0:00:00", "monthly_cgmv": {"1": 1999.79, "2": 625.27, "3": 823.4, "4": 223.18}, "total_cgmv": 3671.64, "latest_month_cgmv": 223.18, "latest_month_num": 4, "previous_month_cgmv": 823.4, "am": "Amina", "current_stage": "Month 6 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "tracking-down"}, {"name": "CANDACE POST", "user_id": "cl0adubnk1q0u0934ic67gzvn", "dealname": "Candace Post - Managed VIP", "playbook_start_date": "2025-09-22 0:00:00", "monthly_cgmv": {"1": 4899.77, "2": 3034.23, "3": 781.38, "4": 667.94, "5": 554.88}, "total_cgmv": 9938.199999999999, "latest_month_cgmv": 554.88, "latest_month_num": 5, "previous_month_cgmv": 667.94, "am": "Amina", "current_stage": "Month 6 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "good-standing"}, {"name": "AMANDA WAGNER", "user_id": "cm1un8q070jie0801fcu6agx8", "dealname": "Amanda Wagner - Managed VIP", "playbook_start_date": "2025-09-24 0:00:00", "monthly_cgmv": {"1": 16247.79, "2": 8182.54, "3": 33138.72, "4": 11684.62, "5": 16289.6, "6": 1953.52}, "total_cgmv": 87496.79000000001, "latest_month_cgmv": 1953.52, "latest_month_num": 6, "previous_month_cgmv": 16289.6, "am": "Amina", "current_stage": "Month 6 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "tracking-down"}, {"name": "CASEY SOUTHERN", "user_id": "cmf2lwl01000tbqaw4znmim3y", "dealname": "Casey Southern - Managed VIP", "playbook_start_date": "2025-10-01 0:00:00", "monthly_cgmv": {"1": 10462.6, "2": 18031.21, "3": 6118.06, "4": 5674.06}, "total_cgmv": 40285.92999999999, "latest_month_cgmv": 5674.06, "latest_month_num": 4, "previous_month_cgmv": 6118.06, "am": "Amina", "current_stage": "Month 5 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "good-standing"}, {"name": "JESSICA FRAPPAMPINA", "user_id": "cm23idhnj4sr30838mpdzhvfr", "dealname": "Jessica Frappampina - Managed VIP", "playbook_start_date": "2025-10-06 0:00:00", "monthly_cgmv": {}, "total_cgmv": 0, "latest_month_cgmv": 0, "latest_month_num": 0, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 5 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "good-standing"}, {"name": "ALEXANDRA HARPER", "user_id": "clorganuy2rdt0864euh3ok6s", "dealname": "Alexandra England - Managed VIP", "playbook_start_date": "2025-10-06 0:00:00", "monthly_cgmv": {"1": 85950.92, "2": 215983.87, "3": 197471.78, "4": 18051.54, "5": 1523.6}, "total_cgmv": 518981.7099999999, "latest_month_cgmv": 1523.6, "latest_month_num": 5, "previous_month_cgmv": 18051.54, "am": "Amina", "current_stage": "Month 5 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 150000.0, "tier2_target": 250000.0, "tier3_target": 500000.0, "risk_status": "tracking-down"}, {"name": "ROCHELLE JOHNSON", "user_id": "cmeussh5j001rf3ay8r5wck1c", "dealname": "Rochelle Johnson - Managed VIP", "playbook_start_date": "2025-10-06 0:00:00", "monthly_cgmv": {"1": 1675.92}, "total_cgmv": 1675.92, "latest_month_cgmv": 1675.92, "latest_month_num": 1, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 5 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "good-standing"}, {"name": "DEANA HOFFMAN", "user_id": "cmhawqxbt000iv8c7ar5ceoa5", "dealname": "Deana Hoffman - Managed VIP", "playbook_start_date": "2025-10-06 0:00:00", "monthly_cgmv": {"1": 68.17, "2": 1359.04, "3": 3822.12, "4": 1069.4, "5": 4596.45}, "total_cgmv": 10915.18, "latest_month_cgmv": 4596.45, "latest_month_num": 5, "previous_month_cgmv": 1069.4, "am": "Amina", "current_stage": "Month 5 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "tracking-up"}, {"name": "JANAYE ROBINSON", "user_id": "cmga5e6gd002ta1f0kkwbqi1l", "dealname": "Janaye Robinson - Managed VIP", "playbook_start_date": "2025-10-10 0:00:00", "monthly_cgmv": {}, "total_cgmv": 0, "latest_month_cgmv": 0, "latest_month_num": 0, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 5 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 20000.0, "tier2_target": 30000.0, "tier3_target": 50000.0, "risk_status": "good-standing"}, {"name": "LESLIE WUISCHPARD", "user_id": "cmfbiu1w600b0fhgqsi4yuei3", "dealname": "Leslie Wuischpard - Managed VIP", "playbook_start_date": "2025-10-13 0:00:00", "monthly_cgmv": {}, "total_cgmv": 0, "latest_month_cgmv": 0, "latest_month_num": 0, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 5 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 30000.0, "tier2_target": 60000.0, "tier3_target": 90000.0, "risk_status": "good-standing"}, {"name": "BETSY BURLESON", "user_id": "cmh4uo458000q9oh3gjvsl44y", "dealname": "Betsy Burleson - Managed VIP", "playbook_start_date": "2025-10-15 0:00:00", "monthly_cgmv": {"1": 811.51, "2": 1708.18, "3": 337.14, "4": 9272.29, "5": 530.58}, "total_cgmv": 12659.7, "latest_month_cgmv": 530.58, "latest_month_num": 5, "previous_month_cgmv": 9272.29, "am": "Amina", "current_stage": "Month 5 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "tracking-down"}, {"name": "TAYLOR MOORE", "user_id": "cm7zwkdxe001fhgye50slnbl4", "dealname": "Taylor Moore - Managed VIP", "playbook_start_date": "2025-10-17 0:00:00", "monthly_cgmv": {"1": 4015109.25, "2": 5349319.94, "3": 1249450.41, "4": 493606.36, "5": 1039152.26}, "total_cgmv": 12146638.22, "latest_month_cgmv": 1039152.26, "latest_month_num": 5, "previous_month_cgmv": 493606.36, "am": "Amina", "current_stage": "Month 5 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 250000.0, "tier2_target": 500000.0, "tier3_target": 750000.0, "risk_status": "tracking-up"}, {"name": "KAIT CURNOW", "user_id": "clndf1tje1nlb0844k1fpmi43", "dealname": "Kaitlyn Curnow - Managed VIP", "playbook_start_date": "2025-10-22 0:00:00", "monthly_cgmv": {"1": 667.08, "2": 212.18}, "total_cgmv": 879.26, "latest_month_cgmv": 212.18, "latest_month_num": 2, "previous_month_cgmv": 667.08, "am": "Amina", "current_stage": "Month 5 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "tracking-down"}, {"name": "TAYLOR HARDY", "user_id": "cmc3gc1cg0030fdkkm6hjh42g", "dealname": "Taylor Hardy - Managed VIP", "playbook_start_date": "2025-10-24 0:00:00", "monthly_cgmv": {"1": 2595.09}, "total_cgmv": 2595.09, "latest_month_cgmv": 2595.09, "latest_month_num": 1, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 5 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 25000.0, "tier2_target": 35000.0, "tier3_target": 50000.0, "risk_status": "good-standing"}, {"name": "CARALYN MIRAND KOCH", "user_id": "cmh3s3thu0052amh3tpoxwcw3", "dealname": "Caralyn Mirand-Koch - Managed VIP", "playbook_start_date": "2025-10-27 0:00:00", "monthly_cgmv": {"1": 201.51, "2": 6566.47, "3": 1152.29, "4": 387.08}, "total_cgmv": 8307.35, "latest_month_cgmv": 387.08, "latest_month_num": 4, "previous_month_cgmv": 1152.29, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "tracking-down"}, {"name": "MOJI OJEDIRAN", "user_id": "clq64qh4ikhr408108276by88", "dealname": "Moji Ojediran - Managed VIP", "playbook_start_date": "2025-10-27 0:00:00", "monthly_cgmv": {}, "total_cgmv": 0, "latest_month_cgmv": 0, "latest_month_num": 0, "previous_month_cgmv": 0, "am": "Amina", "risk_status": "good-standing"}, {"name": "STEPHANIE TRANTHAM", "user_id": "cmebu37vy0000f0agpi5q43pa", "dealname": "Stephanie Trantham - Managed VIP", "playbook_start_date": "2025-10-29 0:00:00", "monthly_cgmv": {"1": 170545.18, "2": 165479.84, "3": 85104.17, "4": 29243.36}, "total_cgmv": 450372.55, "latest_month_cgmv": 29243.36, "latest_month_num": 4, "previous_month_cgmv": 85104.17, "am": "Amina", "current_stage": "Contract Complete (VIP Management)", "current_month_type": "", "tier1_target": 200000.0, "tier2_target": 300000.0, "tier3_target": 400000.0, "total_activation_bonus": 0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0}, "risk_status": "contract-complete"}, {"name": "SANDRA HERZOG", "user_id": "clydcy3dl0q6z087507rl9g7y", "dealname": "Sandra | Tuxedo Farmhouse - Managed VIP", "playbook_start_date": "2025-10-29 0:00:00", "monthly_cgmv": {"1": 3702.82, "2": 1725.36}, "total_cgmv": 5428.18, "latest_month_cgmv": 1725.36, "latest_month_num": 2, "previous_month_cgmv": 3702.82, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "tracking-down"}, {"name": "JESSICA BARSTOW", "user_id": "cmiaitojo0002qufna2390oic", "dealname": "Jessica Barstow - Managed VIP", "playbook_start_date": "2025-10-29 0:00:00", "monthly_cgmv": {"1": 4497.95, "2": 689.83, "3": 7628.3}, "total_cgmv": 12816.08, "latest_month_cgmv": 7628.3, "latest_month_num": 3, "previous_month_cgmv": 689.83, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "tracking-up"}, {"name": "CARA MURTAUGH", "user_id": "cm1tztzqu2s3c0824zsw0sitr", "dealname": "Kisses from Cara \ud83d\udc8b - Managed VIP", "playbook_start_date": "2025-10-30 0:00:00", "monthly_cgmv": {"1": 9895.1, "2": 6447.23, "3": 4259.41, "4": 787.36}, "total_cgmv": 21389.1, "latest_month_cgmv": 787.36, "latest_month_num": 4, "previous_month_cgmv": 4259.41, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "risk_status": "tracking-down"}, {"name": "LEAH WHITE", "user_id": "clz3pxgbh1wzj088212ozr036", "dealname": "Leah White - Managed VIP", "playbook_start_date": "2025-10-30 0:00:00", "monthly_cgmv": {"1": 46.94, "2": 5067.29, "3": 3176.88}, "total_cgmv": 8291.11, "latest_month_cgmv": 3176.88, "latest_month_num": 3, "previous_month_cgmv": 5067.29, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 150000.0, "tier2_target": 300000.0, "tier3_target": 600000.0, "total_activation_bonus": 1000.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 250.0, "2": 250.0, "3": 250.0, "4": 0.0}, "risk_status": "tracking-down"}, {"name": "NICKY SCHMADERER", "user_id": "cmc803x1j0039ezm2hx7mpta5", "dealname": "Nicky Schmaderer - Managed VIP", "playbook_start_date": "2025-11-01 0:00:00", "monthly_cgmv": {"1": 14789.09, "2": 48219.31, "3": 17047.76, "4": 14376.64}, "total_cgmv": 94432.79999999999, "latest_month_cgmv": 14376.64, "latest_month_num": 4, "previous_month_cgmv": 17047.76, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 0.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "EMILY PRIEST", "user_id": "cmhl6ik8q003d3veuokamsrdc", "dealname": "Emily Priest - Managed VIP", "playbook_start_date": "2025-11-06 23:00:00", "monthly_cgmv": {}, "total_cgmv": 0, "latest_month_cgmv": 0, "latest_month_num": 0, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "KRYSTAL SMIT", "user_id": "cl5gu8qjaa88c08210xb73k6j", "dealname": "Krystal Smit - Managed VIP", "playbook_start_date": "2025-11-09 23:00:00", "monthly_cgmv": {"1": 778.97}, "total_cgmv": 778.97, "latest_month_cgmv": 778.97, "latest_month_num": 1, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 0.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "JESSICA SIGMON", "user_id": "cm7z71x9i001zdjxcrx7d3oue", "dealname": "Jessica Sigmon - Managed VIP", "playbook_start_date": "2025-11-09 23:00:00", "monthly_cgmv": {"1": 217.28, "2": 468.62, "3": 1204.17}, "total_cgmv": 1890.0700000000002, "latest_month_cgmv": 1204.17, "latest_month_num": 3, "previous_month_cgmv": 468.62, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 0.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0}, "risk_status": "tracking-up"}, {"name": "ERIN VOGELPOHL", "user_id": "cmhw9pxiv0006qifnhbcxnsdl", "dealname": "Erin Vogelpohl - Managed VIP", "playbook_start_date": "2025-11-11 23:00:00", "monthly_cgmv": {"1": 56909.92, "2": 278.17, "3": 215.99}, "total_cgmv": 57404.079999999994, "latest_month_cgmv": 215.99, "latest_month_num": 3, "previous_month_cgmv": 278.17, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 200000.0, "tier2_target": 350000.0, "tier3_target": 500000.0, "total_activation_bonus": 1500.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 500.0, "2": 500.0, "3": 500.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "TORI WINKLE", "user_id": "cmhnw2e7c003yt3g1m3a6roav", "dealname": "Tori Winkle - Managed VIP", "playbook_start_date": "2025-11-11 23:00:00", "monthly_cgmv": {"1": 12881.27, "2": 13493.7, "3": 1667.75, "4": 16730.38}, "total_cgmv": 44773.100000000006, "latest_month_cgmv": 16730.38, "latest_month_num": 4, "previous_month_cgmv": 1667.75, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 50000.0, "tier2_target": 75000.0, "tier3_target": 125000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "tracking-up"}, {"name": "TIFFANY MULGREW", "user_id": "cm08cp2vbp7p70894tvfkxrkd", "dealname": "Tiffany Mulgrew - Managed VIP", "playbook_start_date": "2025-11-13 23:00:00", "monthly_cgmv": {"1": 3508.33, "2": 13741.0, "3": 17811.91, "4": 1243.51}, "total_cgmv": 36304.75000000001, "latest_month_cgmv": 1243.51, "latest_month_num": 4, "previous_month_cgmv": 17811.91, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 0.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0}, "risk_status": "tracking-down"}, {"name": "JENNY REIMOLD", "user_id": "cming7xgs000dqtfseq00aajn", "dealname": "Jenny Reimold - Managed VIP", "playbook_start_date": "2025-11-13 23:00:00", "monthly_cgmv": {"1": 17083.45}, "total_cgmv": 17083.45, "latest_month_cgmv": 17083.45, "latest_month_num": 1, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 150000.0, "tier2_target": 250000.0, "tier3_target": 500000.0, "total_activation_bonus": 1000.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 250.0, "2": 250.0, "3": 250.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "LOGAN HILL", "user_id": "cm4ljrd080056itp980lrfk97", "dealname": "Logan Hill - Managed VIP", "playbook_start_date": "2025-11-13 23:00:00", "monthly_cgmv": {}, "total_cgmv": 0, "latest_month_cgmv": 0, "latest_month_num": 0, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "ANGELA HOWENSTEIN", "user_id": "cmi7rg8vd0025rpfswzgp1lg3", "dealname": "Angela Howenstein - Managed VIP", "playbook_start_date": "2025-11-16 23:00:00", "monthly_cgmv": {"1": 1187.27}, "total_cgmv": 1187.27, "latest_month_cgmv": 1187.27, "latest_month_num": 1, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "MICHELLE RILEY", "user_id": "cmhxnhggl0006s0c4qfmubvh9", "dealname": "Michelle Riley - Managed VIP", "playbook_start_date": "2025-11-16 23:00:00", "monthly_cgmv": {}, "total_cgmv": 0, "latest_month_cgmv": 0, "latest_month_num": 0, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "KATIE KEEVER", "user_id": "cli4okkoz01cy0896ietu74vu", "dealname": "Katie Keever - Managed VIP", "playbook_start_date": "2025-11-17 23:00:00", "monthly_cgmv": {"1": 32326.52, "2": 7892.68, "3": 128.17, "4": 12295.89}, "total_cgmv": 52643.259999999995, "latest_month_cgmv": 12295.89, "latest_month_num": 4, "previous_month_cgmv": 128.17, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "tracking-up"}, {"name": "DANIRA ALIHODZIC", "user_id": "cmbhttp2d002gglkbhqbj5lgo", "dealname": "Danira Alihodzic - Managed VIP", "playbook_start_date": "2025-11-18 23:00:00", "monthly_cgmv": {}, "total_cgmv": 0, "latest_month_cgmv": 0, "latest_month_num": 0, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 0.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "LAUREN HANSEN", "user_id": "ckvvf5y5f03l00880kyfiw06h", "dealname": "Lauren Hansen - Managed VIP", "playbook_start_date": "2025-11-23 23:00:00", "monthly_cgmv": {"1": 20.25, "2": 168.0}, "total_cgmv": 188.25, "latest_month_cgmv": 168.0, "latest_month_num": 2, "previous_month_cgmv": 20.25, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0}, "risk_status": "tracking-up"}, {"name": "BETH ANNE BRICE", "user_id": "cm9hdwdrd0043dr9q4cjd6hvz", "dealname": "Beth Anne Brice - Managed VIP", "playbook_start_date": "2025-11-24 23:00:00", "monthly_cgmv": {"1": 2366.86, "2": 160.0, "3": 1266.6}, "total_cgmv": 3793.46, "latest_month_cgmv": 1266.6, "latest_month_num": 3, "previous_month_cgmv": 160.0, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 10000.0, "tier2_target": 20000.0, "tier3_target": 50000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "tracking-up"}, {"name": "KAYLEE BRICE", "user_id": "cmj94f4c0000m09gc4ew0d1bq", "dealname": "Kaylee Brice - Managed VIP", "playbook_start_date": "2025-11-24 23:00:00", "monthly_cgmv": {"1": 114.39, "2": 2737.14}, "total_cgmv": 2851.5299999999997, "latest_month_cgmv": 2737.14, "latest_month_num": 2, "previous_month_cgmv": 114.39, "am": "Amina", "current_stage": "Month 4 (VIP Management)", "current_month_type": "", "tier1_target": 10000.0, "tier2_target": 20000.0, "tier3_target": 50000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "tracking-up"}, {"name": "MORGAN BULLARD", "user_id": "cming4ttq00bksyfs6sg5dzh5", "dealname": "Morgan Bullard - Managed VIP", "playbook_start_date": "2025-11-30 23:00:00", "monthly_cgmv": {"1": 30362.35, "2": 30146.99, "3": 3085.89}, "total_cgmv": 63595.229999999996, "latest_month_cgmv": 3085.89, "latest_month_num": 3, "previous_month_cgmv": 30146.99, "am": "Amina", "current_stage": "Month 3 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 150000.0, "tier2_target": 250000.0, "tier3_target": 350000.0, "total_activation_bonus": 1000.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 250.0, "2": 250.0, "3": 250.0, "4": 0.0}, "risk_status": "tracking-down"}, {"name": "LAUREN ROSCOPF", "user_id": "cmhxom65c000arnfstldxp7hg", "dealname": "Lauren Roscopf - Managed VIP", "playbook_start_date": "2025-12-02 23:00:00", "monthly_cgmv": {}, "total_cgmv": 0, "latest_month_cgmv": 0, "latest_month_num": 0, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 3 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 75000.0, "total_activation_bonus": 0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "NICHOLE PACLIBAR", "user_id": "cl6a9vgw2exv10852s74o9clq", "dealname": "Nichole - Managed VIP", "playbook_start_date": "2025-12-04 23:00:00", "monthly_cgmv": {"1": 2861.04, "2": 1241.56, "3": 1406.39}, "total_cgmv": 5508.990000000001, "latest_month_cgmv": 1406.39, "latest_month_num": 3, "previous_month_cgmv": 1241.56, "am": "Amina", "current_stage": "Month 3 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 25000.0, "tier2_target": 50000.0, "tier3_target": 250000.0, "total_activation_bonus": 0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "KATE FULLER", "user_id": "cmif5u58z0016r1c4dj68kdpi", "dealname": "Kate Fuller - Managed VIP", "playbook_start_date": "2025-12-08 23:00:00", "monthly_cgmv": {}, "total_cgmv": 0, "latest_month_cgmv": 0, "latest_month_num": 0, "previous_month_cgmv": 0, "am": "Amina", "current_stage": "Month 3 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 75000.0, "tier2_target": 150000.0, "tier3_target": 300000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "BROOKE ANDERSON", "user_id": "cmij0v9ux0002qpe4tkcqfz7y", "dealname": "Brooke Anderson - Managed VIP", "playbook_start_date": "2025-12-11 23:00:00", "monthly_cgmv": {"1": 4865.06, "2": 239.65, "3": 1034.97}, "total_cgmv": 6139.68, "latest_month_cgmv": 1034.97, "latest_month_num": 3, "previous_month_cgmv": 239.65, "am": "Amina", "current_stage": "Month 3 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 100000.0, "tier2_target": 250000.0, "tier3_target": 500000.0, "total_activation_bonus": 750.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 250.0, "2": 250.0, "3": 250.0, "4": 0.0}, "risk_status": "tracking-up"}, {"name": "KRISTEN FUSSELL", "user_id": "cljdm17teo51s0899s23189rw", "dealname": "Kristen Fussell - Managed VIP", "playbook_start_date": "2025-12-11 23:00:00", "monthly_cgmv": {"1": 18958.97, "2": 69874.48, "3": 83904.47}, "total_cgmv": 172737.91999999998, "latest_month_cgmv": 83904.47, "latest_month_num": 3, "previous_month_cgmv": 69874.48, "am": "Amina", "current_stage": "Month 3 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 100000.0, "tier2_target": 200000.0, "tier3_target": 500000.0, "total_activation_bonus": 0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0}, "risk_status": "good-standing"}, {"name": "SYDNEY BASS", "user_id": "cme963cdw00q8du98eyw92zzy", "dealname": "Sydney Bass - Managed VIP", "playbook_start_date": "2025-12-16 23:00:00", "monthly_cgmv": {"1": 4279.11, "2": 38176.44, "3": 7195.01}, "total_cgmv": 49650.560000000005, "latest_month_cgmv": 7195.01, "latest_month_num": 3, "previous_month_cgmv": 38176.44, "am": "Amina", "current_stage": "Month 3 (VIP Management)", "current_month_type": "Bonus Month", "tier1_target": 200000.0, "tier2_target": 400000.0, "tier3_target": 750000.0, "total_activation_bonus": 0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0}, "risk_status": "tracking-down"}];
+        const MARG_DATA = [{"name": "PAULA WEBSTER", "user_id": "cmk4i7bmn005g67desbaef4rh", "dealname": "Paula Webster - Managed VIP", "playbook_start_date": "2026-01-11 23:00:00", "monthly_cgmv": {"1": 1378.62, "2": 333.37}, "total_cgmv": 1711.9899999999998, "latest_month_cgmv": 333.37, "latest_month_num": 2, "previous_month_cgmv": 1378.62, "am": "Marguerite", "current_stage": "Month 2 (VIP Management)", "current_month_type": "Evaluation Month", "tier1_target": 25000.0, "tier2_target": 75000.0, "tier3_target": 125000.0, "total_activation_bonus": 600.0, "week_completion": {"1": false, "2": false, "3": false, "4": false}, "week_bonus": {"1": 100.0, "2": 200.0, "3": 300.0, "4": 0.0}, "risk_status": "tracking-down"}];
+
+        const titleCase = (s) => s.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+
+        // Apply display_name to all arrays
+        [CREATORS_DATA, AMINA_DATA, MARG_DATA].forEach(arr => {
+            arr.forEach(c => {
+                c.display_name = c.dealname ? c.dealname.replace(' - Managed VIP', '').replace(/\|.*/, '').trim() : titleCase(c.name);
+            });
+        });
+
+        // Recalculate risk_status from scratch — ignore playbook stage
+        // 4 statuses: activation, tracking-up, tracking-down, not-enough-data
+        [CREATORS_DATA, AMINA_DATA, MARG_DATA].forEach(arr => arr.forEach(c => {
+            const monthly = c.monthly_cgmv || {};
+            const monthNums = Object.keys(monthly).map(Number).sort((a,b) => a - b);
+
+            // Check if in first 30 days (activation stages)
+            const daysSinceStart = Math.floor((new Date() - new Date(c.playbook_start_date)) / (1000*60*60*24));
+            if (daysSinceStart <= 30) {
+                c.risk_status = 'activation';
+                c.risk_reason = 'New creator — ' + daysSinceStart + ' days in';
+                return;
+            }
+
+            // Find the two most recent COMPLETED months (skip in-progress current month)
+            // Current month is latest_month_num; it may be incomplete
+            const currentMonthStart = new Date(c.playbook_start_date);
+            currentMonthStart.setMonth(currentMonthStart.getMonth() + ((c.latest_month_num || 1) - 1));
+            const daysIntoCurrent = Math.floor((new Date() - currentMonthStart) / (1000*60*60*24));
+            const currentIsIncomplete = daysIntoCurrent >= 0 && daysIntoCurrent < 25;
+
+            // Get completed month numbers
+            let completedMonths = monthNums.filter(m => monthly[String(m)] != null && monthly[String(m)] !== '');
+            if (currentIsIncomplete && completedMonths.length > 0) {
+                // Remove the current in-progress month from comparison
+                const currentM = c.latest_month_num || completedMonths[completedMonths.length - 1];
+                completedMonths = completedMonths.filter(m => m !== currentM);
+            }
+
+            if (completedMonths.length < 2) {
+                c.risk_status = 'not-enough-data';
+                c.risk_reason = 'Need 2 full months to determine trend';
+                return;
+            }
+
+            // Compare the two most recent completed months
+            const recentMonth = completedMonths[completedMonths.length - 1];
+            const priorMonth = completedMonths[completedMonths.length - 2];
+            const recentVal = monthly[String(recentMonth)] || 0;
+            const priorVal = monthly[String(priorMonth)] || 0;
+
+            if (recentVal >= priorVal) {
+                c.risk_status = 'tracking-up';
+                const pctUp = priorVal > 0 ? Math.round(((recentVal - priorVal) / priorVal) * 100) : 100;
+                c.risk_reason = formatMoney(recentVal) + ' last 30 days — up ' + pctUp + '% from prior';
+            } else {
+                c.risk_status = 'tracking-down';
+                const pctDown = priorVal > 0 ? Math.round(((priorVal - recentVal) / priorVal) * 100) : 0;
+                c.risk_reason = formatMoney(recentVal) + ' last 30 days — down ' + pctDown + '% from prior';
+            }
+        }));
+
+        // Compute quarterly cGMV for each creator
+        CREATORS_DATA.forEach(c => {
+            const start = new Date(c.playbook_start_date);
+            const quarters = {};
+            const monthly = c.monthly_cgmv || {};
+            for (let m = 1; m <= 12; m++) {
+                const val = monthly[String(m)];
+                if (val == null || val === '') continue;
+                const d = new Date(start);
+                d.setMonth(d.getMonth() + (m - 1));
+                const yr = d.getFullYear();
+                const q = 'Q' + (Math.floor(d.getMonth() / 3) + 1);
+                const key = yr + ' ' + q;
+                quarters[key] = (quarters[key] || 0) + val;
+            }
+            c.quarters = quarters;
+            c.q1_2026 = quarters['2026 Q1'] || 0;
+            c.q4_2025 = quarters['2025 Q4'] || 0;
+            c.q3_2025 = quarters['2025 Q3'] || 0;
+            c.q2_2025 = quarters['2025 Q2'] || 0;
+            c.this_quarter = c.q1_2026;
+        });
+        // Also apply to filtered arrays
+        [AMINA_DATA, MARG_DATA].forEach(arr => {
+            arr.forEach(c => {
+                const match = CREATORS_DATA.find(d => d.user_id === c.user_id);
+                if (match) { c.quarters = match.quarters; c.this_quarter = match.this_quarter; c.q1_2026 = match.q1_2026; c.q4_2025 = match.q4_2025; c.q3_2025 = match.q3_2025; }
+            });
+        });
+
+        function formatMoney(value) {
+            if (value >= 1_000_000) return '$' + (value / 1_000_000).toFixed(1) + 'M';
+            if (value >= 1_000) return '$' + (value / 1_000).toFixed(1) + 'K';
+            return '$' + value.toFixed(0);
+        }
+
+        function MiniStat({ value, label }) {
+            return (
+                <div className="mini-stat">
+                    <div className="mini-stat-value">{value}</div>
+                    <div className="mini-stat-label">{label}</div>
+                </div>
+            );
+        }
+
+        function RiskBadge({ status }) {
+            const risk = RISK_MAP[status] || RISK_MAP["not-enough-data"];
+            return (
+                <span
+                    className="risk-badge"
+                    style={{ backgroundColor: risk.bg, color: risk.text }}
+                >
+                    <span>{risk.icon}</span>
+                    <span>{risk.label}</span>
+                </span>
+            );
+        }
+
+        function Overview() {
+            const totalBookCGMV = CREATORS_DATA.reduce((sum, c) => sum + (c.total_cgmv || 0), 0);
+            const activeCreators = CREATORS_DATA.filter(c => c.total_cgmv > 0).length;
+            const creatorsInActivation = CREATORS_DATA.filter(c => c.current_stage?.includes('Activation')).length;
+            const avgMonthlyCGMV = totalBookCGMV / CREATORS_DATA.length;
+
+            const topPerformer = CREATORS_DATA.reduce((max, c) =>
+                (c.total_cgmv > (max?.total_cgmv || 0)) ? c : max, null);
+
+            const dormant = CREATORS_DATA.filter(c => c.total_cgmv > 0 && c.latest_month_cgmv === 0);
+
+            const weeklyData = [
+                { week: 'Week 1', cgmv: 450000 },
+                { week: 'Week 2', cgmv: 520000 },
+                { week: 'Week 3', cgmv: 480000 },
+                { week: 'Week 4', cgmv: 620000 }
+            ];
+
+            return (
+                <div>
+                    <div className="grid grid-4">
+                        <MiniStat value={formatMoney(totalBookCGMV)} label="Total Book cGMV" />
+                        <MiniStat value={activeCreators} label="Active Creators" />
+                        <MiniStat value={creatorsInActivation} label="In Activation" />
+                        <MiniStat value={formatMoney(avgMonthlyCGMV)} label="Avg Monthly cGMV" />
+                    </div>
+
+                    <div className="grid grid-2" style={{gap: '24px'}} >
+                        <div className="insight-card">
+                            <div className="insight-header">
+                                <span className="insight-emoji">👑</span>
+                                Top Performer
+                            </div>
+                            <div className="insight-content">
+                                {topPerformer && (
+                                    <>
+                                        <div className="insight-value">{topPerformer.name}</div>
+                                        <div>{formatMoney(topPerformer.total_cgmv)} total</div>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="insight-card">
+                            <div className="insight-header">
+                                <span className="insight-emoji">🚀</span>
+                                Rising Star
+                            </div>
+                            <div className="insight-content">
+                                {CREATORS_DATA[1] && (
+                                    <>
+                                        <div className="insight-value">{CREATORS_DATA[1].name}</div>
+                                        <div>{formatMoney(CREATORS_DATA[1].this_quarter || 0)} Q1 2026</div>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="insight-card">
+                            <div className="insight-header">
+                                <span className="insight-emoji">🔥</span>
+                                Campaign Powerhouse
+                            </div>
+                            <div className="insight-content">
+                                {CREATORS_DATA[0] && (
+                                    <>
+                                        <div className="insight-value">{CREATORS_DATA[0].name}</div>
+                                        <div>{formatMoney(CREATORS_DATA[0].total_cgmv)} total cGMV</div>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="insight-card">
+                            <div className="insight-header">
+                                <span className="insight-emoji">⚠️</span>
+                                Dormant Revenue
+                            </div>
+                            <div className="insight-content">
+                                <div className="insight-value">{dormant.length}</div>
+                                <div>Creators with $0 this month</div>
+                            </div>
+                        </div>
+
+                        <div className="insight-card">
+                            <div className="insight-header">
+                                <span className="insight-emoji">💰</span>
+                                Bonus Efficiency
+                            </div>
+                            <div className="insight-content">
+                                <div className="insight-value">{formatMoney(50000)}</div>
+                                <div>Bonuses paid YTD</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="card">
+                        <div className="card-title">Weekly Performance Trend</div>
+                        <ResponsiveContainer width="100%" height={400}>
+                            <AreaChart data={weeklyData}>
+                                <defs>
+                                    <linearGradient id="colorCGMV" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#A855F7" stopOpacity={0.3}/>
+                                        <stop offset="95%" stopColor="#A855F7" stopOpacity={0}/>
+                                    </linearGradient>
+                                </defs>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#2A2A3C" />
+                                <XAxis dataKey="week" stroke="#9CA3AF" />
+                                <YAxis stroke="#9CA3AF" />
+                                <Tooltip
+                                    contentStyle={{ backgroundColor: '#1C1C2A', border: '1px solid #2A2A3C' }}
+                                    labelStyle={{ color: '#F1F1F5' }}
+                                />
+                                <Area
+                                    type="monotone"
+                                    dataKey="cgmv"
+                                    stroke="#A855F7"
+                                    fillOpacity={1}
+                                    fill="url(#colorCGMV)"
+                                />
+                            </AreaChart>
+                        </ResponsiveContainer>
+                    </div>
+
+                    <div className="card">
+                        <div className="card-title">Recommendations</div>
+                        <div style={{ fontSize: '14px', lineHeight: '1.6', color: '#9CA3AF' }}>
+                            <p>• Focus on reactivating {dormant.length} dormant creators with personalized outreach</p>
+                            <p>• Scale successful playbooks from top performers to mid-tier creators</p>
+                            <p>• Prioritize activation completions to build momentum through first 4 weeks</p>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function CreatorDeepDive() {
+            const [riskFilter, setRiskFilter] = useState(null);
+            const [amFilter, setAmFilter] = useState(null);
+            const [sortBy, setSortBy] = useState('total');
+            const [sortDir, setSortDir] = useState('desc');
+
+            const toggleSort = (field) => {
+                if (sortBy === field) setSortDir(d => d === 'desc' ? 'asc' : 'desc');
+                else { setSortBy(field); setSortDir('desc'); }
+            };
+
+            const RISK_ORDER = {'tracking-down': 0, 'not-enough-data': 1, 'tracking-up': 2, 'activation': 3};
+
+            const filtered = useMemo(() => {
+                let result = [...CREATORS_DATA];
+                if (riskFilter) result = result.filter(c => c.risk_status === riskFilter);
+                if (amFilter) result = result.filter(c => c.am === amFilter);
+
+                const dir = sortDir === 'desc' ? 1 : -1;
+                if (sortBy === 'total') result.sort((a, b) => dir * ((b.total_cgmv || 0) - (a.total_cgmv || 0)));
+                else if (sortBy === 'thisQ') result.sort((a, b) => dir * ((b.this_quarter || 0) - (a.this_quarter || 0)));
+                else if (sortBy === 'status') result.sort((a, b) => dir * ((RISK_ORDER[a.risk_status] ?? 9) - (RISK_ORDER[b.risk_status] ?? 9)));
+                else if (sortBy === 'progress') result.sort((a, b) => dir * (((b.this_quarter || 0) / (b.tier1_target || 25000)) - ((a.this_quarter || 0) / (a.tier1_target || 25000))));
+
+                return result;
+            }, [riskFilter, amFilter, sortBy, sortDir]);
+
+            return (
+                <div>
+                    <div className="filter-group">
+                        <button className={"filter-btn" + (riskFilter === null ? " active" : "")} onClick={() => setRiskFilter(null)}>All Risk Statuses</button>
+                        {Object.keys(RISK_MAP).map(status => (
+                            <button
+                                key={status}
+                                className={"filter-btn" + (riskFilter === status ? " active" : "")}
+                                onClick={() => setRiskFilter(status)}
+                            >
+                                {RISK_MAP[status].label}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="filter-group">
+                        <button className={"filter-btn" + (amFilter === null ? " active" : "")} onClick={() => setAmFilter(null)}>All AMs</button>
+                        <button className={"filter-btn" + (amFilter === "Amina" ? " active" : "")} onClick={() => setAmFilter("Amina")}>Amina</button>
+                        <button className={"filter-btn" + (amFilter === "Marguerite" ? " active" : "")} onClick={() => setAmFilter("Marguerite")}>Marguerite</button>
+                    </div>
+
+                    <div className="filter-group">
+                        <span style={{fontSize: '12px', color: '#6B7280', fontWeight: 600, marginRight: '4px'}}>Sort:</span>
+                        <button className={"filter-btn" + (sortBy === "total" ? " active" : "")} onClick={() => toggleSort("total")}>Total cGMV {sortBy === 'total' ? (sortDir === 'desc' ? '↓' : '↑') : ''}</button>
+                        <button className={"filter-btn" + (sortBy === "thisQ" ? " active" : "")} onClick={() => toggleSort("thisQ")}>This Quarter {sortBy === 'thisQ' ? (sortDir === 'desc' ? '↓' : '↑') : ''}</button>
+                        <button className={"filter-btn" + (sortBy === "status" ? " active" : "")} onClick={() => toggleSort("status")}>Status {sortBy === 'status' ? (sortDir === 'desc' ? '↓' : '↑') : ''}</button>
+                        <button className={"filter-btn" + (sortBy === "progress" ? " active" : "")} onClick={() => toggleSort("progress")}>% to VIP {sortBy === 'progress' ? (sortDir === 'desc' ? '↓' : '↑') : ''}</button>
+                    </div>
+
+                    <div className="card">
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th>Creator</th>
+                                    <th>Status</th>
+                                    <th>Stage</th>
+                                    <th>Total cGMV</th>
+                                    <th title="Q1 2026 (Jan-Mar) C-GMV total">Q1 2026</th>
+                                    <th title="Q4 2025 (Oct-Dec) C-GMV total">Q4 2025</th>
+                                    <th title="VIP C-GMV target from creator's contract. Minimum threshold to qualify for bonus.">VIP Target</th>
+                                    <th title="This quarter's cGMV as % of VIP target">Progress</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filtered.map(creator => (
+                                    <tr key={creator.user_id}>
+                                        <td>
+                                            <div style={{ fontWeight: 600 }}>{creator.display_name}</div>
+                                            <div style={{ fontSize: '12px', color: '#9CA3AF' }}>
+                                                <span className={"am-badge am-" + (creator.am === 'Amina' ? 'amina' : 'marg')}>{creator.am}</span>
+                                                {creator.current_stage || 'Unknown'}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <RiskBadge status={creator.risk_status} />
+                                            {creator.risk_reason && <div style={{fontSize: '10px', color: '#9CA3AF', marginTop: '2px'}}>{creator.risk_reason}</div>}
+                                        </td>
+                                        <td style={{ fontSize: '13px' }}>{creator.current_stage}</td>
+                                        <td style={{ fontWeight: 600 }}>{formatMoney(creator.total_cgmv || 0)}</td>
+                                        <td style={{ fontWeight: 700, color: '#C084FC' }}>{formatMoney(creator.this_quarter || 0)}</td>
+                                        <td style={{ fontWeight: 600, color: '#9CA3AF' }}>{formatMoney(creator.q4_2025 || 0)}</td>
+                                        <td>{formatMoney(creator.tier1_target || 25000)}</td>
+                                        <td>
+                                            {(creator.this_quarter || 0) >= (creator.tier1_target || 25000) ? (
+                                                <div style={{ fontSize: '12px', color: '#2DD4BF', fontWeight: 600 }}>
+                                                    ✓ VIP Goal Met
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    <div style={{ fontSize: '12px' }}>
+                                                        {Math.round(((creator.this_quarter || 0) / (creator.tier1_target || 25000)) * 100)}%
+                                                    </div>
+                                                    <div className="progress-bar">
+                                                        <div
+                                                            className="progress-fill"
+                                                            style={{ width: Math.min(100, Math.round(((creator.this_quarter || 0) / (creator.tier1_target || 25000)) * 100)) + '%' }}
+                                                        ></div>
+                                                    </div>
+                                                </>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            );
+        }
+
+        function Campaigns() {
+            const [drillDown, setDrillDown] = useState(null);
+
+            const campaignEligible = CREATORS_DATA.filter(c => c.total_cgmv > 50000).length;
+            const campaignPriority = CREATORS_DATA.filter(c => c.total_cgmv > 100000).length;
+
+            return (
+                <div>
+                    <div className="grid grid-2">
+                        <div className="mini-stat">
+                            <div
+                                className="mini-stat-value click-value"
+                                onClick={() => setDrillDown(drillDown === 'eligible' ? null : 'eligible')}
+                            >
+                                {campaignEligible}
+                            </div>
+                            <div className="mini-stat-label">Campaign-Eligible (>$50K)</div>
+                        </div>
+                        <div className="mini-stat">
+                            <div
+                                className="mini-stat-value click-value"
+                                onClick={() => setDrillDown(drillDown === 'priority' ? null : 'priority')}
+                            >
+                                {campaignPriority}
+                            </div>
+                            <div className="mini-stat-label">Campaign Priority (>$100K)</div>
+                        </div>
+                    </div>
+
+                    {drillDown && (
+                        <div className="drilldown-list">
+                            {(drillDown === 'eligible'
+                                ? CREATORS_DATA.filter(c => c.total_cgmv > 50000)
+                                : CREATORS_DATA.filter(c => c.total_cgmv > 100000)
+                            ).map(c => (
+                                <div key={c.user_id} className="drilldown-item">
+                                    {c.display_name} - {formatMoney(c.total_cgmv)}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    <div className="card">
+                        <div className="card-title">Campaigns Table</div>
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th>Creator</th>
+                                    <th>Status</th>
+                                    <th>Total cGMV</th>
+                                    <th>Q1 2026 cGMV</th>
+                                    <th>Updated Rate</th>
+                                    <th>Avg Accepted Rate</th>
+                                    <th title="Estimated quarterly ROAS = (Q1 2026 cGMV) / (Avg Accepted Rate)">Est ROAS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {CREATORS_DATA.filter(c => c.total_cgmv > 50000).map(creator => (
+                                    <tr key={creator.user_id}>
+                                        <td style={{ fontWeight: 600 }}> {creator.display_name} </td>
+                                        <td><RiskBadge status={creator.risk_status} /></td>
+                                        <td>{formatMoney(creator.total_cgmv)}</td>
+                                        <td>{formatMoney(creator.this_quarter || 0)}</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        <div style={{fontSize: '12px', color: '#9CA3AF', marginTop: '12px'}}>Fee data coming soon from Domo campaign reports.</div>
+                    </div>
+                </div>
+            );
+        }
+
+        function AminaTab() {
+            const [expandedCard, setExpandedCard] = useState(null);
+            const aminaTotalCreators = AMINA_DATA.length;
+            const aminaTotalCGMV = AMINA_DATA.reduce((sum, c) => sum + (c.total_cgmv || 0), 0);
+            const aminaAtRisk = AMINA_DATA.filter(c => c.risk_status === 'tracking-down').length;
+            const aminaActivation = AMINA_DATA.filter(c => c.current_stage?.includes('Activation')).length;
+            const aminaGoalMet = AMINA_DATA.filter(c => (c.this_quarter || 0) >= (c.tier1_target || 25000) && c.tier1_target > 0).length;
+            const aminaQ1 = AMINA_DATA.reduce((sum, c) => sum + (c.this_quarter || 0), 0);
+
+            const cardData = {
+                total: { creators: AMINA_DATA, label: 'All Creators' },
+                cgmv: { creators: AMINA_DATA.sort((a,b) => (b.total_cgmv||0) - (a.total_cgmv||0)), label: 'By Total cGMV' },
+                risk: { creators: AMINA_DATA.filter(c => c.risk_status === 'tracking-down'), label: 'Tracking Down' },
+                activation: { creators: AMINA_DATA.filter(c => c.current_stage?.includes('Activation')), label: 'In Activation' },
+            };
+
+            const toggleCard = (key) => setExpandedCard(expandedCard === key ? null : key);
+
+            return (
+                <div>
+                    <div className="grid grid-4">
+                        {[
+                            { key: 'total', value: aminaTotalCreators, label: 'Total Creators' },
+                            { key: 'cgmv', value: formatMoney(aminaTotalCGMV), label: 'Total cGMV' },
+                            { key: 'risk', value: aminaAtRisk, label: 'Tracking Down' },
+                            { key: 'activation', value: aminaActivation, label: 'In Activation' },
+                        ].map(item => (
+                            <div key={item.key} className="mini-stat" style={{ cursor: 'pointer', border: expandedCard === item.key ? '1px solid #A855F7' : '1px solid #2A2A3C', transition: 'all 0.2s' }} onClick={() => toggleCard(item.key)} onMouseEnter={(e) => e.currentTarget.style.borderColor = '#A855F7'} onMouseLeave={(e) => { if (expandedCard !== item.key) e.currentTarget.style.borderColor = '#2A2A3C'; }}>
+                                <div className="mini-stat-value">{item.value}</div>
+                                <div className="mini-stat-label">{item.label}</div>
+                                <div style={{ fontSize: '10px', color: '#9CA3AF', marginTop: '4px' }}>Click to expand</div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {expandedCard && cardData[expandedCard] && (
+                        <div className="card" style={{ marginBottom: '24px', borderColor: '#A855F7' }}>
+                            <div className="card-title">{cardData[expandedCard].label}</div>
+                            <table className="table">
+                                <thead><tr><th>Creator</th><th>Stage</th><th>Q1 2026</th><th>VIP Target</th><th>% to Target</th><th>Status</th></tr></thead>
+                                <tbody>
+                                    {cardData[expandedCard].creators.map(c => {
+                                        const pct = Math.round(((c.this_quarter || 0) / (c.tier1_target || 25000)) * 100);
+                                        return (
+                                            <tr key={c.user_id}>
+                                                <td style={{ fontWeight: 600 }}>{c.display_name}</td>
+                                                <td style={{ fontSize: '12px' }}>{c.current_stage}</td>
+                                                <td>{formatMoney(c.this_quarter || 0)}</td>
+                                                <td>{formatMoney(c.tier1_target || 25000)}</td>
+                                                <td style={{ color: pct >= 100 ? '#2DD4BF' : pct >= 50 ? '#FBBF24' : '#F87171', fontWeight: 600 }}>{pct >= 100 ? '✓ Goal Met' : pct + '%'}</td>
+                                                <td><RiskBadge status={c.risk_status} /></td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+
+                    <div className="card">
+                        <div className="card-title">Q1 2026: {formatMoney(aminaQ1)} | Goal Met: {aminaGoalMet}/{aminaTotalCreators}</div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '12px' }}>
+                            {AMINA_DATA.sort((a,b) => {
+                                const pctA = ((a.this_quarter || 0) / (a.tier1_target || 25000));
+                                const pctB = ((b.this_quarter || 0) / (b.tier1_target || 25000));
+                                return pctB - pctA;
+                            }).map(creator => {
+                                const pct = Math.round(((creator.this_quarter || 0) / (creator.tier1_target || 25000)) * 100);
+                                return (
+                                    <div key={creator.user_id} style={{ background: '#1C1C2A', border: '1px solid #2A2A3C', borderRadius: '8px', padding: '14px' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                            <div style={{ fontWeight: 600, fontSize: '14px' }}>{creator.display_name}</div>
+                                            <div style={{ fontSize: '13px', fontWeight: 700, color: pct >= 100 ? '#2DD4BF' : pct >= 50 ? '#FBBF24' : '#F87171' }}>{pct >= 100 ? '✓' : pct + '%'}</div>
+                                        </div>
+                                        <div style={{ fontSize: '12px', color: '#9CA3AF', marginBottom: '6px' }}>{creator.current_stage}</div>
+                                        <div className="progress-bar" style={{ marginBottom: '6px' }}>
+                                            <div className="progress-fill" style={{ width: Math.min(100, pct) + '%', background: pct >= 100 ? '#2DD4BF' : undefined }}></div>
+                                        </div>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#9CA3AF' }}>
+                                            <span>Q1: {formatMoney(creator.this_quarter || 0)}</span>
+                                            <span>Target: {formatMoney(creator.tier1_target || 25000)}</span>
+                                        </div>
+                                        <div style={{ marginTop: '6px' }}><RiskBadge status={creator.risk_status} /></div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function MargTab() {
+            const [expandedCard, setExpandedCard] = useState(null);
+            const margTotalCreators = MARG_DATA.length;
+            const margTotalCGMV = MARG_DATA.reduce((sum, c) => sum + (c.total_cgmv || 0), 0);
+            const margAtRisk = MARG_DATA.filter(c => c.risk_status === 'tracking-down').length;
+            const margActivation = MARG_DATA.filter(c => c.current_stage?.includes('Activation')).length;
+            const margGoalMet = MARG_DATA.filter(c => (c.this_quarter || 0) >= (c.tier1_target || 25000) && c.tier1_target > 0).length;
+            const margQ1 = MARG_DATA.reduce((sum, c) => sum + (c.this_quarter || 0), 0);
+
+            const cardData = {
+                total: { creators: MARG_DATA, label: 'All Creators' },
+                cgmv: { creators: MARG_DATA.sort((a,b) => (b.total_cgmv||0) - (a.total_cgmv||0)), label: 'By Total cGMV' },
+                risk: { creators: MARG_DATA.filter(c => c.risk_status === 'tracking-down'), label: 'Tracking Down' },
+                activation: { creators: MARG_DATA.filter(c => c.current_stage?.includes('Activation')), label: 'In Activation' },
+            };
+
+            const toggleCard = (key) => setExpandedCard(expandedCard === key ? null : key);
+
+            return (
+                <div>
+                    <div className="grid grid-4">
+                        {[
+                            { key: 'total', value: margTotalCreators, label: 'Total Creators' },
+                            { key: 'cgmv', value: formatMoney(margTotalCGMV), label: 'Total cGMV' },
+                            { key: 'risk', value: margAtRisk, label: 'Tracking Down' },
+                            { key: 'activation', value: margActivation, label: 'In Activation' },
+                        ].map(item => (
+                            <div key={item.key} className="mini-stat" style={{ cursor: 'pointer', border: expandedCard === item.key ? '1px solid #2DD4BF' : '1px solid #2A2A3C', transition: 'all 0.2s' }} onClick={() => toggleCard(item.key)} onMouseEnter={(e) => e.currentTarget.style.borderColor = '#2DD4BF'} onMouseLeave={(e) => { if (expandedCard !== item.key) e.currentTarget.style.borderColor = '#2A2A3C'; }}>
+                                <div className="mini-stat-value" style={{ color: '#2DD4BF' }}>{item.value}</div>
+                                <div className="mini-stat-label">{item.label}</div>
+                                <div style={{ fontSize: '10px', color: '#9CA3AF', marginTop: '4px' }}>Click to expand</div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {expandedCard && cardData[expandedCard] && (
+                        <div className="card" style={{ marginBottom: '24px', borderColor: '#2DD4BF' }}>
+                            <div className="card-title">{cardData[expandedCard].label}</div>
+                            <table className="table">
+                                <thead><tr><th>Creator</th><th>Stage</th><th>Q1 2026</th><th>VIP Target</th><th>% to Target</th><th>Status</th></tr></thead>
+                                <tbody>
+                                    {cardData[expandedCard].creators.map(c => {
+                                        const pct = Math.round(((c.this_quarter || 0) / (c.tier1_target || 25000)) * 100);
+                                        return (
+                                            <tr key={c.user_id}>
+                                                <td style={{ fontWeight: 600 }}>{c.display_name}</td>
+                                                <td style={{ fontSize: '12px' }}>{c.current_stage}</td>
+                                                <td>{formatMoney(c.this_quarter || 0)}</td>
+                                                <td>{formatMoney(c.tier1_target || 25000)}</td>
+                                                <td style={{ color: pct >= 100 ? '#2DD4BF' : pct >= 50 ? '#FBBF24' : '#F87171', fontWeight: 600 }}>{pct >= 100 ? '✓ Goal Met' : pct + '%'}</td>
+                                                <td><RiskBadge status={c.risk_status} /></td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+
+                    <div className="card">
+                        <div className="card-title">Q1 2026: {formatMoney(margQ1)} | Goal Met: {margGoalMet}/{margTotalCreators}</div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '12px' }}>
+                            {MARG_DATA.sort((a,b) => {
+                                const pctA = ((a.this_quarter || 0) / (a.tier1_target || 25000));
+                                const pctB = ((b.this_quarter || 0) / (b.tier1_target || 25000));
+                                return pctB - pctA;
+                            }).map(creator => {
+                                const pct = Math.round(((creator.this_quarter || 0) / (creator.tier1_target || 25000)) * 100);
+                                return (
+                                    <div key={creator.user_id} style={{ background: '#1C1C2A', border: '1px solid #2A2A3C', borderRadius: '8px', padding: '14px' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                            <div style={{ fontWeight: 600, fontSize: '14px' }}>{creator.display_name}</div>
+                                            <div style={{ fontSize: '13px', fontWeight: 700, color: pct >= 100 ? '#2DD4BF' : pct >= 50 ? '#FBBF24' : '#F87171' }}>{pct >= 100 ? '✓' : pct + '%'}</div>
+                                        </div>
+                                        <div style={{ fontSize: '12px', color: '#9CA3AF', marginBottom: '6px' }}>{creator.current_stage}</div>
+                                        <div className="progress-bar" style={{ marginBottom: '6px' }}>
+                                            <div className="progress-fill" style={{ width: Math.min(100, pct) + '%', background: pct >= 100 ? '#2DD4BF' : 'linear-gradient(90deg, #2DD4BF 0%, #A855F7 100%)' }}></div>
+                                        </div>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#9CA3AF' }}>
+                                            <span>Q1: {formatMoney(creator.this_quarter || 0)}</span>
+                                            <span>Target: {formatMoney(creator.tier1_target || 25000)}</span>
+                                        </div>
+                                        <div style={{ marginTop: '6px' }}><RiskBadge status={creator.risk_status} /></div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function BrandIntel() {
+            // Compute real stats from data
+            const totalCreators = CREATORS_DATA.length;
+            const avgCGMV = CREATORS_DATA.reduce((s,c) => s + (c.total_cgmv || 0), 0) / totalCreators;
+            const medianCGMV = (() => {
+                const sorted = CREATORS_DATA.map(c => c.total_cgmv || 0).sort((a,b) => a - b);
+                const mid = Math.floor(sorted.length / 2);
+                return sorted.length % 2 ? sorted[mid] : (sorted[mid-1] + sorted[mid]) / 2;
+            })();
+            const topQuartile = CREATORS_DATA.filter(c => (c.total_cgmv || 0) > avgCGMV).length;
+            const q1Total = CREATORS_DATA.reduce((s,c) => s + (c.this_quarter || 0), 0);
+            const q4Total = CREATORS_DATA.reduce((s,c) => s + (c.q4_2025 || 0), 0);
+            const qoqGrowth = q4Total > 0 ? Math.round(((q1Total - q4Total) / q4Total) * 100) : 0;
+
+            // Tier distribution
+            const hitTarget = CREATORS_DATA.filter(c => (c.this_quarter || 0) >= (c.tier1_target || 25000) && c.tier1_target > 0).length;
+            const tier2Hit = CREATORS_DATA.filter(c => (c.this_quarter || 0) >= (c.tier2_target || 50000) && c.tier2_target > 0).length;
+            const tier3Hit = CREATORS_DATA.filter(c => (c.this_quarter || 0) >= (c.tier3_target || 75000) && c.tier3_target > 0).length;
+
+            const statusCounts = {};
+            CREATORS_DATA.forEach(c => { statusCounts[c.risk_status] = (statusCounts[c.risk_status] || 0) + 1; });
+
+            const pieData = Object.entries(statusCounts).map(([k,v]) => ({ name: k.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()), value: v }));
+            const COLORS = ['#F87171', '#FB923C', '#FBBF24', '#34D399', '#2DD4BF', '#60A5FA', '#6B7280'];
+
+            return (
+                <div>
+                    <div className="grid grid-4">
+                        <MiniStat value={formatMoney(q1Total)} label="Q1 2026 Total cGMV" />
+                        <MiniStat value={(qoqGrowth >= 0 ? '+' : '') + qoqGrowth + '%'} label="QoQ Growth (vs Q4)" />
+                        <MiniStat value={hitTarget + '/' + totalCreators} label="Hit VIP Target (Q1)" />
+                        <MiniStat value={formatMoney(medianCGMV)} label="Median All-Time cGMV" />
+                    </div>
+
+                    <div className="grid grid-2">
+                        <div className="card">
+                            <div className="card-title">Tier Achievement This Quarter</div>
+                            <div style={{ padding: '16px 0' }}>
+                                {[
+                                    { label: 'VIP Target (Tier 1)', count: hitTarget, color: '#2DD4BF' },
+                                    { label: 'Tier 2', count: tier2Hit, color: '#A855F7' },
+                                    { label: 'Tier 3', count: tier3Hit, color: '#FBBF24' },
+                                ].map(tier => (
+                                    <div key={tier.label} style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                                        <div style={{ width: '140px', fontSize: '13px', color: '#9CA3AF' }}>{tier.label}</div>
+                                        <div style={{ flex: 1, height: '8px', background: '#2A2A3C', borderRadius: '4px', overflow: 'hidden' }}>
+                                            <div style={{ height: '100%', width: Math.round((tier.count / totalCreators) * 100) + '%', background: tier.color, borderRadius: '4px' }}></div>
+                                        </div>
+                                        <div style={{ width: '60px', fontSize: '14px', fontWeight: 700, color: tier.color }}>{tier.count} / {totalCreators}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="card">
+                            <div className="card-title">Portfolio Health Distribution</div>
+                            <ResponsiveContainer width="100%" height={250}>
+                                <PieChart>
+                                    <Pie data={pieData} cx="50%" cy="50%" labelLine={false} label={{fill: '#F1F1F5', fontSize: 11}} outerRadius={90} fill="#8884d8" dataKey="value">
+                                        {pieData.map((entry, index) => <Cell key={index} fill={COLORS[index % COLORS.length]} />)}
+                                    </Pie>
+                                    <Legend />
+                                    <Tooltip contentStyle={{ backgroundColor: '#1C1C2A', border: '1px solid #2A2A3C' }} />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </div>
+
+                    <div className="card">
+                        <div className="card-title">Performance Benchmarks</div>
+                        <div className="grid grid-4" style={{ marginTop: '12px' }}>
+                            <div style={{ textAlign: 'center' }}>
+                                <div style={{ fontSize: '20px', fontWeight: 700, color: '#A855F7' }}>{formatMoney(avgCGMV)}</div>
+                                <div style={{ fontSize: '12px', color: '#9CA3AF' }}>Avg All-Time cGMV</div>
+                            </div>
+                            <div style={{ textAlign: 'center' }}>
+                                <div style={{ fontSize: '20px', fontWeight: 700, color: '#2DD4BF' }}>{formatMoney(q1Total / totalCreators)}</div>
+                                <div style={{ fontSize: '12px', color: '#9CA3AF' }}>Avg Q1 cGMV/Creator</div>
+                            </div>
+                            <div style={{ textAlign: 'center' }}>
+                                <div style={{ fontSize: '20px', fontWeight: 700, color: '#FBBF24' }}>{topQuartile}</div>
+                                <div style={{ fontSize: '12px', color: '#9CA3AF' }}>Above-Avg Performers</div>
+                            </div>
+                            <div style={{ textAlign: 'center' }}>
+                                <div style={{ fontSize: '20px', fontWeight: 700, color: '#34D399' }}>{tier3Hit}</div>
+                                <div style={{ fontSize: '12px', color: '#9CA3AF' }}>Tier 3 Achievers</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function ActivationPlaybook() {
+            const activationCreators = CREATORS_DATA.filter(c => c.current_stage?.includes('Activation') || c.current_stage?.includes('Week'));
+            const allCreators = CREATORS_DATA;
+
+            // Budget = sum of total_activation_bonus for all creators
+            const totalBudget = allCreators.reduce((sum, c) => sum + (c.total_activation_bonus || 0), 0);
+            const budgetAllocated = activationCreators.reduce((sum, c) => sum + (c.total_activation_bonus || 0), 0);
+            const avgPerCreator = activationCreators.length > 0 ? budgetAllocated / activationCreators.length : 0;
+
+            // Quarterly savings: total possible bonus minus what was actually earned
+            const maxPossibleBonus = allCreators.reduce((sum, c) => {
+                const w = c.week_bonus || {};
+                return sum + (w['1'] || 0) + (w['2'] || 0) + (w['3'] || 0) + (w['4'] || 0);
+            }, 0);
+            const earnedBonus = allCreators.reduce((sum, c) => {
+                const w = c.week_bonus || {};
+                const wc = c.week_completion || {};
+                let earned = 0;
+                for (let i = 1; i <= 4; i++) {
+                    if (wc[String(i)]) earned += (w[String(i)] || 0);
+                }
+                return sum + earned;
+            }, 0);
+            const savings = totalBudget - earnedBonus;
+
+            // Quarterly cGMV from new sign-ons (all creators)
+            const quarterlyCGMV = allCreators.reduce((sum, c) => sum + (c.this_quarter || 0), 0);
+            const activationCGMV = activationCreators.reduce((sum, c) => sum + (c.this_quarter || 0), 0);
+            const completedActivation = allCreators.filter(c => {
+                const wc = c.week_completion || {};
+                return wc['1'] && wc['2'] && wc['3'] && wc['4'];
+            });
+            const incompletedActivation = allCreators.filter(c => {
+                const wc = c.week_completion || {};
+                return !(wc['1'] && wc['2'] && wc['3'] && wc['4']);
+            });
+            const completedCGMV = completedActivation.reduce((sum, c) => sum + (c.this_quarter || 0), 0);
+            const incompleteCGMV = incompletedActivation.reduce((sum, c) => sum + (c.this_quarter || 0), 0);
+
+            const [showDetail, setShowDetail] = useState(null);
+
+            return (
+                <div>
+                    <div className="grid grid-4">
+                        <MiniStat value={formatMoney(totalBudget)} label="Total Budget Allocated" />
+                        <MiniStat value={formatMoney(avgPerCreator)} label="Avg per Creator" />
+                        <MiniStat value={formatMoney(savings)} label="Quarterly Savings" />
+                        <MiniStat value={formatMoney(quarterlyCGMV)} label="Quarterly cGMV (All)" />
+                    </div>
+
+                    <div className="grid grid-2">
+                        <div className="card" style={{ cursor: 'pointer', border: showDetail === 'completed' ? '1px solid #2DD4BF' : '1px solid #2A2A3C' }} onClick={() => setShowDetail(showDetail === 'completed' ? null : 'completed')}>
+                            <div className="card-title" style={{ color: '#2DD4BF' }}>Completed Activation ({completedActivation.length})</div>
+                            <div style={{ fontSize: '24px', fontWeight: 700, color: '#2DD4BF' }}>{formatMoney(completedCGMV)}</div>
+                            <div style={{ fontSize: '12px', color: '#9CA3AF' }}>Q1 cGMV from creators who finished playbook</div>
+                        </div>
+                        <div className="card" style={{ cursor: 'pointer', border: showDetail === 'incomplete' ? '1px solid #FB923C' : '1px solid #2A2A3C' }} onClick={() => setShowDetail(showDetail === 'incomplete' ? null : 'incomplete')}>
+                            <div className="card-title" style={{ color: '#FB923C' }}>Incomplete Activation ({incompletedActivation.length})</div>
+                            <div style={{ fontSize: '24px', fontWeight: 700, color: '#FB923C' }}>{formatMoney(incompleteCGMV)}</div>
+                            <div style={{ fontSize: '12px', color: '#9CA3AF' }}>Q1 cGMV from creators who haven't finished playbook</div>
+                        </div>
+                    </div>
+
+                    {showDetail && (
+                        <div className="card" style={{ marginTop: '16px' }}>
+                            <div className="card-title">{showDetail === 'completed' ? 'Completed Activation Creators' : 'Incomplete Activation Creators'}</div>
+                            <table className="table">
+                                <thead><tr><th>Creator</th><th>Stage</th><th>Wk 1</th><th>Wk 2</th><th>Wk 3</th><th>Wk 4</th><th>Q1 cGMV</th><th>Bonus Earned</th></tr></thead>
+                                <tbody>
+                                    {(showDetail === 'completed' ? completedActivation : incompletedActivation).sort((a,b) => (b.this_quarter||0) - (a.this_quarter||0)).map(c => {
+                                        const wc = c.week_completion || {};
+                                        const wb = c.week_bonus || {};
+                                        const earned = [1,2,3,4].reduce((s, i) => s + (wc[String(i)] ? (wb[String(i)] || 0) : 0), 0);
+                                        return (
+                                            <tr key={c.user_id}>
+                                                <td style={{ fontWeight: 600 }}>{c.display_name}</td>
+                                                <td style={{ fontSize: '12px' }}>{c.current_stage}</td>
+                                                <td style={{ color: wc['1'] ? '#2DD4BF' : '#F87171', textAlign: 'center' }}>{wc['1'] ? '✓' : '✗'}</td>
+                                                <td style={{ color: wc['2'] ? '#2DD4BF' : '#F87171', textAlign: 'center' }}>{wc['2'] ? '✓' : '✗'}</td>
+                                                <td style={{ color: wc['3'] ? '#2DD4BF' : '#F87171', textAlign: 'center' }}>{wc['3'] ? '✓' : '✗'}</td>
+                                                <td style={{ color: wc['4'] ? '#2DD4BF' : '#F87171', textAlign: 'center' }}>{wc['4'] ? '✓' : '✗'}</td>
+                                                <td>{formatMoney(c.this_quarter || 0)}</td>
+                                                <td style={{ color: '#2DD4BF' }}>{formatMoney(earned)}</td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        function WalmartHQ() {
+            const [expandedCreator, setExpandedCreator] = useState(null);
+            const [view, setView] = useState('alltime');
+
+            const allTimeSorted = [...CREATORS_DATA].sort((a, b) => (b.total_cgmv || 0) - (a.total_cgmv || 0));
+            const q1Sorted = [...CREATORS_DATA].sort((a, b) => (b.this_quarter || 0) - (a.this_quarter || 0));
+
+            const top10 = view === 'alltime' ? allTimeSorted.slice(0, 10) : q1Sorted.slice(0, 10);
+            const totalCGMV = CREATORS_DATA.reduce((s,c) => s + (c.total_cgmv || 0), 0);
+            const q1Total = CREATORS_DATA.reduce((s,c) => s + (c.this_quarter || 0), 0);
+            const top10CGMV = view === 'alltime'
+                ? top10.reduce((s,c) => s + (c.total_cgmv || 0), 0)
+                : top10.reduce((s,c) => s + (c.this_quarter || 0), 0);
+            const top10Pct = Math.round((top10CGMV / (view === 'alltime' ? totalCGMV : q1Total)) * 100);
+
+            return (
+                <div>
+                    <div className="grid grid-4">
+                        <MiniStat value={formatMoney(totalCGMV)} label="All-Time cGMV" />
+                        <MiniStat value={formatMoney(q1Total)} label="Q1 2026 cGMV" />
+                        <MiniStat value={top10Pct + '%'} label="Top 10 Concentration" />
+                        <MiniStat value={CREATORS_DATA.filter(c => (c.this_quarter || 0) > 0).length + '/' + CREATORS_DATA.length} label="Active This Quarter" />
+                    </div>
+
+                    <div className="filter-group">
+                        <button className={"filter-btn" + (view === 'alltime' ? ' active' : '')} onClick={() => { setView('alltime'); setExpandedCreator(null); }}>All-Time</button>
+                        <button className={"filter-btn" + (view === 'q1' ? ' active' : '')} onClick={() => { setView('q1'); setExpandedCreator(null); }}>Q1 2026</button>
+                    </div>
+
+                    <div className="card">
+                        <div className="card-title">Top 10 {view === 'alltime' ? 'All-Time' : 'Q1 2026'} Performers</div>
+                        <table className="table">
+                            <thead><tr><th>Rank</th><th>Creator</th><th>cGMV</th><th>% of Total</th><th>Status</th><th></th></tr></thead>
+                            <tbody>
+                                {top10.map((creator, idx) => {
+                                    const cgmv = view === 'alltime' ? (creator.total_cgmv || 0) : (creator.this_quarter || 0);
+                                    const total = view === 'alltime' ? totalCGMV : q1Total;
+                                    const pctOfTotal = Math.round((cgmv / total) * 100);
+                                    const isExpanded = expandedCreator === creator.user_id;
+                                    const pctToTarget = Math.round(((creator.this_quarter || 0) / (creator.tier1_target || 25000)) * 100);
+
+                                    return (
+                                        <React.Fragment key={creator.user_id}>
+                                            <tr style={{ cursor: 'pointer', background: isExpanded ? '#22223A' : undefined }} onClick={() => setExpandedCreator(isExpanded ? null : creator.user_id)}>
+                                                <td style={{ fontWeight: 700, color: idx < 3 ? '#FBBF24' : '#9CA3AF' }}>{idx + 1}</td>
+                                                <td style={{ fontWeight: 600 }}>{creator.display_name}</td>
+                                                <td style={{ fontWeight: 700, color: '#A855F7' }}>{formatMoney(cgmv)}</td>
+                                                <td>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                        <div style={{ flex: 1, height: '6px', background: '#2A2A3C', borderRadius: '3px', overflow: 'hidden' }}>
+                                                            <div style={{ height: '100%', width: pctOfTotal + '%', background: '#A855F7', borderRadius: '3px' }}></div>
+                                                        </div>
+                                                        <span style={{ fontSize: '12px', color: '#9CA3AF' }}>{pctOfTotal}%</span>
+                                                    </div>
+                                                </td>
+                                                <td><RiskBadge status={creator.risk_status} /></td>
+                                                <td style={{ fontSize: '12px', color: '#9CA3AF' }}>{isExpanded ? '▲' : '▼'}</td>
+                                            </tr>
+                                            {isExpanded && (
+                                                <tr>
+                                                    <td colSpan="6" style={{ background: '#1C1C2A', padding: '16px' }}>
+                                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
+                                                            <div>
+                                                                <div style={{ fontSize: '11px', color: '#9CA3AF', marginBottom: '4px' }}>All-Time cGMV</div>
+                                                                <div style={{ fontSize: '18px', fontWeight: 700, color: '#A855F7' }}>{formatMoney(creator.total_cgmv || 0)}</div>
+                                                            </div>
+                                                            <div>
+                                                                <div style={{ fontSize: '11px', color: '#9CA3AF', marginBottom: '4px' }}>Q1 2026</div>
+                                                                <div style={{ fontSize: '18px', fontWeight: 700, color: '#C084FC' }}>{formatMoney(creator.this_quarter || 0)}</div>
+                                                            </div>
+                                                            <div>
+                                                                <div style={{ fontSize: '11px', color: '#9CA3AF', marginBottom: '4px' }}>Q4 2025</div>
+                                                                <div style={{ fontSize: '18px', fontWeight: 700 }}>{formatMoney(creator.q4_2025 || 0)}</div>
+                                                            </div>
+                                                            <div>
+                                                                <div style={{ fontSize: '11px', color: '#9CA3AF', marginBottom: '4px' }}>VIP Target</div>
+                                                                <div style={{ fontSize: '18px', fontWeight: 700 }}>{formatMoney(creator.tier1_target || 25000)}</div>
+                                                            </div>
+                                                        </div>
+                                                        <div style={{ marginTop: '12px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+                                                            <div>
+                                                                <div style={{ fontSize: '11px', color: '#9CA3AF', marginBottom: '4px' }}>% to VIP Target</div>
+                                                                <div style={{ fontSize: '16px', fontWeight: 700, color: pctToTarget >= 100 ? '#2DD4BF' : '#FBBF24' }}>{pctToTarget >= 100 ? '✓ Goal Met' : pctToTarget + '%'}</div>
+                                                            </div>
+                                                            <div>
+                                                                <div style={{ fontSize: '11px', color: '#9CA3AF', marginBottom: '4px' }}>Stage</div>
+                                                                <div style={{ fontSize: '14px' }}>{creator.current_stage}</div>
+                                                            </div>
+                                                            <div>
+                                                                <div style={{ fontSize: '11px', color: '#9CA3AF', marginBottom: '4px' }}>AM</div>
+                                                                <div><span className={"am-badge am-" + (creator.am === 'Amina' ? 'amina' : 'marg')}>{creator.am}</span></div>
+                                                            </div>
+                                                        </div>
+                                                        <div style={{ marginTop: '12px' }}>
+                                                            <div style={{ fontSize: '11px', color: '#9CA3AF', marginBottom: '4px' }}>Monthly cGMV Trend</div>
+                                                            <div style={{ display: 'flex', gap: '4px', alignItems: 'flex-end', height: '60px' }}>
+                                                                {Object.entries(creator.monthly_cgmv || {}).sort((a,b) => Number(a[0]) - Number(b[0])).map(([month, val]) => {
+                                                                    const maxVal = Math.max(...Object.values(creator.monthly_cgmv || {}));
+                                                                    const height = maxVal > 0 ? Math.max(4, (val / maxVal) * 60) : 4;
+                                                                    return (
+                                                                        <div key={month} title={'Month ' + month + ': ' + formatMoney(val)} style={{ flex: 1, height: height + 'px', background: 'linear-gradient(180deg, #A855F7, #2DD4BF)', borderRadius: '2px', minWidth: '8px', cursor: 'default' }}></div>
+                                                                    );
+                                                                })}
+                                                            </div>
+                                                            <div style={{ display: 'flex', gap: '4px', marginTop: '4px' }}>
+                                                                {Object.keys(creator.monthly_cgmv || {}).sort((a,b) => Number(a) - Number(b)).map(month => (
+                                                                    <div key={month} style={{ flex: 1, fontSize: '9px', color: '#6B7280', textAlign: 'center' }}>M{month}</div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </React.Fragment>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            );
+        }
+
+        function Dashboard() {
+            const [activeTab, setActiveTab] = useState('deep-dive');
+
+            return (
+                <div className="dashboard">
+                    <div className="header">
+                        <div className="header-title">Mavely VIP Creator Intelligence</div>
+                        <div className="header-subtitle">Data last updated: Feb 25, 2026 (from Domo CSV export) — <span style={{color: '#2DD4BF'}}>Auto-synced from Domo</span></div>
+                    </div>
+
+                    <div className="tabs">
+                        {['deep-dive', 'campaigns', 'amina', 'marg', 'intel', 'activation', 'walmart'].map(tab => {
+                            const labels = {
+                                overview: 'Overview',
+                                'deep-dive': 'Creator Deep Dive',
+                                campaigns: 'Campaigns',
+                                amina: 'Amina',
+                                marg: 'Marg',
+                                intel: 'Brand Intel',
+                                activation: 'Activation Playbook',
+                                walmart: 'Walmart HQ'
+                            };
+                            return (
+                                <button
+                                    key={tab}
+                                    className={"tab-btn" + (activeTab === tab ? " active" : "")}
+                                    onClick={() => setActiveTab(tab)}
+                                >
+                                    {labels[tab]}
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    <div className="tab-content" style={{ display: activeTab === 'deep-dive' ? 'block' : 'none' }}>
+                        <CreatorDeepDive />
+                    </div>
+                    <div className="tab-content" style={{ display: activeTab === 'campaigns' ? 'block' : 'none' }}>
+                        <Campaigns />
+                    </div>
+                    <div className="tab-content" style={{ display: activeTab === 'amina' ? 'block' : 'none' }}>
+                        <AminaTab />
+                    </div>
+                    <div className="tab-content" style={{ display: activeTab === 'marg' ? 'block' : 'none' }}>
+                        <MargTab />
+                    </div>
+                    <div className="tab-content" style={{ display: activeTab === 'intel' ? 'block' : 'none' }}>
+                        <BrandIntel />
+                    </div>
+                    <div className="tab-content" style={{ display: activeTab === 'activation' ? 'block' : 'none' }}>
+                        <ActivationPlaybook />
+                    </div>
+                    <div className="tab-content" style={{ display: activeTab === 'walmart' ? 'block' : 'none' }}>
+                        <WalmartHQ />
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<Dashboard />, document.getElementById("root"));
+    </script>
+</body>
+</html>
