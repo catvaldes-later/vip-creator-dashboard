@@ -1,47 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>mavely | VIP Creator Intelligence</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #0B0B11; font-family: 'Inter', sans-serif; }
-        #root { width: 100%; height: 100vh; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #14141E; }
-        ::-webkit-scrollbar-thumb { background: #2A2A3C; border-radius: 3px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mavely | VIP Creator Intelligence</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0F0B1A; color: #E2E8F0; }
+    #root { min-height: 100vh; }
+  </style>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/prop-types@15/prop-types.min.js"></script>
+  <script crossorigin src="https://unpkg.com/recharts@2.12.7/umd/Recharts.js"></script>
 </head>
 <body>
-    <div id="root"></div>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/prop-types@15/prop-types.min.js"></script>
-    <script src="https://unpkg.com/recharts@2.12.7/umd/Recharts.js"></script>
-    <script>
+  <div id="root"></div>
+  <script>
 const {
   useState,
-  useMemo
+  useEffect,
+  useMemo,
+  useCallback
 } = React;
 const {
   BarChart,
   Bar,
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Cell,
   PieChart,
   Pie,
-  Cell,
-  Legend,
-  AreaChart,
-  Area,
-  LineChart,
-  Line,
-  ComposedChart
+  Legend
 } = Recharts;
 
 //  DARK MODE THEME 
@@ -9282,6 +9274,745 @@ const funnelData = [{
   count: deals.filter(d => d.stage === "Closed Lost").length,
   color: M.red
 }];
+const VIP_MGMT_RAW = [{
+  name: "Aussiedomxo Bird",
+  stage: "Week 1",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Catherine Ortega",
+  stage: "Week 1",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Nadira Kurtic",
+  stage: "Week 1",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Sandy Chang",
+  stage: "Week 1",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Michelle Hammons",
+  stage: "Week 2",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Marnie Goldberg",
+  stage: "Week 3",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Jessica Salgado",
+  stage: "Week 3",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Ashley Savage",
+  stage: "Week 3",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Gianna Caputo",
+  stage: "Week 3",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Greer Gagnier",
+  stage: "Week 4",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Katie Fletcher",
+  stage: "Week 4",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Timothy & Tatyana",
+  stage: "Week 4",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "January Rizzo",
+  stage: "Week 4",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Tracy Baggett",
+  stage: "Week 4",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 300
+}, {
+  name: "Tiania Haneline",
+  stage: "Week 4",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Nita Mann",
+  stage: "Month 2",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Nicole Cantu",
+  stage: "Month 2",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Crystal Schmidt",
+  stage: "Month 2",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Alexi Mellady",
+  stage: "Month 2",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Kaylee Brice",
+  stage: "Month 4",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Beth Anne Brice",
+  stage: "Month 4",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Paula Webster",
+  stage: "Month 2",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Sydney Bass",
+  stage: "Month 3",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Kate Fuller",
+  stage: "Month 3",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Kristen Fussell",
+  stage: "Month 3",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Brooke Anderson",
+  stage: "Month 3",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 750
+}, {
+  name: "Lauren Roscopf",
+  stage: "Month 3",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Nichole",
+  stage: "Month 3",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Morgan Bullard",
+  stage: "Month 3",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 1000
+}, {
+  name: "Katie Keever",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Logan Hill",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Nicky Schmaderer",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Leah White",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 1000
+}, {
+  name: "Tiffany Mulgrew",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Jessica Sigmon",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Kisses from Cara",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Michelle Riley",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Erin Vogelpohl",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 1500
+}, {
+  name: "Danira Alihodzic",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Tori Winkle",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Sandra | Tuxedo Farmhouse",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Angela Howenstein",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Jenny Reimold",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 1000
+}, {
+  name: "Jessica Barstow",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Emily Priest",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Krystal Smit",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Lauren Hansen",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Betsy Burleson",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Casey Southern",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Leslie Wuischpard",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Caralyn Mirand-Koch",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Jessica Frappampina",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 100
+}, {
+  name: "Deana Hoffman",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Rochelle Johnson",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Moji Ojediran",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Janaye Robinson",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 300
+}, {
+  name: "Alexandra England",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Kaitlyn Curnow",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Taylor Hardy",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 300
+}, {
+  name: "Taylor Moore",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 1500
+}, {
+  name: "Laura Godfrey",
+  stage: "Month 6",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Lauren Antonucci",
+  stage: "Month 6",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Candice Trevino",
+  stage: "Month 6",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Courtney White",
+  stage: "Month 6",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Jasmine Rae Snooks",
+  stage: "Month 6",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Amanda Wagner",
+  stage: "Month 6",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Ali Propst",
+  stage: "Month 6",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Candace Post",
+  stage: "Month 6",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Olivia Adkins",
+  stage: "Month 6",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Amberly Crast",
+  stage: "Month 6",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Abi Ayres",
+  stage: "Complete",
+  am: "Harrison",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Andrea Vowels",
+  stage: "Complete",
+  am: "Harrison",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Brooke Havner",
+  stage: "Complete",
+  am: "Harrison",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Erica Hinthorne",
+  stage: "Complete",
+  am: "Harrison",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Kallie Davis",
+  stage: "Complete",
+  am: "Harrison",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Kaylyn Hartmann",
+  stage: "Complete",
+  am: "Harrison",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Jennifer Palpallatoc",
+  stage: "Complete",
+  am: "Harrison",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "targetandtopknots",
+  stage: "Complete",
+  am: "Harrison",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Tiffany Mulgrew",
+  stage: "Complete",
+  am: "Harrison",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Stephanie Trantham",
+  stage: "Complete",
+  am: "Harrison",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Nicky Schmaderer",
+  stage: "Complete",
+  am: "Harrison",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Harrison Testing",
+  stage: "Disqualified",
+  am: "Harrison",
+  w1: true,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}];
 
 //  COMPONENTS 
 const RiskBadge = ({
@@ -9884,9 +10615,16 @@ function VIPCreatorDashboard() {
     am: c.am
   })), /*#__PURE__*/React.createElement("td", {
     style: tdStyle
-  }, /*#__PURE__*/React.createElement(CatTag, {
-    category: c.category
-  })), /*#__PURE__*/React.createElement("td", {
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      background: `${CAT_COLORS[c.topVerticals[0]] || "#6366F1"}20`,
+      color: CAT_COLORS[c.topVerticals[0]] || "#6366F1",
+      padding: "2px 8px",
+      borderRadius: 999,
+      fontSize: 10,
+      fontWeight: 600
+    }
+  }, c.topVerticals[0])), /*#__PURE__*/React.createElement("td", {
     style: tdStyle
   }, c.topVerticals && c.topVerticals.length > 1 ? /*#__PURE__*/React.createElement("span", {
     style: {
@@ -10133,7 +10871,7 @@ function VIPCreatorDashboard() {
       color: M.purpleLight,
       marginBottom: 10
     }
-  }, "Creator Lifecycle Phases"), /*#__PURE__*/React.createElement("div", {
+  }, "VIP Management Pipeline  Live from HubSpot"), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       gap: 12,
@@ -10141,61 +10879,33 @@ function VIPCreatorDashboard() {
       flexWrap: "wrap"
     }
   }, (() => {
-    const getMonthNum = m => parseInt(m.match(/\d+/)?.[0] || 0);
-    const phases = [{
-      key: "ramp",
-      label: "Ramp Up (M1-2)",
-      color: M.blue,
-      filter: c => {
-        const m = getMonthNum(c.month);
-        return m >= 1 && m <= 2;
-      }
-    }, {
-      key: "eval",
-      label: "Evaluation (M3-4)",
-      color: M.purple,
-      filter: c => {
-        const m = getMonthNum(c.month);
-        return m >= 3 && m <= 4;
-      }
-    }, {
-      key: "growth",
-      label: "Growth (M5-6)",
-      color: M.green,
-      filter: c => {
-        const m = getMonthNum(c.month);
-        return m >= 5 && m <= 6;
-      }
-    }, {
-      key: "mature",
-      label: "Mature (M7+)",
-      color: M.gold,
-      filter: c => {
-        const m = getMonthNum(c.month);
-        return m >= 7;
-      }
-    }, {
-      key: "inactive",
-      label: "Inactive (0 Week)",
-      color: M.red,
-      filter: c => c.weekCgmv === 0
-    }];
-    const phaseCounts = phases.map(p => ({
-      ...p,
-      creators: creators.filter(p.filter),
-      count: creators.filter(p.filter).length
-    }));
-    return phaseCounts.map(p => /*#__PURE__*/React.createElement("div", {
-      key: p.key,
-      onClick: () => setDrillPhase(drillPhase === p.key ? null : p.key),
+    const STAGE_ORDER = ["Week 1", "Week 2", "Week 3", "Week 4", "Month 2", "Month 3", "Month 4", "Month 5", "Month 6", "Complete", "Disqualified"];
+    const STAGE_COLORS = {
+      "Week 1": M.blue,
+      "Week 2": "#60A5FA",
+      "Week 3": "#818CF8",
+      "Week 4": M.purple,
+      "Month 2": M.green,
+      "Month 3": "#34D399",
+      "Month 4": "#FBBF24",
+      "Month 5": M.gold,
+      "Month 6": "#F97316",
+      "Complete": M.textMuted,
+      "Disqualified": M.red
+    };
+    const stageCounts = {};
+    STAGE_ORDER.forEach(s => stageCounts[s] = VIP_MGMT_RAW.filter(d => d.stage === s).length);
+    return STAGE_ORDER.filter(s => stageCounts[s] > 0).map(s => /*#__PURE__*/React.createElement("div", {
+      key: s,
+      onClick: () => setDrillPhase(drillPhase === s ? null : s),
       style: {
-        flex: "1 1 180px",
-        background: drillPhase === p.key ? `${p.color}15` : M.bgCard,
+        flex: "1 1 120px",
+        background: drillPhase === s ? `${STAGE_COLORS[s]}15` : M.bgCard,
         borderRadius: 12,
-        padding: 16,
-        border: `1px solid ${drillPhase === p.key ? p.color : M.border}`,
+        padding: 14,
+        border: `1px solid ${drillPhase === s ? STAGE_COLORS[s] : M.border}`,
         cursor: "pointer",
-        borderLeft: `4px solid ${p.color}`,
+        borderLeft: `4px solid ${STAGE_COLORS[s]}`,
         transition: "all 0.2s"
       }
     }, /*#__PURE__*/React.createElement("div", {
@@ -10204,67 +10914,119 @@ function VIPCreatorDashboard() {
         color: M.textMuted,
         fontWeight: 600
       }
-    }, p.label), /*#__PURE__*/React.createElement("div", {
+    }, s), /*#__PURE__*/React.createElement("div", {
       style: {
-        fontSize: 28,
+        fontSize: 24,
         fontWeight: 800,
-        color: p.color,
+        color: STAGE_COLORS[s],
         marginTop: 4
       }
-    }, p.count), /*#__PURE__*/React.createElement("div", {
+    }, stageCounts[s]), /*#__PURE__*/React.createElement("div", {
       style: {
-        fontSize: 10,
+        fontSize: 9,
         color: M.textLight,
         marginTop: 2
       }
-    }, "creators  click to drill")));
-  })()), (() => {
-    const getMonthNum = m => parseInt(m.match(/\d+/)?.[0] || 0);
-    const phases = [{
-      key: "ramp",
-      label: "Ramp Up (M1-2)",
-      color: M.blue,
-      filter: c => {
-        const m = getMonthNum(c.month);
-        return m >= 1 && m <= 2;
+    }, "click to drill")));
+  })()), /*#__PURE__*/React.createElement(Card, {
+    style: {
+      marginBottom: 20
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      fontWeight: 700,
+      marginBottom: 14,
+      color: M.text
+    }
+  }, "AM Workload"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 16,
+      flexWrap: "wrap"
+    }
+  }, (() => {
+    const amData = {};
+    VIP_MGMT_RAW.forEach(d => {
+      if (!amData[d.am]) amData[d.am] = {
+        total: 0,
+        activation: 0,
+        managed: 0,
+        complete: 0,
+        bonus: 0
+      };
+      amData[d.am].total++;
+      amData[d.am].bonus += d.bonus || 0;
+      if (d.stage.startsWith("Week")) amData[d.am].activation++;else if (d.stage === "Complete" || d.stage === "Disqualified") amData[d.am].complete++;else amData[d.am].managed++;
+    });
+    return Object.entries(amData).map(([am, data]) => /*#__PURE__*/React.createElement("div", {
+      key: am,
+      style: {
+        flex: "1 1 200px",
+        background: M.bgCardAlt,
+        borderRadius: 12,
+        padding: 16,
+        border: `1px solid ${M.border}`
       }
-    }, {
-      key: "eval",
-      label: "Evaluation (M3-4)",
-      color: M.purple,
-      filter: c => {
-        const m = getMonthNum(c.month);
-        return m >= 3 && m <= 4;
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 8
       }
-    }, {
-      key: "growth",
-      label: "Growth (M5-6)",
-      color: M.green,
-      filter: c => {
-        const m = getMonthNum(c.month);
-        return m >= 5 && m <= 6;
+    }, /*#__PURE__*/React.createElement(AmBadge, {
+      am: am
+    }), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 22,
+        fontWeight: 800,
+        color: M.text
       }
-    }, {
-      key: "mature",
-      label: "Mature (M7+)",
-      color: M.gold,
-      filter: c => {
-        const m = getMonthNum(c.month);
-        return m >= 7;
+    }, data.total)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 10,
+        color: M.textMuted
       }
-    }, {
-      key: "inactive",
-      label: "Inactive (0 Week)",
-      color: M.red,
-      filter: c => c.weekCgmv === 0
-    }];
-    const phaseCounts = phases.map(p => ({
-      ...p,
-      creators: creators.filter(p.filter),
-      count: creators.filter(p.filter).length
-    }));
-    const drillData = drillPhase ? phaseCounts.find(p => p.key === drillPhase) : null;
-    return drillData ? /*#__PURE__*/React.createElement(Card, {
+    }, data.activation > 0 && /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: M.blue
+      }
+    }, data.activation, " activating"), data.activation > 0 && data.managed > 0 && "  ", data.managed > 0 && /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: M.green
+      }
+    }, data.managed, " managed"), (data.activation > 0 || data.managed > 0) && data.complete > 0 && "  ", data.complete > 0 && /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: M.textMuted
+      }
+    }, data.complete, " done")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 10,
+        color: M.gold,
+        marginTop: 4
+      }
+    }, "Bonus paid: ", fmt(data.bonus))));
+  })())), (() => {
+    if (!drillPhase) return null;
+    const STAGE_COLORS = {
+      "Week 1": M.blue,
+      "Week 2": "#60A5FA",
+      "Week 3": "#818CF8",
+      "Week 4": M.purple,
+      "Month 2": M.green,
+      "Month 3": "#34D399",
+      "Month 4": "#FBBF24",
+      "Month 5": M.gold,
+      "Month 6": "#F97316",
+      "Complete": M.textMuted,
+      "Disqualified": M.red
+    };
+    const stageCreators = VIP_MGMT_RAW.filter(d => d.stage === drillPhase);
+    if (stageCreators.length === 0) return null;
+    const stageColor = STAGE_COLORS[drillPhase] || M.text;
+    const isActivation = drillPhase.startsWith("Week");
+    return /*#__PURE__*/React.createElement(Card, {
       style: {
         marginBottom: 20
       }
@@ -10273,9 +11035,9 @@ function VIPCreatorDashboard() {
         fontSize: 13,
         fontWeight: 700,
         marginBottom: 14,
-        color: drillData.color
+        color: stageColor
       }
-    }, drillData.label, "  ", drillData.count, " Creators"), /*#__PURE__*/React.createElement("div", {
+    }, drillPhase, "  ", stageCreators.length, " Creators"), /*#__PURE__*/React.createElement("div", {
       style: {
         overflowX: "auto"
       }
@@ -10292,19 +11054,17 @@ function VIPCreatorDashboard() {
       style: thStyle
     }, "Creator"), /*#__PURE__*/React.createElement("th", {
       style: thStyle
-    }, "Month"), /*#__PURE__*/React.createElement("th", {
-      style: thStyle
-    }, "Risk"), /*#__PURE__*/React.createElement("th", {
-      style: thStyle
     }, "AM"), /*#__PURE__*/React.createElement("th", {
       style: thStyle
-    }, "Week cGMV"), /*#__PURE__*/React.createElement("th", {
+    }, "Bonus"), isActivation && /*#__PURE__*/React.createElement("th", {
       style: thStyle
-    }, "WoW %"), /*#__PURE__*/React.createElement("th", {
+    }, "W1"), isActivation && /*#__PURE__*/React.createElement("th", {
       style: thStyle
-    }, "Bonus Paid"), /*#__PURE__*/React.createElement("th", {
+    }, "W2"), isActivation && /*#__PURE__*/React.createElement("th", {
       style: thStyle
-    }, "Total Payout"))), /*#__PURE__*/React.createElement("tbody", null, drillData.creators.sort((a, b) => b.weekCgmv - a.weekCgmv).map((c, idx) => /*#__PURE__*/React.createElement("tr", {
+    }, "W3"), isActivation && /*#__PURE__*/React.createElement("th", {
+      style: thStyle
+    }, "W4"))), /*#__PURE__*/React.createElement("tbody", null, stageCreators.map((c, idx) => /*#__PURE__*/React.createElement("tr", {
       key: idx,
       style: {
         borderBottom: `1px solid ${M.borderLight}`,
@@ -10314,34 +11074,38 @@ function VIPCreatorDashboard() {
       style: tdStyle
     }, /*#__PURE__*/React.createElement("strong", null, c.name)), /*#__PURE__*/React.createElement("td", {
       style: tdStyle
-    }, /*#__PURE__*/React.createElement("span", {
-      style: {
-        color: drillData.color,
-        fontWeight: 600
-      }
-    }, c.month)), /*#__PURE__*/React.createElement("td", {
-      style: tdStyle
-    }, /*#__PURE__*/React.createElement(RiskBadge, {
-      risk: c.risk
-    })), /*#__PURE__*/React.createElement("td", {
-      style: tdStyle
     }, /*#__PURE__*/React.createElement(AmBadge, {
       am: c.am
     })), /*#__PURE__*/React.createElement("td", {
       style: {
         ...tdStyle,
-        color: c.weekCgmv > 0 ? M.green : M.textMuted
+        color: c.bonus > 0 ? M.gold : M.textMuted
       }
-    }, fmt(c.weekCgmv)), /*#__PURE__*/React.createElement("td", {
+    }, c.bonus > 0 ? `$${c.bonus}` : ""), isActivation && /*#__PURE__*/React.createElement("td", {
       style: {
         ...tdStyle,
-        color: c.wowCgmv >= 0 ? M.green : M.red
+        textAlign: "center",
+        color: c.w1 ? M.green : M.textMuted
       }
-    }, c.wowCgmv.toFixed(1), "%"), /*#__PURE__*/React.createElement("td", {
-      style: tdStyle
-    }, fmt(c.bonusPayout)), /*#__PURE__*/React.createElement("td", {
-      style: tdStyle
-    }, fmt(c.totalPayout)))))))) : null;
+    }, c.w1 ? "" : ""), isActivation && /*#__PURE__*/React.createElement("td", {
+      style: {
+        ...tdStyle,
+        textAlign: "center",
+        color: c.w2 ? M.green : M.textMuted
+      }
+    }, c.w2 ? "" : ""), isActivation && /*#__PURE__*/React.createElement("td", {
+      style: {
+        ...tdStyle,
+        textAlign: "center",
+        color: c.w3 ? M.green : M.textMuted
+      }
+    }, c.w3 ? "" : ""), isActivation && /*#__PURE__*/React.createElement("td", {
+      style: {
+        ...tdStyle,
+        textAlign: "center",
+        color: c.w4 ? M.green : M.textMuted
+      }
+    }, c.w4 ? "" : "")))))));
   })(), /*#__PURE__*/React.createElement(Card, {
     style: {
       marginBottom: 20
@@ -10353,170 +11117,136 @@ function VIPCreatorDashboard() {
       marginBottom: 14,
       color: M.text
     }
-  }, "Bonus Achievement Tracking"), /*#__PURE__*/React.createElement("div", {
+  }, "Activation Summary"), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "grid",
-      gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+      gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
       gap: 12
     }
-  }, [{
-    label: "Total Bonus Paid",
-    value: fmt(creators.reduce((s, c) => s + (c.bonusPayout || 0), 0)),
-    color: M.gold
-  }, {
-    label: "Avg Bonus/Creator",
-    value: fmt(creators.reduce((s, c) => s + (c.bonusPayout || 0), 0) / creators.length),
-    color: M.gold
-  }, {
-    label: "Total Payout (All)",
-    value: fmt(creators.reduce((s, c) => s + (c.totalPayout || 0), 0)),
-    color: M.purple
-  }, {
-    label: "Bonus ROI (cGMV:Bonus)",
-    value: `1:${(creators.reduce((s, c) => s + c.allTimeCgmv, 0) / Math.max(1, creators.reduce((s, c) => s + (c.bonusPayout || 0), 0)) || 0).toFixed(0)}`,
-    color: M.green
-  }, {
-    label: "Creators w/ Bonus",
-    value: creators.filter(c => c.bonusPayout > 0).length,
-    color: M.blue
-  }, {
-    label: "Creators w/o Bonus",
-    value: creators.filter(c => !c.bonusPayout || c.bonusPayout === 0).length,
-    color: M.textMuted
-  }].map((s, i) => /*#__PURE__*/React.createElement("div", {
-    key: i,
-    style: {
-      background: M.bgCardAlt,
-      borderRadius: 12,
-      padding: 14,
-      border: `1px solid ${M.border}`,
-      borderLeft: `3px solid ${s.color}`
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 10,
-      color: M.textMuted,
-      fontWeight: 600
-    }
-  }, s.label), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 20,
-      fontWeight: 800,
-      color: s.color,
-      marginTop: 4
-    }
-  }, s.value))))), /*#__PURE__*/React.createElement(Card, {
-    style: {
-      marginBottom: 20
-    }
-  }, /*#__PURE__*/React.createElement("div", {
+  }, (() => {
+    const active = VIP_MGMT_RAW.filter(d => d.stage !== "Complete" && d.stage !== "Disqualified");
+    const inActivation = VIP_MGMT_RAW.filter(d => d.stage.startsWith("Week"));
+    const totalBonus = VIP_MGMT_RAW.reduce((s, d) => s + (d.bonus || 0), 0);
+    const avgBonus = active.length > 0 ? totalBonus / active.length : 0;
+    const bonusPaidCount = VIP_MGMT_RAW.filter(d => d.bonus > 0).length;
+    return [{
+      label: "Total Managed VIPs",
+      value: VIP_MGMT_RAW.length,
+      color: M.purple
+    }, {
+      label: "Active (excl. Complete)",
+      value: active.length,
+      color: M.green
+    }, {
+      label: "In Activation (Wk 1-4)",
+      value: inActivation.length,
+      color: M.blue
+    }, {
+      label: "Total Bonus Paid",
+      value: fmt(totalBonus),
+      color: M.gold
+    }, {
+      label: "Avg Bonus/Creator",
+      value: fmt(avgBonus),
+      color: M.gold
+    }, {
+      label: "Creators w/ Bonus",
+      value: `${bonusPaidCount}/${VIP_MGMT_RAW.length}`,
+      color: M.green
+    }].map((s, i) => /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: {
+        background: M.bgCardAlt,
+        borderRadius: 12,
+        padding: 14,
+        border: `1px solid ${M.border}`,
+        borderLeft: `3px solid ${s.color}`
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 10,
+        color: M.textMuted,
+        fontWeight: 600
+      }
+    }, s.label), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 20,
+        fontWeight: 800,
+        color: s.color,
+        marginTop: 4
+      }
+    }, s.value)));
+  })())), /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 13,
       fontWeight: 700,
       marginBottom: 14,
       color: M.text
     }
-  }, "Tier Target Progress"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      overflowX: "auto"
-    }
-  }, /*#__PURE__*/React.createElement("table", {
-    style: {
-      width: "100%",
-      borderCollapse: "collapse"
-    }
-  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", {
-    style: {
-      borderBottom: `1px solid ${M.border}`
-    }
-  }, /*#__PURE__*/React.createElement("th", {
-    style: thStyle
-  }, "Creator"), /*#__PURE__*/React.createElement("th", {
-    style: thStyle
-  }, "Month"), /*#__PURE__*/React.createElement("th", {
-    style: thStyle
-  }, "All-Time cGMV"), /*#__PURE__*/React.createElement("th", {
-    style: thStyle
-  }, "Tier 1 Target"), /*#__PURE__*/React.createElement("th", {
-    style: thStyle
-  }, "Tier 2 Target"), /*#__PURE__*/React.createElement("th", {
-    style: thStyle
-  }, "Tier 3 Target"), /*#__PURE__*/React.createElement("th", {
-    style: thStyle
-  }, "Status"))), /*#__PURE__*/React.createElement("tbody", null, creators.filter(c => c.tier1Target > 0).sort((a, b) => b.allTimeCgmv - a.allTimeCgmv).slice(0, 20).map((c, idx) => {
-    const pct = c.tier3Target > 0 ? c.allTimeCgmv / c.tier3Target * 100 : 0;
-    const statusColor = pct >= 100 ? M.green : pct >= 50 ? M.gold : M.red;
-    return /*#__PURE__*/React.createElement("tr", {
-      key: idx,
-      style: {
-        borderBottom: `1px solid ${M.borderLight}`,
-        background: idx % 2 === 0 ? M.bgCard : M.bgCardAlt
-      }
-    }, /*#__PURE__*/React.createElement("td", {
-      style: tdStyle
-    }, /*#__PURE__*/React.createElement("strong", null, c.name)), /*#__PURE__*/React.createElement("td", {
-      style: tdStyle
-    }, c.month), /*#__PURE__*/React.createElement("td", {
-      style: tdStyle
-    }, fmt(c.allTimeCgmv)), /*#__PURE__*/React.createElement("td", {
-      style: {
-        ...tdStyle,
-        color: c.allTimeCgmv >= c.tier1Target ? M.green : M.textMuted
-      }
-    }, fmt(c.tier1Target), " ", c.allTimeCgmv >= c.tier1Target ? "" : ""), /*#__PURE__*/React.createElement("td", {
-      style: {
-        ...tdStyle,
-        color: c.allTimeCgmv >= c.tier2Target ? M.green : M.textMuted
-      }
-    }, fmt(c.tier2Target), " ", c.allTimeCgmv >= c.tier2Target ? "" : ""), /*#__PURE__*/React.createElement("td", {
-      style: {
-        ...tdStyle,
-        color: c.allTimeCgmv >= c.tier3Target ? M.green : M.textMuted
-      }
-    }, fmt(c.tier3Target), " ", c.allTimeCgmv >= c.tier3Target ? "" : ""), /*#__PURE__*/React.createElement("td", {
-      style: tdStyle
-    }, /*#__PURE__*/React.createElement("span", {
-      style: {
-        color: statusColor,
-        fontWeight: 700,
-        fontSize: 11
-      }
-    }, pct.toFixed(0), "%")));
-  }))))), /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 13,
-      fontWeight: 700,
-      marginBottom: 14,
-      color: M.text
-    }
-  }, "Risk Status Definitions"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "grid",
-      gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-      gap: 12
-    }
-  }, Object.entries(RISK_MAP).map(([key, risk]) => /*#__PURE__*/React.createElement("div", {
-    key: key,
-    style: {
-      background: `${risk.text}10`,
-      borderRadius: 10,
-      padding: 12,
-      border: `1px solid ${risk.text}30`
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      color: risk.text,
-      fontWeight: 700,
-      fontSize: 11
-    }
-  }, risk.label), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 10,
-      color: M.textMuted,
-      marginTop: 4,
-      lineHeight: 1.5
-    }
-  }, key === "good-standing" && "Week cGMV > 0 AND WoW >= -10%", key === "tracking-up" && "WoW > 20% AND Week cGMV > 0", key === "tracking-down" && "WoW < -20% AND Week cGMV > 0", key === "medium-risk" && "WoW < -30% OR (Zero week & prior week > 0)", key === "high-risk" && "Zero cGMV both weeks", key === "contract-complete" && "Contract end date in past")))))), tab === "Walmart HQ" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+  }, "VIP Lifecycle Funnel"), (() => {
+    const STAGE_ORDER = ["Week 1", "Week 2", "Week 3", "Week 4", "Month 2", "Month 3", "Month 4", "Month 5", "Month 6", "Complete"];
+    const STAGE_COLORS = {
+      "Week 1": M.blue,
+      "Week 2": "#60A5FA",
+      "Week 3": "#818CF8",
+      "Week 4": M.purple,
+      "Month 2": M.green,
+      "Month 3": "#34D399",
+      "Month 4": "#FBBF24",
+      "Month 5": M.gold,
+      "Month 6": "#F97316",
+      "Complete": M.textMuted
+    };
+    const maxCount = Math.max(...STAGE_ORDER.map(s => VIP_MGMT_RAW.filter(d => d.stage === s).length));
+    return STAGE_ORDER.map(s => {
+      const count = VIP_MGMT_RAW.filter(d => d.stage === s).length;
+      if (count === 0) return null;
+      const pct = maxCount > 0 ? count / maxCount * 100 : 0;
+      return /*#__PURE__*/React.createElement("div", {
+        key: s,
+        style: {
+          display: "flex",
+          alignItems: "center",
+          marginBottom: 6
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 80,
+          fontSize: 10,
+          color: M.textMuted,
+          fontWeight: 600,
+          textAlign: "right",
+          paddingRight: 10
+        }
+      }, s), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flex: 1,
+          background: M.bgCardAlt,
+          borderRadius: 6,
+          height: 24,
+          position: "relative",
+          overflow: "hidden"
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: `${pct}%`,
+          height: "100%",
+          background: STAGE_COLORS[s],
+          borderRadius: 6,
+          transition: "width 0.5s"
+        }
+      }), /*#__PURE__*/React.createElement("span", {
+        style: {
+          position: "absolute",
+          left: 8,
+          top: 4,
+          fontSize: 10,
+          fontWeight: 700,
+          color: "#fff"
+        }
+      }, count)));
+    });
+  })())), tab === "Walmart HQ" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 14,
       fontWeight: 700,
@@ -10588,8 +11318,7 @@ function VIPCreatorDashboard() {
     }
   }, "This tab shows Walmart-specific creator leaderboards. For detailed product conversion rates, category breakdowns, and seasonal trends, integrate Domo product-level CSVs. HubSpot provides aggregate brand data; Domo SKU-level insights unlock strategic opportunities.")))));
 }
-
-ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(VIPCreatorDashboard));
-    </script>
+  ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(VIPCreatorDashboard));
+  </script>
 </body>
 </html>
