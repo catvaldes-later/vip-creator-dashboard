@@ -1,26 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VIP Creator Intelligence | Mavely</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/prop-types@15/prop-types.min.js" crossorigin></script>
-  <script src="https://cdn.jsdelivr.net/npm/recharts@2.12.7/umd/Recharts.min.js" crossorigin></script>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #0B0B11; font-family: 'Inter', -apple-system, sans-serif; }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #14141E; }
-    ::-webkit-scrollbar-thumb { background: #2A2A3C; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #3A3A5C; }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VIP Creator Intelligence Dashboard</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0B0B11; color: #F1F1F5; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #14141E; }
+  ::-webkit-scrollbar-thumb { background: #2A2A3C; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #A855F7; }
+</style>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/prop-types@15/prop-types.min.js"></script>
+<script crossorigin src="https://cdn.jsdelivr.net/npm/recharts@2.12.7/umd/Recharts.min.js"></script>
 </head>
 <body>
-  <div id="root"></div>
-  <script>
+<div id="root"></div>
+<script>
 const {
   useState,
   useMemo,
@@ -44,7 +43,8 @@ const {
   Area,
   LineChart,
   Line,
-  ComposedChart
+  ComposedChart,
+  LabelList
 } = Recharts;
 
 // ═══ DARK MODE THEME ═══
@@ -12703,7 +12703,8 @@ const parseCreators = rawData => {
       tier2Target: parseFloat(props.mvp_period_2_c_gmv_target) || 0,
       tier3Target: parseFloat(props.mvp_period_3_c_gmv_target) || 0,
       cgmv30d: parseFloat(props.gmv_last_30_days) || 0,
-      cgmv90d: parseFloat(props.gmv_last_90_days) || 0
+      cgmv90d: parseFloat(props.gmv_last_90_days) || 0,
+      convRate: parseFloat(props.conversion_rate_last_7_days) || 0
     };
   });
 };
@@ -13626,7 +13627,6 @@ const fmt = v => v >= 1e6 ? `$${(v / 1e6).toFixed(1)}M` : v >= 1000 ? `$${(v / 1
 // ═══ MAIN DASHBOARD ═══
 function Dashboard() {
   const [tab, setTab] = useState("Overview");
-  const [drillPhase, setDrillPhase] = useState(null);
   const [riskFilter, setRiskFilter] = useState("all");
   const [catFilter, setCatFilter] = useState("all");
   const [amFilter, setAmFilter] = useState("all");
@@ -13776,7 +13776,7 @@ function Dashboard() {
       background: M.bgCard,
       overflowX: "auto"
     }
-  }, ["Overview", "Creator Deep Dive", "VIP Pipeline", "Campaigns", "Activation Playbook", "Walmart HQ"].map(t => /*#__PURE__*/React.createElement("button", {
+  }, ["Overview", "Creator Deep Dive", "VIP Leads Pipeline", "VIP Deals Pipeline", "Campaigns", "Walmart HQ"].map(t => /*#__PURE__*/React.createElement("button", {
     key: t,
     onClick: () => setTab(t),
     style: {
@@ -14184,86 +14184,16 @@ function Dashboard() {
         fontWeight: 700
       }
     }, b)))));
-  })))))), "}", tab === "VIP Pipeline" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+  })))))), "}", tab === "VIP Leads Pipeline" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     style: {
-      display: "flex",
-      gap: 12,
-      marginBottom: 20,
-      flexWrap: "wrap"
-    }
-  }, /*#__PURE__*/React.createElement(MiniStat, {
-    label: "Active Pipeline",
-    value: pipelineStats.active,
-    sub: "Call Set + Negotiating + Sent",
-    accent: M.blue
-  }), /*#__PURE__*/React.createElement(MiniStat, {
-    label: "Closed Won (Q1)",
-    value: pipelineStats.closedWonQ,
-    accent: M.green
-  }), /*#__PURE__*/React.createElement(MiniStat, {
-    label: "VIP Prospects (Ivana)",
-    value: VIP_LEADS_RAW.length,
-    sub: "Active leads",
-    accent: M.orange
-  })), /*#__PURE__*/React.createElement(Card, {
-    style: {
-      marginBottom: 20
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 13,
+      fontSize: 14,
       fontWeight: 700,
-      marginBottom: 14,
-      color: M.text
+      color: M.purpleLight,
+      marginBottom: 16
     }
-  }, "VIP Acquisition Funnel"), /*#__PURE__*/React.createElement(ResponsiveContainer, {
-    width: "100%",
-    height: 280
-  }, /*#__PURE__*/React.createElement(BarChart, {
-    data: [{
-      stage: "Call Set",
-      count: deals.filter(d => d.stage === "Call Set").length
-    }, {
-      stage: "Negotiating",
-      count: deals.filter(d => d.stage === "Negotiating").length
-    }, {
-      stage: "Contract Sent",
-      count: deals.filter(d => d.stage === "Contract Sent").length
-    }, {
-      stage: "Closed Won",
-      count: deals.filter(d => d.stage === "Closed Won").length
-    }]
-  }, /*#__PURE__*/React.createElement(CartesianGrid, {
-    strokeDasharray: "3 3",
-    stroke: M.border
-  }), /*#__PURE__*/React.createElement(XAxis, {
-    dataKey: "stage",
-    stroke: M.textLight,
-    fontSize: 10
-  }), /*#__PURE__*/React.createElement(YAxis, {
-    stroke: M.textLight,
-    fontSize: 10
-  }), /*#__PURE__*/React.createElement(Tooltip, {
-    contentStyle: {
-      background: M.bgCard,
-      border: `1px solid ${M.border}`,
-      borderRadius: 8,
-      color: M.text
-    }
-  }), /*#__PURE__*/React.createElement(Bar, {
-    dataKey: "count",
-    fill: M.purple,
-    radius: [6, 6, 0, 0]
-  })))), /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
+  }, "VIP Leads Pipeline \u2014 Ivana's Prospects (", VIP_LEADS_RAW.length, ")"), /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 13,
-      fontWeight: 700,
-      marginBottom: 14,
-      color: M.text
-    }
-  }, "VIP Prospects & Leads"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      maxHeight: 400,
+      maxHeight: 600,
       overflowY: "auto",
       borderRadius: 8
     }
@@ -14330,12 +14260,20 @@ function Dashboard() {
       }
     }, lead.owner)), /*#__PURE__*/React.createElement("td", {
       style: tdStyle
-    }, /*#__PURE__*/React.createElement("span", {
+    }, lead.social ? /*#__PURE__*/React.createElement("a", {
+      href: lead.social.startsWith("http") ? lead.social : `https://instagram.com/${lead.social.replace("@", "")}`,
+      target: "_blank",
+      rel: "noopener",
       style: {
         fontSize: 10,
-        color: M.blue
+        color: M.blue,
+        textDecoration: "none"
       }
-    }, lead.social)), /*#__PURE__*/React.createElement("td", {
+    }, lead.social) : /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: M.textMuted
+      }
+    }, "\u2014")), /*#__PURE__*/React.createElement("td", {
       style: tdStyle
     }, /*#__PURE__*/React.createElement("span", {
       style: {
@@ -14343,7 +14281,144 @@ function Dashboard() {
         color: M.textLight
       }
     }, lead.created)));
-  })))))), "}", tab === "Campaigns" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+  })))))), tab === "VIP Deals Pipeline" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      fontWeight: 700,
+      color: M.purpleLight,
+      marginBottom: 16
+    }
+  }, "VIP Deals Pipeline \u2014 Lauren's Acquisition"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 12,
+      marginBottom: 20,
+      flexWrap: "wrap"
+    }
+  }, (() => {
+    const STAGE_ORDER = ["Contract Sent", "Negotiating", "Call Set", "Closed Won", "Closed Lost"];
+    const STAGE_COLORS = {
+      "Contract Sent": M.orange,
+      "Negotiating": M.purple,
+      "Call Set": M.blue,
+      "Closed Won": M.green,
+      "Closed Lost": M.red
+    };
+    const now = new Date("2026-02-25");
+    const qStart = new Date(now.getFullYear(), Math.floor(now.getMonth() / 3) * 3, 1);
+    return STAGE_ORDER.map(s => {
+      const count = s === "Closed Won" || s === "Closed Lost" ? deals.filter(d => d.stage === s && d.closeDate && d.closeDate >= qStart).length : deals.filter(d => d.stage === s).length;
+      return /*#__PURE__*/React.createElement("div", {
+        key: s,
+        style: {
+          flex: "1 1 140px",
+          background: M.bgCard,
+          borderRadius: 12,
+          padding: 14,
+          border: `1px solid ${M.border}`,
+          borderLeft: `4px solid ${STAGE_COLORS[s]}`
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: 10,
+          color: M.textMuted,
+          fontWeight: 600
+        }
+      }, s), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: 24,
+          fontWeight: 800,
+          color: STAGE_COLORS[s],
+          marginTop: 4
+        }
+      }, count));
+    });
+  })()), /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxHeight: 600,
+      overflowY: "auto",
+      borderRadius: 8
+    }
+  }, /*#__PURE__*/React.createElement("table", {
+    style: {
+      width: "100%",
+      borderCollapse: "collapse"
+    }
+  }, /*#__PURE__*/React.createElement("thead", {
+    style: {
+      position: "sticky",
+      top: 0,
+      background: M.bgCard,
+      zIndex: 1
+    }
+  }, /*#__PURE__*/React.createElement("tr", {
+    style: {
+      borderBottom: `1px solid ${M.border}`
+    }
+  }, /*#__PURE__*/React.createElement("th", {
+    style: thStyle
+  }, "Creator / Deal"), /*#__PURE__*/React.createElement("th", {
+    style: thStyle
+  }, "Stage"), /*#__PURE__*/React.createElement("th", {
+    style: thStyle
+  }, "Amount"), /*#__PURE__*/React.createElement("th", {
+    style: thStyle
+  }, "Last Updated"))), /*#__PURE__*/React.createElement("tbody", null, (() => {
+    const STAGE_PRIORITY = {
+      "Contract Sent": 1,
+      "Negotiating": 2,
+      "Call Set": 3,
+      "Closed Won": 4,
+      "Closed Lost": 5
+    };
+    const STAGE_COLORS = {
+      "Contract Sent": M.orange,
+      "Negotiating": M.purple,
+      "Call Set": M.blue,
+      "Closed Won": M.green,
+      "Closed Lost": M.red
+    };
+    const now = new Date("2026-02-25");
+    const qStart = new Date(now.getFullYear(), Math.floor(now.getMonth() / 3) * 3, 1);
+    const filtered = deals.filter(d => {
+      if (d.stage === "Closed Won" || d.stage === "Closed Lost") {
+        return d.closeDate && d.closeDate >= qStart;
+      }
+      return true;
+    }).sort((a, b) => (STAGE_PRIORITY[a.stage] || 99) - (STAGE_PRIORITY[b.stage] || 99));
+    return filtered.map((d, idx) => {
+      const sc = STAGE_COLORS[d.stage] || M.textMuted;
+      return /*#__PURE__*/React.createElement("tr", {
+        key: idx,
+        style: {
+          borderBottom: `1px solid ${M.borderLight}`,
+          background: idx % 2 === 0 ? M.bgCard : M.bgCardAlt
+        }
+      }, /*#__PURE__*/React.createElement("td", {
+        style: tdStyle
+      }, /*#__PURE__*/React.createElement("strong", null, d.name)), /*#__PURE__*/React.createElement("td", {
+        style: tdStyle
+      }, /*#__PURE__*/React.createElement("span", {
+        style: {
+          background: `${sc}20`,
+          color: sc,
+          padding: "2px 8px",
+          borderRadius: 6,
+          fontSize: 9,
+          fontWeight: 700
+        }
+      }, d.stage)), /*#__PURE__*/React.createElement("td", {
+        style: tdStyle
+      }, d.amount > 0 ? fmt(d.amount) : "—"), /*#__PURE__*/React.createElement("td", {
+        style: tdStyle
+      }, /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: 10,
+          color: M.textLight
+        }
+      }, d.lastModified ? d.lastModified.toLocaleDateString() : "—")));
+    });
+  })()))))), "}", tab === "Campaigns" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 14,
       fontWeight: 700,
@@ -14430,329 +14505,21 @@ function Dashboard() {
     style: tdStyle
   }, /*#__PURE__*/React.createElement(RiskBadge, {
     risk: c.risk
-  }))))))))), "}", tab === "Activation Playbook" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 14,
-      fontWeight: 700,
-      color: M.purpleLight,
-      marginBottom: 10
-    }
-  }, "Activation Playbook \u2014 First 30 Days"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 12,
-      marginBottom: 20,
-      flexWrap: "wrap"
-    }
-  }, (() => {
-    const WEEKS = ["Week 1", "Week 2", "Week 3", "Week 4"];
-    const WEEK_COLORS = {
-      "Week 1": M.blue,
-      "Week 2": "#60A5FA",
-      "Week 3": "#818CF8",
-      "Week 4": M.purple
-    };
-    return WEEKS.map(w => {
-      const count = VIP_MGMT_RAW.filter(d => d.stage === w).length;
-      return /*#__PURE__*/React.createElement("div", {
-        key: w,
-        onClick: () => setDrillPhase(drillPhase === w ? null : w),
-        style: {
-          flex: "1 1 180px",
-          background: drillPhase === w ? `${WEEK_COLORS[w]}15` : M.bgCard,
-          borderRadius: 12,
-          padding: 16,
-          border: `1px solid ${drillPhase === w ? WEEK_COLORS[w] : M.border}`,
-          cursor: "pointer",
-          borderLeft: `4px solid ${WEEK_COLORS[w]}`,
-          transition: "all 0.2s"
-        }
-      }, /*#__PURE__*/React.createElement("div", {
-        style: {
-          fontSize: 11,
-          color: M.textMuted,
-          fontWeight: 600
-        }
-      }, w), /*#__PURE__*/React.createElement("div", {
-        style: {
-          fontSize: 28,
-          fontWeight: 800,
-          color: WEEK_COLORS[w],
-          marginTop: 4
-        }
-      }, count), /*#__PURE__*/React.createElement("div", {
-        style: {
-          fontSize: 9,
-          color: M.textLight,
-          marginTop: 2
-        }
-      }, "click to drill"));
-    });
-  })()), /*#__PURE__*/React.createElement(Card, {
-    style: {
-      marginBottom: 20
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 13,
-      fontWeight: 700,
-      marginBottom: 14,
-      color: M.text
-    }
-  }, "AM Activation Workload"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 16,
-      flexWrap: "wrap"
-    }
-  }, (() => {
-    const activationOnly = VIP_MGMT_RAW.filter(d => d.stage.startsWith("Week"));
-    const amData = {};
-    activationOnly.forEach(d => {
-      if (!amData[d.am]) amData[d.am] = {
-        total: 0,
-        bonus: 0,
-        byWeek: {
-          "Week 1": 0,
-          "Week 2": 0,
-          "Week 3": 0,
-          "Week 4": 0
-        }
-      };
-      amData[d.am].total++;
-      amData[d.am].bonus += d.bonus || 0;
-      if (amData[d.am].byWeek[d.stage] !== undefined) amData[d.am].byWeek[d.stage]++;
-    });
-    return Object.entries(amData).map(([am, data]) => /*#__PURE__*/React.createElement("div", {
-      key: am,
-      style: {
-        flex: "1 1 260px",
-        background: M.bgCardAlt,
-        borderRadius: 12,
-        padding: 16,
-        border: `1px solid ${M.border}`
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: 10
-      }
-    }, /*#__PURE__*/React.createElement(AmBadge, {
-      am: am
-    }), /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 24,
-        fontWeight: 800,
-        color: M.text
-      }
-    }, data.total)), /*#__PURE__*/React.createElement("div", {
-      style: {
-        display: "flex",
-        gap: 6,
-        marginBottom: 6
-      }
-    }, ["Week 1", "Week 2", "Week 3", "Week 4"].map(w => /*#__PURE__*/React.createElement("div", {
-      key: w,
-      style: {
-        flex: 1,
-        textAlign: "center",
-        background: M.bgCard,
-        borderRadius: 6,
-        padding: "4px 0"
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 8,
-        color: M.textLight
-      }
-    }, w.replace("Week ", "W")), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 14,
-        fontWeight: 700,
-        color: M.text
-      }
-    }, data.byWeek[w])))), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 10,
-        color: M.gold
-      }
-    }, "Bonus allocated: ", fmt(data.bonus))));
-  })())), (() => {
-    if (!drillPhase || !drillPhase.startsWith("Week")) return null;
-    const WEEK_COLORS = {
-      "Week 1": M.blue,
-      "Week 2": "#60A5FA",
-      "Week 3": "#818CF8",
-      "Week 4": M.purple
-    };
-    const stageCreators = VIP_MGMT_RAW.filter(d => d.stage === drillPhase);
-    if (stageCreators.length === 0) return null;
-    return /*#__PURE__*/React.createElement(Card, {
-      style: {
-        marginBottom: 20
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 13,
-        fontWeight: 700,
-        marginBottom: 14,
-        color: WEEK_COLORS[drillPhase]
-      }
-    }, drillPhase, " \u2014 ", stageCreators.length, " Creators"), /*#__PURE__*/React.createElement("div", {
-      style: {
-        overflowX: "auto"
-      }
-    }, /*#__PURE__*/React.createElement("table", {
-      style: {
-        width: "100%",
-        borderCollapse: "collapse"
-      }
-    }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", {
-      style: {
-        borderBottom: `1px solid ${M.border}`
-      }
-    }, /*#__PURE__*/React.createElement("th", {
-      style: thStyle
-    }, "Creator"), /*#__PURE__*/React.createElement("th", {
-      style: thStyle
-    }, "AM"), /*#__PURE__*/React.createElement("th", {
-      style: thStyle
-    }, "Bonus"), /*#__PURE__*/React.createElement("th", {
-      style: thStyle
-    }, "W1"), /*#__PURE__*/React.createElement("th", {
-      style: thStyle
-    }, "W2"), /*#__PURE__*/React.createElement("th", {
-      style: thStyle
-    }, "W3"), /*#__PURE__*/React.createElement("th", {
-      style: thStyle
-    }, "W4"))), /*#__PURE__*/React.createElement("tbody", null, stageCreators.map((c, idx) => /*#__PURE__*/React.createElement("tr", {
-      key: idx,
-      style: {
-        borderBottom: `1px solid ${M.borderLight}`,
-        background: idx % 2 === 0 ? M.bgCard : M.bgCardAlt
-      }
-    }, /*#__PURE__*/React.createElement("td", {
-      style: tdStyle
-    }, /*#__PURE__*/React.createElement("strong", null, c.name)), /*#__PURE__*/React.createElement("td", {
-      style: tdStyle
-    }, /*#__PURE__*/React.createElement(AmBadge, {
-      am: c.am
-    })), /*#__PURE__*/React.createElement("td", {
-      style: {
-        ...tdStyle,
-        color: c.bonus > 0 ? M.gold : M.textMuted
-      }
-    }, c.bonus > 0 ? `$${c.bonus}` : "—"), /*#__PURE__*/React.createElement("td", {
-      style: {
-        ...tdStyle,
-        textAlign: "center",
-        color: c.w1 ? M.green : M.textMuted
-      }
-    }, c.w1 ? "✓" : "—"), /*#__PURE__*/React.createElement("td", {
-      style: {
-        ...tdStyle,
-        textAlign: "center",
-        color: c.w2 ? M.green : M.textMuted
-      }
-    }, c.w2 ? "✓" : "—"), /*#__PURE__*/React.createElement("td", {
-      style: {
-        ...tdStyle,
-        textAlign: "center",
-        color: c.w3 ? M.green : M.textMuted
-      }
-    }, c.w3 ? "✓" : "—"), /*#__PURE__*/React.createElement("td", {
-      style: {
-        ...tdStyle,
-        textAlign: "center",
-        color: c.w4 ? M.green : M.textMuted
-      }
-    }, c.w4 ? "✓" : "—")))))));
-  })(), /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 13,
-      fontWeight: 700,
-      marginBottom: 14,
-      color: M.text
-    }
-  }, "Activation Summary"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "grid",
-      gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-      gap: 12
-    }
-  }, (() => {
-    const inActivation = VIP_MGMT_RAW.filter(d => d.stage.startsWith("Week"));
-    const totalBonus = inActivation.reduce((s, d) => s + (d.bonus || 0), 0);
-    const avgBonus = inActivation.length > 0 ? totalBonus / inActivation.length : 0;
-    const bonusPaidCount = inActivation.filter(d => d.bonus > 0).length;
-    return [{
-      label: "In Activation (Wk 1-4)",
-      value: inActivation.length,
-      color: M.blue
-    }, {
-      label: "Week 1",
-      value: VIP_MGMT_RAW.filter(d => d.stage === "Week 1").length,
-      color: M.blue
-    }, {
-      label: "Week 2",
-      value: VIP_MGMT_RAW.filter(d => d.stage === "Week 2").length,
-      color: "#60A5FA"
-    }, {
-      label: "Week 3",
-      value: VIP_MGMT_RAW.filter(d => d.stage === "Week 3").length,
-      color: "#818CF8"
-    }, {
-      label: "Week 4",
-      value: VIP_MGMT_RAW.filter(d => d.stage === "Week 4").length,
-      color: M.purple
-    }, {
-      label: "Avg Bonus/Creator",
-      value: fmt(Math.round(avgBonus)),
-      color: M.gold
-    }].map((s, i) => /*#__PURE__*/React.createElement("div", {
-      key: i,
-      style: {
-        background: M.bgCardAlt,
-        borderRadius: 12,
-        padding: 14,
-        border: `1px solid ${M.border}`,
-        borderLeft: `3px solid ${s.color}`
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 10,
-        color: M.textMuted,
-        fontWeight: 600
-      }
-    }, s.label), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 20,
-        fontWeight: 800,
-        color: s.color,
-        marginTop: 4
-      }
-    }, s.value)));
-  })()))), "}", tab === "Walmart HQ" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+  }))))))))), "}", "}", tab === "Walmart HQ" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 14,
       fontWeight: 700,
       color: M.walmart,
-      marginBottom: 10
+      marginBottom: 16
     }
-  }, "Walmart-Focused Performance"), /*#__PURE__*/React.createElement(Card, {
-    style: {
-      marginBottom: 20
-    }
-  }, /*#__PURE__*/React.createElement("div", {
+  }, "Walmart-Focused Performance"), /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 13,
       fontWeight: 700,
       marginBottom: 14,
       color: M.text
     }
-  }, "Walmart Leaderboard"), /*#__PURE__*/React.createElement("div", {
+  }, "Walmart Creator Leaderboard"), /*#__PURE__*/React.createElement("div", {
     style: {
       overflowX: "auto"
     }
@@ -14769,45 +14536,48 @@ function Dashboard() {
     style: thStyle
   }, "Creator"), /*#__PURE__*/React.createElement("th", {
     style: thStyle
+  }, "30d GMV"), /*#__PURE__*/React.createElement("th", {
+    style: thStyle
+  }, "60d GMV"), /*#__PURE__*/React.createElement("th", {
+    style: thStyle
   }, "All-Time cGMV"), /*#__PURE__*/React.createElement("th", {
     style: thStyle
-  }, "Est. Walmart $"), /*#__PURE__*/React.createElement("th", {
+  }, "Conv. Rate (7d)"), /*#__PURE__*/React.createElement("th", {
     style: thStyle
-  }, "Risk"))), /*#__PURE__*/React.createElement("tbody", null, creators.filter(c => c.topBrand === "Walmart").sort((a, b) => b.allTimeCgmv - a.allTimeCgmv).slice(0, 15).map((c, idx) => /*#__PURE__*/React.createElement("tr", {
+  }, "Risk"))), /*#__PURE__*/React.createElement("tbody", null, creators.filter(c => c.topBrand === "Walmart").sort((a, b) => b.cgmv30d - a.cgmv30d).map((c, idx) => /*#__PURE__*/React.createElement("tr", {
     key: idx,
     style: {
-      borderBottom: `1px solid ${M.borderLight}`
+      borderBottom: `1px solid ${M.borderLight}`,
+      background: idx % 2 === 0 ? M.bgCard : M.bgCardAlt
     }
   }, /*#__PURE__*/React.createElement("td", {
     style: tdStyle
   }, /*#__PURE__*/React.createElement("strong", null, c.name)), /*#__PURE__*/React.createElement("td", {
+    style: {
+      ...tdStyle,
+      color: c.cgmv30d > 0 ? M.green : M.textMuted
+    }
+  }, fmt(c.cgmv30d)), /*#__PURE__*/React.createElement("td", {
+    style: {
+      ...tdStyle,
+      color: c.cgmv60d > 0 ? M.green : M.textMuted
+    }
+  }, fmt(c.cgmv60d)), /*#__PURE__*/React.createElement("td", {
     style: tdStyle
   }, fmt(c.allTimeCgmv)), /*#__PURE__*/React.createElement("td", {
     style: tdStyle
-  }, fmt(c.allTimeCgmv * 0.75)), /*#__PURE__*/React.createElement("td", {
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: c.convRate > 0 ? M.blue : M.textMuted
+    }
+  }, c.convRate > 0 ? c.convRate.toFixed(1) + "%" : "—")), /*#__PURE__*/React.createElement("td", {
     style: tdStyle
   }, /*#__PURE__*/React.createElement(RiskBadge, {
     risk: c.risk
-  })))))))), /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 13,
-      fontWeight: 700,
-      marginBottom: 14,
-      color: M.text,
-      display: "flex",
-      alignItems: "center",
-      gap: 8
-    }
-  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCA1"), " Note: Product-level data requires Domo CSV enrichment"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 12,
-      color: M.textMuted,
-      lineHeight: 1.6
-    }
-  }, "This tab shows Walmart-specific creator leaderboards. For detailed product conversion rates, category breakdowns, and seasonal trends, integrate Domo product-level CSVs. HubSpot provides aggregate brand data; Domo SKU-level insights unlock strategic opportunities.")))));
+  })))))))))));
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(Dashboard));
-  </script>
+</script>
 </body>
 </html>
