@@ -28,14 +28,19 @@ const {
   Bar,
   XAxis,
   YAxis,
+  CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Cell,
   PieChart,
   Pie,
-  Legend
+  Cell,
+  Legend,
+  AreaChart,
+  Area,
+  LineChart,
+  Line,
+  ComposedChart
 } = Recharts;
-
 //  DARK MODE THEME 
 const M = {
   purple: "#A855F7",
@@ -11318,7 +11323,7 @@ function VIPCreatorDashboard() {
     }
   }, "This tab shows Walmart-specific creator leaderboards. For detailed product conversion rates, category breakdowns, and seasonal trends, integrate Domo product-level CSVs. HubSpot provides aggregate brand data; Domo SKU-level insights unlock strategic opportunities.")))));
 }
-  ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(VIPCreatorDashboard));
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(VIPCreatorDashboard));
   </script>
 </body>
 </html>
