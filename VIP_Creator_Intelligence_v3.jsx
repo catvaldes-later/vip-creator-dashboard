@@ -892,7 +892,8 @@ export default function Dashboard() {
                     <th style={thStyle}>30d cGMV</th>
                     <th style={thStyle}>Week cGMV</th>
                     <th style={thStyle}>WoW %</th>
-                    <th style={thStyle}>Threshold Progress</th>
+                    <th style={thStyle}>VIP Bonus</th>
+                    <th style={thStyle}>VIP Minimum GMV</th>
                     <th style={thStyle}>Top 3 Brands</th>
                   </tr>
                 </thead>
@@ -901,21 +902,18 @@ export default function Dashboard() {
                     const thresholdContent = (() => {
                       const monthNum = parseInt(c.month.replace("Month ", ""));
                       if (isNaN(monthNum)) return <span style={{ fontSize: 10, color: M.textLight }}>—</span>;
+                      const evalBonusMonths = [2, 3, 5, 6, 11, 12];
+                      if (!evalBonusMonths.includes(monthNum)) return <span style={{ fontSize: 10, color: M.textMuted }}>NA</span>;
                       let target = 0;
-                      let bonusPct = 0;
                       let label = "";
-                      if (monthNum === 1) { target = c.p1Target; bonusPct = c.p1BonusPct; label = "T1 Ramp"; }
-                      else if (monthNum === 2) { target = c.p1Target; bonusPct = c.p1BonusPct; label = "T1 Eval"; }
-                      else if (monthNum === 3) { target = c.p1Target; bonusPct = c.p1BonusPct; label = "T1 Bonus"; }
-                      else if (monthNum === 4) { target = c.p2Target; bonusPct = c.p2BonusPct; label = "→ T2"; }
-                      else if (monthNum === 5) { target = c.p2Target; bonusPct = c.p2BonusPct; label = "T2 Eval"; }
-                      else if (monthNum === 6) { target = c.p2Target; bonusPct = c.p2BonusPct; label = "T2 Bonus"; }
-                      else if (monthNum >= 7 && monthNum <= 10) { target = c.p3Target; bonusPct = c.p3BonusPct; label = "→ T3"; }
-                      else if (monthNum === 11) { target = c.p3Target; bonusPct = c.p3BonusPct; label = "T3 Eval"; }
-                      else if (monthNum === 12) { target = c.p3Target; bonusPct = c.p3BonusPct; label = "T3 Bonus"; }
-                      else if (monthNum > 12) { target = c.p3Target; bonusPct = c.p3BonusPct; label = "T3 ✓"; }
+                      if (monthNum === 2) { target = c.p1Target; label = "T1 Eval"; }
+                      else if (monthNum === 3) { target = c.p1Target; label = "T1 Bonus"; }
+                      else if (monthNum === 5) { target = c.p2Target; label = "T2 Eval"; }
+                      else if (monthNum === 6) { target = c.p2Target; label = "T2 Bonus"; }
+                      else if (monthNum === 11) { target = c.p3Target; label = "T3 Eval"; }
+                      else if (monthNum === 12) { target = c.p3Target; label = "T3 Bonus"; }
                       if (target > 0) {
-                        const pct = Math.min(Math.round((c.allTimeCgmv / target) * 100), 100);
+                        const pct = Math.min(Math.round((c.cgmv30d / target) * 100), 100);
                         return <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                           <div style={{ width: 60, height: 8, background: M.bgHover, borderRadius: 4, overflow: "hidden" }}>
                             <div style={{ width: `${pct}%`, height: "100%", background: pct >= 100 ? M.green : pct >= 50 ? M.gold : M.red, borderRadius: 4 }} />
@@ -926,6 +924,21 @@ export default function Dashboard() {
                         </div>;
                       }
                       return <span style={{ fontSize: 10, color: M.textLight }}>No target</span>;
+                    })();
+                    const minGmvContent = (() => {
+                      const minTarget = 25000;
+                      const gmv30 = c.cgmv30d || 0;
+                      if (gmv30 >= minTarget) {
+                        return <span style={{ fontSize: 14, color: M.green }}>✓</span>;
+                      }
+                      const pct = Math.min(Math.round((gmv30 / minTarget) * 100), 100);
+                      return <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <div style={{ width: 50, height: 8, background: M.bgHover, borderRadius: 4, overflow: "hidden" }}>
+                          <div style={{ width: `${pct}%`, height: "100%", background: pct >= 50 ? M.gold : M.red, borderRadius: 4 }} />
+                        </div>
+                        <span style={{ fontSize: 10, color: M.gold, fontWeight: 700 }}>{pct}%</span>
+                        <span style={{ fontSize: 9, color: M.textLight }}>$25K</span>
+                      </div>;
                     })();
                     return (
                     <tr key={idx} style={{ borderBottom: `1px solid ${M.borderLight}`, background: idx % 2 === 0 ? M.bgCard : M.bgCardAlt }}>
@@ -938,6 +951,7 @@ export default function Dashboard() {
                       <td style={{...tdStyle, color: c.weekCgmv > 0 ? M.green : M.textMuted}}>{fmt(c.weekCgmv)}</td>
                       <td style={{...tdStyle, color: c.wowCgmv >= 0 ? M.green : M.red}}>{c.wowCgmv.toFixed(1)}%</td>
                       <td style={tdStyle}>{thresholdContent}</td>
+                      <td style={tdStyle}>{minGmvContent}</td>
                       <td style={tdStyle}><div style={{ display: "flex", gap: 3, flexWrap: "wrap" }}>{c.topBrands.slice(0,3).map((b,i) => <span key={i} style={{ background: getBrandColor(b) + "20", color: getBrandColor(b), padding: "2px 6px", borderRadius: 6, fontSize: 9, fontWeight: 700 }}>{b}</span>)}</div></td>
                     </tr>
                     );

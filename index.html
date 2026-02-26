@@ -15171,7 +15171,9 @@ function Dashboard() {
     style: thStyle
   }, "WoW %"), /*#__PURE__*/React.createElement("th", {
     style: thStyle
-  }, "Threshold Progress"), /*#__PURE__*/React.createElement("th", {
+  }, "VIP Bonus"), /*#__PURE__*/React.createElement("th", {
+    style: thStyle
+  }, "VIP Minimum GMV"), /*#__PURE__*/React.createElement("th", {
     style: thStyle
   }, "Top 3 Brands"))), /*#__PURE__*/React.createElement("tbody", null, filtered.map((c, idx) => {
     const thresholdContent = (() => {
@@ -15182,52 +15184,36 @@ function Dashboard() {
           color: M.textLight
         }
       }, "\u2014");
+      const evalBonusMonths = [2, 3, 5, 6, 11, 12];
+      if (!evalBonusMonths.includes(monthNum)) return /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: 10,
+          color: M.textMuted
+        }
+      }, "NA");
       let target = 0;
-      let bonusPct = 0;
       let label = "";
-      if (monthNum === 1) {
+      if (monthNum === 2) {
         target = c.p1Target;
-        bonusPct = c.p1BonusPct;
-        label = "T1 Ramp";
-      } else if (monthNum === 2) {
-        target = c.p1Target;
-        bonusPct = c.p1BonusPct;
         label = "T1 Eval";
       } else if (monthNum === 3) {
         target = c.p1Target;
-        bonusPct = c.p1BonusPct;
         label = "T1 Bonus";
-      } else if (monthNum === 4) {
-        target = c.p2Target;
-        bonusPct = c.p2BonusPct;
-        label = "→ T2";
       } else if (monthNum === 5) {
         target = c.p2Target;
-        bonusPct = c.p2BonusPct;
         label = "T2 Eval";
       } else if (monthNum === 6) {
         target = c.p2Target;
-        bonusPct = c.p2BonusPct;
         label = "T2 Bonus";
-      } else if (monthNum >= 7 && monthNum <= 10) {
-        target = c.p3Target;
-        bonusPct = c.p3BonusPct;
-        label = "→ T3";
       } else if (monthNum === 11) {
         target = c.p3Target;
-        bonusPct = c.p3BonusPct;
         label = "T3 Eval";
       } else if (monthNum === 12) {
         target = c.p3Target;
-        bonusPct = c.p3BonusPct;
         label = "T3 Bonus";
-      } else if (monthNum > 12) {
-        target = c.p3Target;
-        bonusPct = c.p3BonusPct;
-        label = "T3 ✓";
       }
       if (target > 0) {
-        const pct = Math.min(Math.round(c.allTimeCgmv / target * 100), 100);
+        const pct = Math.min(Math.round(c.cgmv30d / target * 100), 100);
         return /*#__PURE__*/React.createElement("div", {
           style: {
             display: "flex",
@@ -15273,6 +15259,52 @@ function Dashboard() {
           color: M.textLight
         }
       }, "No target");
+    })();
+    const minGmvContent = (() => {
+      const minTarget = 25000;
+      const gmv30 = c.cgmv30d || 0;
+      if (gmv30 >= minTarget) {
+        return /*#__PURE__*/React.createElement("span", {
+          style: {
+            fontSize: 14,
+            color: M.green
+          }
+        }, "\u2713");
+      }
+      const pct = Math.min(Math.round(gmv30 / minTarget * 100), 100);
+      return /*#__PURE__*/React.createElement("div", {
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 6
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 50,
+          height: 8,
+          background: M.bgHover,
+          borderRadius: 4,
+          overflow: "hidden"
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: `${pct}%`,
+          height: "100%",
+          background: pct >= 50 ? M.gold : M.red,
+          borderRadius: 4
+        }
+      })), /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: 10,
+          color: M.gold,
+          fontWeight: 700
+        }
+      }, pct, "%"), /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: 9,
+          color: M.textLight
+        }
+      }, "$25K"));
     })();
     return /*#__PURE__*/React.createElement("tr", {
       key: idx,
@@ -15322,6 +15354,8 @@ function Dashboard() {
     }, c.wowCgmv.toFixed(1), "%"), /*#__PURE__*/React.createElement("td", {
       style: tdStyle
     }, thresholdContent), /*#__PURE__*/React.createElement("td", {
+      style: tdStyle
+    }, minGmvContent), /*#__PURE__*/React.createElement("td", {
       style: tdStyle
     }, /*#__PURE__*/React.createElement("div", {
       style: {
