@@ -6,7 +6,7 @@
   <title>mavely | VIP Creator Intelligence</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0F0B1A; color: #E2E8F0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0F0B1A; color: #E2E8F0; }
     #root { min-height: 100vh; }
   </style>
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -70,7 +70,8 @@ const M = {
 };
 const AM_COLORS = {
   "Amina": M.amina,
-  "Marguerite": M.marg
+  "Marguerite": M.marg,
+  "Marg": M.marg
 };
 const COLORS = ["#A855F7", "#FBBF24", "#34D399", "#F87171", "#60A5FA", "#F472B6", "#FB923C", "#818CF8", "#C084FC", "#E879F9"];
 const CAT_COLORS = {
@@ -9909,114 +9910,6 @@ const VIP_MGMT_RAW = [{
   w3: false,
   w4: false,
   bonus: 600
-}, {
-  name: "Abi Ayres",
-  stage: "Complete",
-  am: "Harrison",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Andrea Vowels",
-  stage: "Complete",
-  am: "Harrison",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Brooke Havner",
-  stage: "Complete",
-  am: "Harrison",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Erica Hinthorne",
-  stage: "Complete",
-  am: "Harrison",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Kallie Davis",
-  stage: "Complete",
-  am: "Harrison",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Kaylyn Hartmann",
-  stage: "Complete",
-  am: "Harrison",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Jennifer Palpallatoc",
-  stage: "Complete",
-  am: "Harrison",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "targetandtopknots",
-  stage: "Complete",
-  am: "Harrison",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Tiffany Mulgrew",
-  stage: "Complete",
-  am: "Harrison",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Stephanie Trantham",
-  stage: "Complete",
-  am: "Harrison",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Nicky Schmaderer",
-  stage: "Complete",
-  am: "Harrison",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Harrison Testing",
-  stage: "Disqualified",
-  am: "Harrison",
-  w1: true,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
 }];
 
 //  COMPONENTS 
@@ -10042,6 +9935,7 @@ const AmBadge = ({
   am
 }) => {
   const color = AM_COLORS[am] || M.textLight;
+  const label = am === "Marguerite" || am === "Marg" ? "MARG" : am === "Amina" ? "AMINA" : am ? am.toUpperCase() : "";
   return /*#__PURE__*/React.createElement("span", {
     style: {
       background: `${color}18`,
@@ -10053,7 +9947,7 @@ const AmBadge = ({
       border: `1px solid ${color}30`,
       whiteSpace: "nowrap"
     }
-  }, am === "Marguerite" ? "MARG" : "AMINA");
+  }, label);
 };
 const CatTag = ({
   category
@@ -11152,7 +11046,7 @@ function VIPCreatorDashboard() {
       color: M.gold
     }, {
       label: "Avg Bonus/Creator",
-      value: fmt(avgBonus),
+      value: fmt(Math.round(avgBonus)),
       color: M.gold
     }, {
       label: "Creators w/ Bonus",
