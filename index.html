@@ -9070,863 +9070,6 @@ const HUBSPOT_PIPELINE_RAW = [{
   }
 }];
 // ═══ PARSE HUBSPOT DATA ═══
-const parseCreators = rawData => {
-  const today = new Date("2026-02-25");
-  return rawData.filter(c => {
-    const endDate = c.properties.mvp_contract_end_date ? new Date(c.properties.mvp_contract_end_date) : null;
-    const startDate = c.properties.mvp_contract_start_date ? new Date(c.properties.mvp_contract_start_date) : null;
-    // Include if contract end date is in future or no end date but has start date
-    return endDate && endDate >= today || startDate && !endDate;
-  }).map(c => {
-    const props = c.properties;
-    const firstname = props.firstname || "";
-    const lastname = props.lastname || "";
-    const name = `${firstname} ${lastname}`.trim();
-    const weekCgmv = parseFloat(props.c_gmv_last_7_days) || 0;
-    const week14Cgmv = parseFloat(props.c_gmv_last_14_days) || 0;
-    const prevWeekCgmv = week14Cgmv - weekCgmv;
-    const allTimeCgmv = parseFloat(props.total_gmv) || 0;
-    const weekLinks = parseFloat(props.links_created_last_7_days) || 0;
-    const totalLinks = parseFloat(props.total_links_created) || 0;
-    const wowCgmv = prevWeekCgmv > 0 ? (weekCgmv / prevWeekCgmv - 1) * 100 : weekCgmv > 0 ? 100 : 0;
-
-    // Extract AM first name
-    const amText = props.am_name_text_field || "Unknown";
-    const amFirstName = amText.split(" ")[0];
-
-    // Calculate month
-    const startDateObj = props.mvp_contract_start_date ? new Date(props.mvp_contract_start_date) : null;
-    let month = "Month ?";
-    if (startDateObj) {
-      const months = Math.floor((today - startDateObj) / (1000 * 60 * 60 * 24 * 30));
-      month = `Month ${Math.max(1, months)}`;
-    }
-
-    // Calculate risk
-    let risk = "good-standing";
-    if (weekCgmv > 0 && wowCgmv >= -10) risk = "good-standing";else if (wowCgmv > 20 && weekCgmv > 0) risk = "tracking-up";else if (wowCgmv < -20 && weekCgmv > 0) risk = "tracking-down";else if (wowCgmv < -30 || weekCgmv === 0 && prevWeekCgmv > 0) risk = "medium-risk";else if (weekCgmv === 0 && prevWeekCgmv === 0) risk = "high-risk";
-    const endDate = props.mvp_contract_end_date ? new Date(props.mvp_contract_end_date) : null;
-    if (endDate && endDate < today) risk = "contract-complete";
-
-    // Brand info
-    const topBrand = props.n1_brand_by_links_created || "Unknown";
-    const topBrands = [props.n1_brand_by_links_created, props.n2_brand_by_links_created, props.n3_brand_by_links_created].filter(Boolean);
-    return {
-      id: c.id,
-      name,
-      weekCgmv,
-      prevWeekCgmv,
-      allTimeCgmv,
-      weekLinks,
-      totalLinks,
-      wowCgmv: Math.round(wowCgmv * 10) / 10,
-      am: amFirstName,
-      month,
-      risk,
-      contract: startDateObj ? startDateObj.toLocaleDateString('en-US', {
-        month: 'short',
-        year: 'numeric'
-      }) : "Unknown",
-      category: props.creator_niche || "Multiple",
-      topVerticals: (() => {
-        const niche = props.creator_niche || "";
-        if (!niche) return [];
-        const cleaned = niche.split(";").map(s => s.trim()).filter(Boolean).map(v => {
-          if (v === "Family + Parenting") return "Fashion";
-          if (v === "Home decor / DIY") return "Home/DIY";
-          if (v === "Home decor") return "Home/DIY";
-          if (v === "Deals / Sales") return "Deals/Sales";
-          if (v === "Fitness/Health + Wellness") return "Fitness/Health";
-          if (v === "Generalist") return null;
-          return v;
-        }).filter(Boolean);
-        return cleaned.length === 0 && niche === "Generalist" ? [] : cleaned;
-      })(),
-      topBrand,
-      topBrands,
-      instagram: props.instagram_handle || "—",
-      igFollowers: parseFloat(props.instagram_followers) || 0,
-      totalCommissions: parseFloat(props.total_user_commissions) || 0,
-      commissions30d: parseFloat(props.user_commissions_last_30_days) || 0,
-      activationScore: props.creator_activation_score || "N/A",
-      totalTransactions: parseFloat(props.total_transactions) || 0,
-      returnRate: parseFloat(props.return_rate) || 0,
-      avgOrderValue: parseFloat(props.average_order_value_calculation) || 0,
-      bonusPayout: parseFloat(props.bonus_payout_amount) || 0,
-      totalPayout: parseFloat(props.total_payout_amount) || 0,
-      quarterCgmv: parseFloat(props.c_gmv_this_quarter) || parseFloat(props.gmv_this_quarter) || 0,
-      tier2Target: parseFloat(props.mvp_period_2_c_gmv_target) || 0,
-      tier3Target: parseFloat(props.mvp_period_3_c_gmv_target) || 0,
-      cgmv30d: parseFloat(props.gmv_last_30_days) || 0,
-      cgmv90d: parseFloat(props.gmv_last_90_days) || 0
-    };
-  });
-};
-const parseDeals = rawData => {
-  const stageMap = {
-    "231114582": "Call Set",
-    "1131301134": "Negotiating",
-    "231114585": "Contract Sent",
-    "231114586": "Closed Won",
-    "231114587": "Closed Lost"
-  };
-  return rawData.map(d => ({
-    id: d.id,
-    name: d.properties.dealname || "Untitled Deal",
-    stage: stageMap[d.properties.dealstage] || "Unknown",
-    amount: parseFloat(d.properties.amount) || 0,
-    closeDate: d.properties.closedate ? new Date(d.properties.closedate) : null,
-    lastModified: d.properties.hs_lastmodifieddate ? new Date(d.properties.hs_lastmodifieddate) : null
-  }));
-};
-
-// Parse data
-const creators = parseCreators(HUBSPOT_CREATORS_RAW);
-// Merge bonus lookup data
-creators.forEach(c => {
-  const bl = BONUS_LOOKUP[c.id] || {};
-  c.p1Target = bl.p1_target || 0;
-  c.cgmv60d = bl.cgmv_60d || 0;
-  c.bonusAmt = bl.bonus_amt || 0;
-  c.bonusAmt2 = bl.bonus_amt_2 || 0;
-  c.bonusTarget = bl.bonus_target || 0;
-  c.bonusTarget2 = bl.bonus_target_2 || 0;
-  // Use bonus lookup 30d/90d as fallback if raw data was 0
-  if (c.cgmv30d === 0 && bl.cgmv_30d) c.cgmv30d = bl.cgmv_30d;
-  if (c.cgmv90d === 0 && bl.cgmv_90d) c.cgmv90d = bl.cgmv_90d;
-});
-const deals = parseDeals(HUBSPOT_PIPELINE_RAW);
-
-// ═══ CALCULATED METRICS ═══
-const totalBookCgmv = creators.reduce((sum, c) => sum + c.allTimeCgmv, 0);
-const weekCgmv = creators.reduce((sum, c) => sum + c.weekCgmv, 0);
-const prevWeekCgmv = creators.reduce((sum, c) => sum + c.prevWeekCgmv, 0);
-const wowBookPct = prevWeekCgmv > 0 ? (weekCgmv / prevWeekCgmv - 1) * 100 : weekCgmv > 0 ? 100 : 0;
-const activeThisWeek = creators.filter(c => c.weekCgmv > 0).length;
-const totalWeekLinks = creators.reduce((sum, c) => sum + c.weekLinks, 0);
-const avgPerLink = totalWeekLinks > 0 ? Math.round(weekCgmv / totalWeekLinks) : 0;
-const totalQuarterCgmv = creators.reduce((sum, c) => sum + c.quarterCgmv, 0);
-
-// ═══ INSIGHTS GENERATION ═══
-const generateInsights = () => {
-  const insights = [];
-
-  // Biggest WoW
-  let biggestWow = creators.filter(c => c.wowCgmv > 0).sort((a, b) => (b.wowCgmv || 0) - (a.wowCgmv || 0))[0];
-  if (biggestWow) insights.push({
-    emoji: "🚀",
-    title: "Biggest WoW Explosion",
-    stat: `+${biggestWow.wowCgmv.toFixed(0)}%`,
-    desc: `${biggestWow.name} had the biggest week-over-week growth.`,
-    color: M.green
-  });
-
-  // Less links, more $$$
-  let quality = creators.filter(c => c.wowCgmv > 0 && c.weekLinks > 0).sort((a, b) => {
-    const aLinkChange = b.weekLinks - a.weekLinks;
-    return aLinkChange - (b.weekLinks - b.weekLinks);
-  })[0];
-  if (quality) insights.push({
-    emoji: "🔥",
-    title: "Less Links, More $$$",
-    stat: `+${quality.wowCgmv.toFixed(0)}% cGMV`,
-    desc: `${quality.name} is cracking high-conversion content.`,
-    color: M.orange
-  });
-
-  // Sleeping Giant
-  let sleeper = creators.filter(c => c.allTimeCgmv > 100000 && c.weekCgmv === 0).sort((a, b) => b.allTimeCgmv - a.allTimeCgmv)[0];
-  if (sleeper) insights.push({
-    emoji: "⚠️",
-    title: "Sleeping Giant",
-    stat: `$${(sleeper.allTimeCgmv / 1000).toFixed(0)}K dormant`,
-    desc: `${sleeper.name} has huge all-time cGMV but zero recent activity.`,
-    color: M.red
-  });
-
-  // Commission Leader
-  let commLeader = creators.sort((a, b) => (b.commissions30d || 0) - (a.commissions30d || 0))[0];
-  if (commLeader) insights.push({
-    emoji: "💰",
-    title: "Commission Leader",
-    stat: `$${commLeader.commissions30d.toLocaleString()}`,
-    desc: `${commLeader.name} earned the most in commissions (30d).`,
-    color: M.gold
-  });
-
-  // Link Machine
-  let linkMachine = creators.sort((a, b) => (b.weekLinks || 0) - (a.weekLinks || 0))[0];
-  if (linkMachine) insights.push({
-    emoji: "🔗",
-    title: "Link Machine",
-    stat: `${linkMachine.weekLinks.toLocaleString()} links`,
-    desc: `${linkMachine.name} created the most links this week.`,
-    color: M.blue
-  });
-  return insights.slice(0, 6);
-};
-const insights = generateInsights();
-
-// ═══ PIPELINE STATS ═══
-const thisQuarter = (() => {
-  const now = new Date("2026-02-25");
-  const qStart = new Date(now.getFullYear(), Math.floor(now.getMonth() / 3) * 3, 1);
-  return deals.filter(d => d.closeDate && d.closeDate >= qStart);
-})();
-const pipelineStats = {
-  active: deals.filter(d => d.stage === "Call Set" || d.stage === "Negotiating" || d.stage === "Contract Sent").length,
-  closedWonQ: thisQuarter.filter(d => d.stage === "Closed Won").length
-};
-
-// ═══ FUNNEL DATA ═══
-const funnelData = [{
-  stage: "Call Set",
-  count: deals.filter(d => d.stage === "Call Set").length,
-  color: M.blue
-}, {
-  stage: "Negotiating",
-  count: deals.filter(d => d.stage === "Negotiating").length,
-  color: M.purple
-}, {
-  stage: "Contract Sent",
-  count: deals.filter(d => d.stage === "Contract Sent").length,
-  color: M.purple
-}, {
-  stage: "Closed Won",
-  count: deals.filter(d => d.stage === "Closed Won").length,
-  color: M.green
-}];
-const VIP_MGMT_RAW = [{
-  name: "Aussiedomxo Bird",
-  stage: "Week 1",
-  am: "Marg",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Catherine Ortega",
-  stage: "Week 1",
-  am: "Marg",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Nadira Kurtic",
-  stage: "Week 1",
-  am: "Marg",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Sandy Chang",
-  stage: "Week 1",
-  am: "Marg",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Michelle Hammons",
-  stage: "Week 2",
-  am: "Marg",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Marnie Goldberg",
-  stage: "Week 3",
-  am: "Marg",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Jessica Salgado",
-  stage: "Week 3",
-  am: "Marg",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Ashley Savage",
-  stage: "Week 3",
-  am: "Marg",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Gianna Caputo",
-  stage: "Week 3",
-  am: "Marg",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Greer Gagnier",
-  stage: "Week 4",
-  am: "Marg",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Katie Fletcher",
-  stage: "Week 4",
-  am: "Marg",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Timothy & Tatyana",
-  stage: "Week 4",
-  am: "Marg",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "January Rizzo",
-  stage: "Week 4",
-  am: "Marg",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Tracy Baggett",
-  stage: "Week 4",
-  am: "Marg",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 300
-}, {
-  name: "Tiania Haneline",
-  stage: "Week 4",
-  am: "Marg",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Nita Mann",
-  stage: "Month 2",
-  am: "Marg",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Nicole Cantu",
-  stage: "Month 2",
-  am: "Marg",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Crystal Schmidt",
-  stage: "Month 2",
-  am: "Marg",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Alexi Mellady",
-  stage: "Month 2",
-  am: "Marg",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Kaylee Brice",
-  stage: "Month 4",
-  am: "Marg",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Beth Anne Brice",
-  stage: "Month 4",
-  am: "Marg",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Paula Webster",
-  stage: "Month 2",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Sydney Bass",
-  stage: "Month 3",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Kate Fuller",
-  stage: "Month 3",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Kristen Fussell",
-  stage: "Month 3",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Brooke Anderson",
-  stage: "Month 3",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 750
-}, {
-  name: "Lauren Roscopf",
-  stage: "Month 3",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Nichole",
-  stage: "Month 3",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Morgan Bullard",
-  stage: "Month 3",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 1000
-}, {
-  name: "Katie Keever",
-  stage: "Month 4",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Logan Hill",
-  stage: "Month 4",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Nicky Schmaderer",
-  stage: "Month 4",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Leah White",
-  stage: "Month 4",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 1000
-}, {
-  name: "Tiffany Mulgrew",
-  stage: "Month 4",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Jessica Sigmon",
-  stage: "Month 4",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Kisses from Cara",
-  stage: "Month 4",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Michelle Riley",
-  stage: "Month 4",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Erin Vogelpohl",
-  stage: "Month 4",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 1500
-}, {
-  name: "Danira Alihodzic",
-  stage: "Month 4",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Tori Winkle",
-  stage: "Month 4",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Sandra | Tuxedo Farmhouse",
-  stage: "Month 4",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Angela Howenstein",
-  stage: "Month 4",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Jenny Reimold",
-  stage: "Month 4",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 1000
-}, {
-  name: "Jessica Barstow",
-  stage: "Month 4",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Emily Priest",
-  stage: "Month 4",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Krystal Smit",
-  stage: "Month 4",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Lauren Hansen",
-  stage: "Month 4",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Betsy Burleson",
-  stage: "Month 5",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Casey Southern",
-  stage: "Month 5",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Leslie Wuischpard",
-  stage: "Month 5",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Caralyn Mirand-Koch",
-  stage: "Month 5",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Jessica Frappampina",
-  stage: "Month 5",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 100
-}, {
-  name: "Deana Hoffman",
-  stage: "Month 5",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Rochelle Johnson",
-  stage: "Month 5",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Moji Ojediran",
-  stage: "Month 5",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Janaye Robinson",
-  stage: "Month 5",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 300
-}, {
-  name: "Alexandra England",
-  stage: "Month 5",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Kaitlyn Curnow",
-  stage: "Month 5",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Taylor Hardy",
-  stage: "Month 5",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 300
-}, {
-  name: "Taylor Moore",
-  stage: "Month 5",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 1500
-}, {
-  name: "Laura Godfrey",
-  stage: "Month 6",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Lauren Antonucci",
-  stage: "Month 6",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Candice Trevino",
-  stage: "Month 6",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Courtney White",
-  stage: "Month 6",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Jasmine Rae Snooks",
-  stage: "Month 6",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 0
-}, {
-  name: "Amanda Wagner",
-  stage: "Month 6",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Ali Propst",
-  stage: "Month 6",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Candace Post",
-  stage: "Month 6",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Olivia Adkins",
-  stage: "Month 6",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}, {
-  name: "Amberly Crast",
-  stage: "Month 6",
-  am: "Amina",
-  w1: false,
-  w2: false,
-  w3: false,
-  w4: false,
-  bonus: 600
-}];
 const BONUS_LOOKUP = {
   "199990462020": {
     "p1_target": 0,
@@ -13471,6 +12614,863 @@ const VIP_LEADS_RAW = [{
   cat: "—",
   created: "2025-03-31",
   social: "@megcusick"
+}];
+const parseCreators = rawData => {
+  const today = new Date("2026-02-25");
+  return rawData.filter(c => {
+    const endDate = c.properties.mvp_contract_end_date ? new Date(c.properties.mvp_contract_end_date) : null;
+    const startDate = c.properties.mvp_contract_start_date ? new Date(c.properties.mvp_contract_start_date) : null;
+    // Include if contract end date is in future or no end date but has start date
+    return endDate && endDate >= today || startDate && !endDate;
+  }).map(c => {
+    const props = c.properties;
+    const firstname = props.firstname || "";
+    const lastname = props.lastname || "";
+    const name = `${firstname} ${lastname}`.trim();
+    const weekCgmv = parseFloat(props.c_gmv_last_7_days) || 0;
+    const week14Cgmv = parseFloat(props.c_gmv_last_14_days) || 0;
+    const prevWeekCgmv = week14Cgmv - weekCgmv;
+    const allTimeCgmv = parseFloat(props.total_gmv) || 0;
+    const weekLinks = parseFloat(props.links_created_last_7_days) || 0;
+    const totalLinks = parseFloat(props.total_links_created) || 0;
+    const wowCgmv = prevWeekCgmv > 0 ? (weekCgmv / prevWeekCgmv - 1) * 100 : weekCgmv > 0 ? 100 : 0;
+
+    // Extract AM first name
+    const amText = props.am_name_text_field || "Unknown";
+    const amFirstName = amText.split(" ")[0];
+
+    // Calculate month
+    const startDateObj = props.mvp_contract_start_date ? new Date(props.mvp_contract_start_date) : null;
+    let month = "Month ?";
+    if (startDateObj) {
+      const months = Math.floor((today - startDateObj) / (1000 * 60 * 60 * 24 * 30));
+      month = `Month ${Math.max(1, months)}`;
+    }
+
+    // Calculate risk
+    let risk = "good-standing";
+    if (weekCgmv > 0 && wowCgmv >= -10) risk = "good-standing";else if (wowCgmv > 20 && weekCgmv > 0) risk = "tracking-up";else if (wowCgmv < -20 && weekCgmv > 0) risk = "tracking-down";else if (wowCgmv < -30 || weekCgmv === 0 && prevWeekCgmv > 0) risk = "medium-risk";else if (weekCgmv === 0 && prevWeekCgmv === 0) risk = "high-risk";
+    const endDate = props.mvp_contract_end_date ? new Date(props.mvp_contract_end_date) : null;
+    if (endDate && endDate < today) risk = "contract-complete";
+
+    // Brand info
+    const topBrand = props.n1_brand_by_links_created || "Unknown";
+    const topBrands = [props.n1_brand_by_links_created, props.n2_brand_by_links_created, props.n3_brand_by_links_created].filter(Boolean);
+    return {
+      id: c.id,
+      name,
+      weekCgmv,
+      prevWeekCgmv,
+      allTimeCgmv,
+      weekLinks,
+      totalLinks,
+      wowCgmv: Math.round(wowCgmv * 10) / 10,
+      am: amFirstName,
+      month,
+      risk,
+      contract: startDateObj ? startDateObj.toLocaleDateString('en-US', {
+        month: 'short',
+        year: 'numeric'
+      }) : "Unknown",
+      category: props.creator_niche || "Multiple",
+      topVerticals: (() => {
+        const niche = props.creator_niche || "";
+        if (!niche) return [];
+        const cleaned = niche.split(";").map(s => s.trim()).filter(Boolean).map(v => {
+          if (v === "Family + Parenting") return "Fashion";
+          if (v === "Home decor / DIY") return "Home/DIY";
+          if (v === "Home decor") return "Home/DIY";
+          if (v === "Deals / Sales") return "Deals/Sales";
+          if (v === "Fitness/Health + Wellness") return "Fitness/Health";
+          if (v === "Generalist") return null;
+          return v;
+        }).filter(Boolean);
+        return cleaned.length === 0 && niche === "Generalist" ? [] : cleaned;
+      })(),
+      topBrand,
+      topBrands,
+      instagram: props.instagram_handle || "—",
+      igFollowers: parseFloat(props.instagram_followers) || 0,
+      totalCommissions: parseFloat(props.total_user_commissions) || 0,
+      commissions30d: parseFloat(props.user_commissions_last_30_days) || 0,
+      activationScore: props.creator_activation_score || "N/A",
+      totalTransactions: parseFloat(props.total_transactions) || 0,
+      returnRate: parseFloat(props.return_rate) || 0,
+      avgOrderValue: parseFloat(props.average_order_value_calculation) || 0,
+      bonusPayout: parseFloat(props.bonus_payout_amount) || 0,
+      totalPayout: parseFloat(props.total_payout_amount) || 0,
+      quarterCgmv: parseFloat(props.c_gmv_this_quarter) || parseFloat(props.gmv_this_quarter) || 0,
+      tier2Target: parseFloat(props.mvp_period_2_c_gmv_target) || 0,
+      tier3Target: parseFloat(props.mvp_period_3_c_gmv_target) || 0,
+      cgmv30d: parseFloat(props.gmv_last_30_days) || 0,
+      cgmv90d: parseFloat(props.gmv_last_90_days) || 0
+    };
+  });
+};
+const parseDeals = rawData => {
+  const stageMap = {
+    "231114582": "Call Set",
+    "1131301134": "Negotiating",
+    "231114585": "Contract Sent",
+    "231114586": "Closed Won",
+    "231114587": "Closed Lost"
+  };
+  return rawData.map(d => ({
+    id: d.id,
+    name: d.properties.dealname || "Untitled Deal",
+    stage: stageMap[d.properties.dealstage] || "Unknown",
+    amount: parseFloat(d.properties.amount) || 0,
+    closeDate: d.properties.closedate ? new Date(d.properties.closedate) : null,
+    lastModified: d.properties.hs_lastmodifieddate ? new Date(d.properties.hs_lastmodifieddate) : null
+  }));
+};
+
+// Parse data
+const creators = parseCreators(HUBSPOT_CREATORS_RAW);
+// Merge bonus lookup data
+creators.forEach(c => {
+  const bl = BONUS_LOOKUP[c.id] || {};
+  c.p1Target = bl.p1_target || 0;
+  c.cgmv60d = bl.cgmv_60d || 0;
+  c.bonusAmt = bl.bonus_amt || 0;
+  c.bonusAmt2 = bl.bonus_amt_2 || 0;
+  c.bonusTarget = bl.bonus_target || 0;
+  c.bonusTarget2 = bl.bonus_target_2 || 0;
+  // Use bonus lookup 30d/90d as fallback if raw data was 0
+  if (c.cgmv30d === 0 && bl.cgmv_30d) c.cgmv30d = bl.cgmv_30d;
+  if (c.cgmv90d === 0 && bl.cgmv_90d) c.cgmv90d = bl.cgmv_90d;
+});
+const deals = parseDeals(HUBSPOT_PIPELINE_RAW);
+
+// ═══ CALCULATED METRICS ═══
+const totalBookCgmv = creators.reduce((sum, c) => sum + c.allTimeCgmv, 0);
+const weekCgmv = creators.reduce((sum, c) => sum + c.weekCgmv, 0);
+const prevWeekCgmv = creators.reduce((sum, c) => sum + c.prevWeekCgmv, 0);
+const wowBookPct = prevWeekCgmv > 0 ? (weekCgmv / prevWeekCgmv - 1) * 100 : weekCgmv > 0 ? 100 : 0;
+const activeThisWeek = creators.filter(c => c.weekCgmv > 0).length;
+const totalWeekLinks = creators.reduce((sum, c) => sum + c.weekLinks, 0);
+const avgPerLink = totalWeekLinks > 0 ? Math.round(weekCgmv / totalWeekLinks) : 0;
+const totalQuarterCgmv = creators.reduce((sum, c) => sum + c.quarterCgmv, 0);
+
+// ═══ INSIGHTS GENERATION ═══
+const generateInsights = () => {
+  const insights = [];
+
+  // Biggest WoW
+  let biggestWow = creators.filter(c => c.wowCgmv > 0).sort((a, b) => (b.wowCgmv || 0) - (a.wowCgmv || 0))[0];
+  if (biggestWow) insights.push({
+    emoji: "🚀",
+    title: "Biggest WoW Explosion",
+    stat: `+${biggestWow.wowCgmv.toFixed(0)}%`,
+    desc: `${biggestWow.name} had the biggest week-over-week growth.`,
+    color: M.green
+  });
+
+  // Less links, more $$$
+  let quality = creators.filter(c => c.wowCgmv > 0 && c.weekLinks > 0).sort((a, b) => {
+    const aLinkChange = b.weekLinks - a.weekLinks;
+    return aLinkChange - (b.weekLinks - b.weekLinks);
+  })[0];
+  if (quality) insights.push({
+    emoji: "🔥",
+    title: "Less Links, More $$$",
+    stat: `+${quality.wowCgmv.toFixed(0)}% cGMV`,
+    desc: `${quality.name} is cracking high-conversion content.`,
+    color: M.orange
+  });
+
+  // Sleeping Giant
+  let sleeper = creators.filter(c => c.allTimeCgmv > 100000 && c.weekCgmv === 0).sort((a, b) => b.allTimeCgmv - a.allTimeCgmv)[0];
+  if (sleeper) insights.push({
+    emoji: "⚠️",
+    title: "Sleeping Giant",
+    stat: `$${(sleeper.allTimeCgmv / 1000).toFixed(0)}K dormant`,
+    desc: `${sleeper.name} has huge all-time cGMV but zero recent activity.`,
+    color: M.red
+  });
+
+  // Commission Leader
+  let commLeader = creators.sort((a, b) => (b.commissions30d || 0) - (a.commissions30d || 0))[0];
+  if (commLeader) insights.push({
+    emoji: "💰",
+    title: "Commission Leader",
+    stat: `$${commLeader.commissions30d.toLocaleString()}`,
+    desc: `${commLeader.name} earned the most in commissions (30d).`,
+    color: M.gold
+  });
+
+  // Link Machine
+  let linkMachine = creators.sort((a, b) => (b.weekLinks || 0) - (a.weekLinks || 0))[0];
+  if (linkMachine) insights.push({
+    emoji: "🔗",
+    title: "Link Machine",
+    stat: `${linkMachine.weekLinks.toLocaleString()} links`,
+    desc: `${linkMachine.name} created the most links this week.`,
+    color: M.blue
+  });
+  return insights.slice(0, 6);
+};
+const insights = generateInsights();
+
+// ═══ PIPELINE STATS ═══
+const thisQuarter = (() => {
+  const now = new Date("2026-02-25");
+  const qStart = new Date(now.getFullYear(), Math.floor(now.getMonth() / 3) * 3, 1);
+  return deals.filter(d => d.closeDate && d.closeDate >= qStart);
+})();
+const pipelineStats = {
+  active: deals.filter(d => d.stage === "Call Set" || d.stage === "Negotiating" || d.stage === "Contract Sent").length,
+  closedWonQ: thisQuarter.filter(d => d.stage === "Closed Won").length
+};
+
+// ═══ FUNNEL DATA ═══
+const funnelData = [{
+  stage: "Call Set",
+  count: deals.filter(d => d.stage === "Call Set").length,
+  color: M.blue
+}, {
+  stage: "Negotiating",
+  count: deals.filter(d => d.stage === "Negotiating").length,
+  color: M.purple
+}, {
+  stage: "Contract Sent",
+  count: deals.filter(d => d.stage === "Contract Sent").length,
+  color: M.purple
+}, {
+  stage: "Closed Won",
+  count: deals.filter(d => d.stage === "Closed Won").length,
+  color: M.green
+}];
+const VIP_MGMT_RAW = [{
+  name: "Aussiedomxo Bird",
+  stage: "Week 1",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Catherine Ortega",
+  stage: "Week 1",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Nadira Kurtic",
+  stage: "Week 1",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Sandy Chang",
+  stage: "Week 1",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Michelle Hammons",
+  stage: "Week 2",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Marnie Goldberg",
+  stage: "Week 3",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Jessica Salgado",
+  stage: "Week 3",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Ashley Savage",
+  stage: "Week 3",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Gianna Caputo",
+  stage: "Week 3",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Greer Gagnier",
+  stage: "Week 4",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Katie Fletcher",
+  stage: "Week 4",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Timothy & Tatyana",
+  stage: "Week 4",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "January Rizzo",
+  stage: "Week 4",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Tracy Baggett",
+  stage: "Week 4",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 300
+}, {
+  name: "Tiania Haneline",
+  stage: "Week 4",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Nita Mann",
+  stage: "Month 2",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Nicole Cantu",
+  stage: "Month 2",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Crystal Schmidt",
+  stage: "Month 2",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Alexi Mellady",
+  stage: "Month 2",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Kaylee Brice",
+  stage: "Month 4",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Beth Anne Brice",
+  stage: "Month 4",
+  am: "Marg",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Paula Webster",
+  stage: "Month 2",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Sydney Bass",
+  stage: "Month 3",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Kate Fuller",
+  stage: "Month 3",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Kristen Fussell",
+  stage: "Month 3",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Brooke Anderson",
+  stage: "Month 3",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 750
+}, {
+  name: "Lauren Roscopf",
+  stage: "Month 3",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Nichole",
+  stage: "Month 3",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Morgan Bullard",
+  stage: "Month 3",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 1000
+}, {
+  name: "Katie Keever",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Logan Hill",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Nicky Schmaderer",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Leah White",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 1000
+}, {
+  name: "Tiffany Mulgrew",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Jessica Sigmon",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Kisses from Cara",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Michelle Riley",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Erin Vogelpohl",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 1500
+}, {
+  name: "Danira Alihodzic",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Tori Winkle",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Sandra | Tuxedo Farmhouse",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Angela Howenstein",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Jenny Reimold",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 1000
+}, {
+  name: "Jessica Barstow",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Emily Priest",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Krystal Smit",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Lauren Hansen",
+  stage: "Month 4",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Betsy Burleson",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Casey Southern",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Leslie Wuischpard",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Caralyn Mirand-Koch",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Jessica Frappampina",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 100
+}, {
+  name: "Deana Hoffman",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Rochelle Johnson",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Moji Ojediran",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Janaye Robinson",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 300
+}, {
+  name: "Alexandra England",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Kaitlyn Curnow",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Taylor Hardy",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 300
+}, {
+  name: "Taylor Moore",
+  stage: "Month 5",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 1500
+}, {
+  name: "Laura Godfrey",
+  stage: "Month 6",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Lauren Antonucci",
+  stage: "Month 6",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Candice Trevino",
+  stage: "Month 6",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Courtney White",
+  stage: "Month 6",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Jasmine Rae Snooks",
+  stage: "Month 6",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 0
+}, {
+  name: "Amanda Wagner",
+  stage: "Month 6",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Ali Propst",
+  stage: "Month 6",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Candace Post",
+  stage: "Month 6",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Olivia Adkins",
+  stage: "Month 6",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
+}, {
+  name: "Amberly Crast",
+  stage: "Month 6",
+  am: "Amina",
+  w1: false,
+  w2: false,
+  w3: false,
+  w4: false,
+  bonus: 600
 }];
 
 // ═══ COMPONENTS ═══
