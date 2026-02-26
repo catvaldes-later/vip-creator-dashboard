@@ -9084,7 +9084,6 @@ const parseCreators = rawData => {
     const allTimeCgmv = parseFloat(props.total_gmv) || 0;
     const weekLinks = parseFloat(props.links_created_last_7_days) || 0;
     const totalLinks = parseFloat(props.total_links_created) || 0;
-    const weekPerLink = weekLinks > 0 ? Math.round(weekCgmv / weekLinks) : 0;
     const wowCgmv = prevWeekCgmv > 0 ? (weekCgmv / prevWeekCgmv - 1) * 100 : weekCgmv > 0 ? 100 : 0;
 
     // Extract AM first name
@@ -9116,7 +9115,6 @@ const parseCreators = rawData => {
       allTimeCgmv,
       weekLinks,
       totalLinks,
-      weekPerLink,
       wowCgmv: Math.round(wowCgmv * 10) / 10,
       am: amFirstName,
       month,
@@ -9128,14 +9126,17 @@ const parseCreators = rawData => {
       category: props.creator_niche || "Multiple",
       topVerticals: (() => {
         const niche = props.creator_niche || "";
-        if (!niche || niche === "Generalist") return [];
-        return niche.split(";").map(s => s.trim()).filter(Boolean).map(v => {
+        if (!niche) return [];
+        const cleaned = niche.split(";").map(s => s.trim()).filter(Boolean).map(v => {
           if (v === "Family + Parenting") return "Fashion";
           if (v === "Home decor / DIY") return "Home/DIY";
+          if (v === "Home decor") return "Home/DIY";
           if (v === "Deals / Sales") return "Deals/Sales";
           if (v === "Fitness/Health + Wellness") return "Fitness/Health";
+          if (v === "Generalist") return null;
           return v;
-        });
+        }).filter(Boolean);
+        return cleaned.length === 0 && niche === "Generalist" ? [] : cleaned;
       })(),
       topBrand,
       topBrands,
@@ -9190,16 +9191,6 @@ const totalQuarterCgmv = creators.reduce((sum, c) => sum + c.quarterCgmv, 0);
 //  INSIGHTS GENERATION 
 const generateInsights = () => {
   const insights = [];
-
-  // Conversion Queen
-  let convQueen = creators.filter(c => c.weekLinks > 0).sort((a, b) => (b.weekPerLink || 0) - (a.weekPerLink || 0))[0];
-  if (convQueen) insights.push({
-    emoji: "",
-    title: "Conversion Queen",
-    stat: `$${convQueen.weekPerLink.toLocaleString()}/link`,
-    desc: `${convQueen.name} has the highest $/link ratio this week.`,
-    color: M.purple
-  });
 
   // Biggest WoW
   let biggestWow = creators.filter(c => c.wowCgmv > 0).sort((a, b) => (b.wowCgmv || 0) - (a.wowCgmv || 0))[0];
@@ -9266,8 +9257,7 @@ const thisQuarter = (() => {
 const pipelineStats = {
   active: deals.filter(d => d.stage === "Call Set" || d.stage === "Negotiating" || d.stage === "Contract Sent").length,
   closedWonQ: thisQuarter.filter(d => d.stage === "Closed Won").length,
-  closedLostQ: thisQuarter.filter(d => d.stage === "Closed Lost").length,
-  totalClosedQ: thisQuarter.filter(d => d.stage === "Closed Won" || d.stage === "Closed Lost").length
+  closedLostQ: thisQuarter.filter(d => d.stage === "Closed Lost").length
 };
 
 //  FUNNEL DATA 
@@ -9465,8 +9455,8 @@ function VIPCreatorDashboard() {
   const categories = [...new Set(creators.map(c => c.category))];
   const riskTypes = [...new Set(creators.filter(c => c.risk !== "n/a").map(c => c.risk))];
   const exportCSV = () => {
-    const h = "Creator,Category,Risk Status,All-Time cGMV,Week cGMV,WoW%,Week Links,Week $/Link,Top Brand,AM\n";
-    const r = filtered.map(c => `${c.name},${c.category},${c.risk},${c.allTimeCgmv},${c.weekCgmv},${c.wowCgmv},${c.weekLinks},${c.weekPerLink},${c.topBrand},${c.am}`).join("\n");
+    const h = "Creator,Category,Risk Status,All-Time cGMV,Week cGMV,WoW%,Week Links,Top Brand,AM\n";
+    const r = filtered.map(c => `${c.name},${c.category},${c.risk},${c.allTimeCgmv},${c.weekCgmv},${c.wowCgmv},${c.weekLinks},${c.topBrand},${c.am}`).join("\n");
     const b = new Blob([h + r], {
       type: "text/csv"
     });
@@ -9616,10 +9606,6 @@ function VIPCreatorDashboard() {
     label: "Active This Week",
     value: `${activeThisWeek} / ${creators.length}`,
     sub: `${Math.round(activeThisWeek / creators.length * 100)}% active`
-  }), /*#__PURE__*/React.createElement(MiniStat, {
-    label: "Avg $/Link (This Week)",
-    value: `$${avgPerLink.toLocaleString()}`,
-    sub: `${totalWeekLinks.toLocaleString()} total links`
   })), /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 14,
@@ -9820,10 +9806,34 @@ function VIPCreatorDashboard() {
   }, "Sort: Week cGMV"), /*#__PURE__*/React.createElement("option", {
     value: "allTimeCgmv"
   }, "Sort: All-Time cGMV"), /*#__PURE__*/React.createElement("option", {
-    value: "weekPerLink"
-  }, "Sort: $/Link"), /*#__PURE__*/React.createElement("option", {
     value: "wowCgmv"
-  }, "Sort: WoW %"))), /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
+  }, "Sort: WoW %"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 6,
+      alignItems: "center",
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: M.textMuted,
+      fontSize: 11,
+      fontWeight: 700
+    }
+  }, "AM:"), ["all", "Amina", "Marguerite"].map(am => /*#__PURE__*/React.createElement("button", {
+    key: am,
+    onClick: () => setAmFilter(am),
+    style: {
+      background: amFilter === am ? am === "all" ? M.purple : AM_COLORS[am] : "transparent",
+      color: amFilter === am ? "#fff" : M.textMuted,
+      border: `1px solid ${amFilter === am ? "transparent" : M.border}`,
+      padding: "4px 12px",
+      borderRadius: 8,
+      fontSize: 11,
+      fontWeight: 600,
+      cursor: "pointer"
+    }
+  }, am === "all" ? "All" : am === "Marguerite" ? "Marg" : "Amina"))), /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
     style: {
       overflowX: "auto"
     }
@@ -9856,8 +9866,6 @@ function VIPCreatorDashboard() {
     style: thStyle
   }, "Week Links"), /*#__PURE__*/React.createElement("th", {
     style: thStyle
-  }, "$/Link"), /*#__PURE__*/React.createElement("th", {
-    style: thStyle
   }, "Top 3 Brands (30d)"))), /*#__PURE__*/React.createElement("tbody", null, filtered.map((c, idx) => /*#__PURE__*/React.createElement("tr", {
     key: idx,
     style: {
@@ -9880,7 +9888,7 @@ function VIPCreatorDashboard() {
     category: c.category
   })), /*#__PURE__*/React.createElement("td", {
     style: tdStyle
-  }, c.category === "Multiple" && c.topVerticals.length > 0 ? /*#__PURE__*/React.createElement("span", {
+  }, c.topVerticals && c.topVerticals.length > 1 ? /*#__PURE__*/React.createElement("span", {
     style: {
       fontSize: 9,
       color: M.textMuted
@@ -9901,8 +9909,6 @@ function VIPCreatorDashboard() {
   }, c.wowCgmv.toFixed(1), "%"), /*#__PURE__*/React.createElement("td", {
     style: tdStyle
   }, c.weekLinks.toLocaleString()), /*#__PURE__*/React.createElement("td", {
-    style: tdStyle
-  }, "$", c.weekPerLink.toLocaleString()), /*#__PURE__*/React.createElement("td", {
     style: tdStyle
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -9940,10 +9946,6 @@ function VIPCreatorDashboard() {
     label: "Closed Lost (Q1)",
     value: pipelineStats.closedLostQ,
     accent: M.red
-  }), /*#__PURE__*/React.createElement(MiniStat, {
-    label: "Total Closed (Q1)",
-    value: pipelineStats.totalClosedQ,
-    accent: M.purple
   })), /*#__PURE__*/React.createElement(Card, {
     style: {
       marginBottom: 20
@@ -10097,16 +10099,23 @@ function VIPCreatorDashboard() {
     style: tdStyle
   }, fmt(c.allTimeCgmv)), /*#__PURE__*/React.createElement("td", {
     style: tdStyle
-  }, /*#__PURE__*/React.createElement("span", {
+  }, /*#__PURE__*/React.createElement("div", {
     style: {
-      background: `${getBrandColor(c.topBrand)}20`,
-      color: getBrandColor(c.topBrand),
+      display: "flex",
+      gap: 3,
+      flexWrap: "wrap"
+    }
+  }, c.topBrands.slice(0, 3).map((b, i) => /*#__PURE__*/React.createElement("span", {
+    key: i,
+    style: {
+      background: getBrandColor(b) + "20",
+      color: getBrandColor(b),
       padding: "2px 6px",
       borderRadius: 6,
       fontSize: 9,
       fontWeight: 700
     }
-  }, c.topBrand)), /*#__PURE__*/React.createElement("td", {
+  }, b)))), /*#__PURE__*/React.createElement("td", {
     style: tdStyle
   }, /*#__PURE__*/React.createElement(RiskBadge, {
     risk: c.risk
