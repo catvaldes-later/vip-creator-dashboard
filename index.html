@@ -9443,7 +9443,7 @@ const Insight = ({
 const fmt = v => v >= 1e6 ? `$${(v / 1e6).toFixed(1)}M` : v >= 1000 ? `$${(v / 1000).toFixed(1)}K` : `$${v}`;
 
 //  MAIN DASHBOARD 
-export default function Dashboard() {
+function VIPCreatorDashboard() {
   const [tab, setTab] = useState("Overview");
   const [drillPhase, setDrillPhase] = useState(null);
   const [riskFilter, setRiskFilter] = useState("all");
