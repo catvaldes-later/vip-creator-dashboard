@@ -14674,6 +14674,26 @@ const VIP_LEADS_RAW = [{
   social: "@megcusick",
   gmv90d: 0
 }];
+// ═══════ CHORUS CALL LOG DATA (from Chorus.ai daily recaps) ═══════
+const CHORUS_CALLS_RAW = [
+  {date:"2026-02-23",csm:"Lauren Vilips",creator:"Taryn Newton",meeting:"@Tarynnewton x Mavely",agency:"Hollingsworth Klaus Mgmt"},
+  {date:"2026-02-25",csm:"Lauren Vilips",creator:"Grace Ginex",meeting:"Grace Ginex and Lauren Vilips",agency:null},
+  {date:"2026-02-25",csm:"Lauren Vilips",creator:"Jen Alvarez",meeting:"Jen Alvarez x Mavely VIP",agency:"Parker Management"},
+  {date:"2026-02-25",csm:"Lauren Vilips",creator:"Whitney Rife Becker",meeting:"Whitney Rife Becker x Mavely VIP",agency:"Dress Up Buttercup"},
+  {date:"2026-02-25",csm:"Lauren Vilips",creator:"Yolande Kellt",meeting:"Yolande Kellt and Lauren Vilips",agency:null},
+  {date:"2026-02-25",csm:"Marguerite Meyers",creator:"Nicole Cantu",meeting:"Nicole Cantu and Marguerite Meyers",agency:null},
+  {date:"2026-02-25",csm:"Marguerite Meyers",creator:"Dominique Bird",meeting:"Dominique Bird and Marguerite Meyers",agency:"Sociable Society"},
+  {date:"2026-02-25",csm:"Amina Butt",creator:"Caitlyn Kirkland",meeting:"Mavely Strategy Session - Caitlyn Kirkland",agency:"Amberly Crast"},
+  {date:"2026-02-26",csm:"Amina Butt",creator:"Tori Winkle",meeting:"Mavely Strategy Session - Tori Winkle",agency:null},
+  {date:"2026-02-26",csm:"Lauren Vilips",creator:"Karlibree",meeting:"Karlibree x Mavely",agency:"CreatorX Agency"},
+  {date:"2026-02-26",csm:"Lauren Vilips",creator:"Amanda Ivanelli",meeting:"Amanda Ivanelli and Lauren Vilips",agency:"Desisto MGMT"},
+  {date:"2026-02-26",csm:"Lauren Vilips",creator:"Liza Adele",meeting:"@Liza_adele x Mavely",agency:null},
+  {date:"2026-02-26",csm:"Lauren Vilips",creator:"Allison Roman",meeting:"Romanfamilyhome x Mavely",agency:null},
+  {date:"2026-02-26",csm:"Lauren Vilips",creator:"Taylor",meeting:"Taylor x Mavely VIP Connect",agency:"The Digital Department"},
+  {date:"2026-02-26",csm:"Marguerite Meyers",creator:"Des & Lexi DFOAD",meeting:"Des & Lexi DFOAD and Marguerite Meyers",agency:null},
+  {date:"2026-02-26",csm:"Amina Butt",creator:"Mackenzie King",meeting:"Mavely Strategy Session - Mackenzie King",agency:"King Social Management"},
+];
+
 const parseCreators = rawData => {
   const today = new Date("2026-02-25");
   return rawData.filter(c => {
@@ -15990,7 +16010,59 @@ function Dashboard() {
       color: M.textMuted,
       lineHeight: 1.5
     }
-  }, s.detail)))), /*#__PURE__*/React.createElement(Card, {
+  }, s.detail)))), (() => {
+  const weekStart = new Date("2026-02-23");
+  const weekEnd = new Date("2026-02-27");
+  const weekCalls = CHORUS_CALLS_RAW.filter(c => { const d = new Date(c.date); return d >= weekStart && d <= weekEnd; });
+  const CSM_COLORS = {"Lauren Vilips": M.purple, "Marguerite Meyers": M.orange, "Amina Butt": M.blue};
+  const csmNames = ["Lauren Vilips", "Marguerite Meyers", "Amina Butt"];
+  const csmCalls = csmNames.map(name => ({name, calls: weekCalls.filter(c => c.csm === name)}));
+  return /*#__PURE__*/React.createElement(React.Fragment, null,
+    /*#__PURE__*/React.createElement("div", {style: {fontSize: 14, fontWeight: 700, color: M.purpleLight, marginBottom: 10}},
+      "Calls Completed This Week ",
+      /*#__PURE__*/React.createElement("span", {style: {fontSize: 11, fontWeight: 500, color: M.textMuted}}, "(Feb 23 – Feb 27)")
+    ),
+    /*#__PURE__*/React.createElement("div", {style: {display: "flex", gap: 12, marginBottom: 12, flexWrap: "wrap"}},
+      csmCalls.map(({name, calls}) =>
+        /*#__PURE__*/React.createElement("div", {key: name, style: {flex: "1 1 140px", background: M.bgCard, borderRadius: 12, padding: 14, border: "1px solid " + M.border, borderLeft: "4px solid " + CSM_COLORS[name]}},
+          /*#__PURE__*/React.createElement("div", {style: {fontSize: 10, color: M.textMuted, fontWeight: 600}}, name.split(" ")[0]),
+          /*#__PURE__*/React.createElement("div", {style: {fontSize: 28, fontWeight: 800, color: CSM_COLORS[name], marginTop: 2}}, calls.length),
+          /*#__PURE__*/React.createElement("div", {style: {fontSize: 9, color: M.textLight, marginTop: 2}}, "calls")
+        )
+      ),
+      /*#__PURE__*/React.createElement("div", {style: {flex: "1 1 140px", background: M.bgCard, borderRadius: 12, padding: 14, border: "1px solid " + M.border, borderLeft: "4px solid " + M.green}},
+        /*#__PURE__*/React.createElement("div", {style: {fontSize: 10, color: M.textMuted, fontWeight: 600}}, "Team Total"),
+        /*#__PURE__*/React.createElement("div", {style: {fontSize: 28, fontWeight: 800, color: M.green, marginTop: 2}}, weekCalls.length),
+        /*#__PURE__*/React.createElement("div", {style: {fontSize: 9, color: M.textLight, marginTop: 2}}, "calls")
+      )
+    ),
+    /*#__PURE__*/React.createElement(Card, {style: {marginBottom: 20}},
+      /*#__PURE__*/React.createElement("div", {style: {maxHeight: 400, overflowY: "auto", borderRadius: 8}},
+        /*#__PURE__*/React.createElement("table", {style: {width: "100%", borderCollapse: "collapse"}},
+          /*#__PURE__*/React.createElement("thead", {style: {position: "sticky", top: 0, background: M.bgCard, zIndex: 1}},
+            /*#__PURE__*/React.createElement("tr", {style: {borderBottom: "1px solid " + M.border}},
+              /*#__PURE__*/React.createElement("th", {style: thStyle}, "Date"),
+              /*#__PURE__*/React.createElement("th", {style: thStyle}, "CSM"),
+              /*#__PURE__*/React.createElement("th", {style: thStyle}, "Creator"),
+              /*#__PURE__*/React.createElement("th", {style: thStyle}, "Agency / Meeting")
+            )
+          ),
+          /*#__PURE__*/React.createElement("tbody", null,
+            weekCalls.sort((a,b) => new Date(b.date) - new Date(a.date)).map((c, idx) => {
+              const sc = CSM_COLORS[c.csm] || M.textMuted;
+              return /*#__PURE__*/React.createElement("tr", {key: idx, style: {borderBottom: "1px solid " + M.borderLight, background: idx % 2 === 0 ? M.bgCard : M.bgCardAlt}},
+                /*#__PURE__*/React.createElement("td", {style: tdStyle}, /*#__PURE__*/React.createElement("span", {style: {fontSize: 10, color: M.textLight}}, new Date(c.date + "T12:00:00").toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"}))),
+                /*#__PURE__*/React.createElement("td", {style: tdStyle}, /*#__PURE__*/React.createElement("span", {style: {background: sc + "20", color: sc, padding: "2px 8px", borderRadius: 6, fontSize: 9, fontWeight: 700}}, c.csm.split(" ")[0])),
+                /*#__PURE__*/React.createElement("td", {style: tdStyle}, /*#__PURE__*/React.createElement("strong", {style: {color: M.text}}, c.creator)),
+                /*#__PURE__*/React.createElement("td", {style: tdStyle}, /*#__PURE__*/React.createElement("span", {style: {fontSize: 10, color: M.textMuted}}, c.agency || "—"))
+              );
+            })
+          )
+        )
+      )
+    )
+  );
+})(), /*#__PURE__*/React.createElement(Card, {
     style: {
       marginBottom: 20
     }
@@ -16393,6 +16465,52 @@ function Dashboard() {
       marginBottom: 16
     }
   }, "VIP Leads Pipeline \u2014 Ivana's Prospects (", VIP_LEADS_RAW.length, ")"), (() => {
+  const weekStart = new Date("2026-02-23");
+  const weekEnd = new Date("2026-02-27");
+  const laurenCalls = CHORUS_CALLS_RAW.filter(c => { const d = new Date(c.date); return c.csm === "Lauren Vilips" && d >= weekStart && d <= weekEnd; });
+  return /*#__PURE__*/React.createElement(React.Fragment, null,
+    /*#__PURE__*/React.createElement("div", {style: {fontSize: 14, fontWeight: 700, color: M.purpleLight, marginBottom: 10}},
+      "Lauren\u2019s Calls Completed ",
+      /*#__PURE__*/React.createElement("span", {style: {fontSize: 11, fontWeight: 500, color: M.textMuted}}, "(Feb 23 \u2013 Feb 27)")
+    ),
+    /*#__PURE__*/React.createElement("div", {style: {display: "flex", gap: 12, marginBottom: 12}},
+      /*#__PURE__*/React.createElement("div", {style: {flex: "0 0 auto", background: M.bgCard, borderRadius: 12, padding: 14, border: "1px solid " + M.border, borderLeft: "4px solid " + M.purple}},
+        /*#__PURE__*/React.createElement("div", {style: {fontSize: 10, color: M.textMuted, fontWeight: 600}}, "Lauren"),
+        /*#__PURE__*/React.createElement("div", {style: {fontSize: 28, fontWeight: 800, color: M.purple, marginTop: 2}}, laurenCalls.length),
+        /*#__PURE__*/React.createElement("div", {style: {fontSize: 9, color: M.textLight, marginTop: 2}}, "calls this week")
+      )
+    ),
+    /*#__PURE__*/React.createElement(Card, {style: {marginBottom: 16}},
+      /*#__PURE__*/React.createElement("div", {style: {maxHeight: 260, overflowY: "auto", borderRadius: 8}},
+        /*#__PURE__*/React.createElement("table", {style: {width: "100%", borderCollapse: "collapse"}},
+          /*#__PURE__*/React.createElement("thead", {style: {position: "sticky", top: 0, background: M.bgCard, zIndex: 1}},
+            /*#__PURE__*/React.createElement("tr", {style: {borderBottom: "1px solid " + M.border}},
+              /*#__PURE__*/React.createElement("th", {style: thStyle}, "Date"),
+              /*#__PURE__*/React.createElement("th", {style: thStyle}, "Creator"),
+              /*#__PURE__*/React.createElement("th", {style: thStyle}, "Agency")
+            )
+          ),
+          /*#__PURE__*/React.createElement("tbody", null,
+            laurenCalls.sort((a,b) => new Date(b.date) - new Date(a.date)).map((c, idx) =>
+              /*#__PURE__*/React.createElement("tr", {key: idx, style: {borderBottom: "1px solid " + M.borderLight, background: idx % 2 === 0 ? M.bgCard : M.bgCardAlt}},
+                /*#__PURE__*/React.createElement("td", {style: tdStyle}, /*#__PURE__*/React.createElement("span", {style: {fontSize: 10, color: M.textLight}}, new Date(c.date + "T12:00:00").toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"}))),
+                /*#__PURE__*/React.createElement("td", {style: tdStyle}, /*#__PURE__*/React.createElement("strong", {style: {color: M.text}}, c.creator)),
+                /*#__PURE__*/React.createElement("td", {style: tdStyle}, /*#__PURE__*/React.createElement("span", {style: {fontSize: 10, color: M.textMuted}}, c.agency || "\u2014"))
+              )
+            )
+          )
+        )
+      )
+    )
+  );
+})(), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      fontWeight: 700,
+      color: M.purpleLight,
+      marginBottom: 16
+    }
+  }, "VIP Leads Pipeline \u2014 Ivana's Prospects (", VIP_LEADS_RAW.length, ")"), (() => {
     const now = new Date("2026-02-27");
     const dayOfWeek = now.getDay();
     const monday = new Date(now);
@@ -16588,6 +16706,45 @@ function Dashboard() {
       marginBottom: 16
     }
   }, "VIP Deals Pipeline \u2014 Lauren's Acquisition"), (() => {
+  const weekStart = new Date("2026-02-23");
+  const weekEnd = new Date("2026-02-27");
+  const laurenCalls = CHORUS_CALLS_RAW.filter(c => { const d = new Date(c.date); return c.csm === "Lauren Vilips" && d >= weekStart && d <= weekEnd; });
+  return /*#__PURE__*/React.createElement(React.Fragment, null,
+    /*#__PURE__*/React.createElement("div", {style: {fontSize: 13, fontWeight: 700, color: M.purpleLight, marginBottom: 10}},
+      "Calls Completed ",
+      /*#__PURE__*/React.createElement("span", {style: {fontSize: 11, fontWeight: 500, color: M.textMuted}}, "(Feb 23 \u2013 Feb 27)")
+    ),
+    /*#__PURE__*/React.createElement("div", {style: {display: "flex", gap: 12, marginBottom: 12}},
+      /*#__PURE__*/React.createElement("div", {style: {flex: "0 0 auto", background: M.bgCard, borderRadius: 12, padding: 14, border: "1px solid " + M.border, borderLeft: "4px solid " + M.purple}},
+        /*#__PURE__*/React.createElement("div", {style: {fontSize: 10, color: M.textMuted, fontWeight: 600}}, "Lauren"),
+        /*#__PURE__*/React.createElement("div", {style: {fontSize: 28, fontWeight: 800, color: M.purple, marginTop: 2}}, laurenCalls.length),
+        /*#__PURE__*/React.createElement("div", {style: {fontSize: 9, color: M.textLight, marginTop: 2}}, "calls this week")
+      )
+    ),
+    /*#__PURE__*/React.createElement(Card, {style: {marginBottom: 16}},
+      /*#__PURE__*/React.createElement("div", {style: {maxHeight: 260, overflowY: "auto", borderRadius: 8}},
+        /*#__PURE__*/React.createElement("table", {style: {width: "100%", borderCollapse: "collapse"}},
+          /*#__PURE__*/React.createElement("thead", {style: {position: "sticky", top: 0, background: M.bgCard, zIndex: 1}},
+            /*#__PURE__*/React.createElement("tr", {style: {borderBottom: "1px solid " + M.border}},
+              /*#__PURE__*/React.createElement("th", {style: thStyle}, "Date"),
+              /*#__PURE__*/React.createElement("th", {style: thStyle}, "Creator"),
+              /*#__PURE__*/React.createElement("th", {style: thStyle}, "Agency")
+            )
+          ),
+          /*#__PURE__*/React.createElement("tbody", null,
+            laurenCalls.sort((a,b) => new Date(b.date) - new Date(a.date)).map((c, idx) =>
+              /*#__PURE__*/React.createElement("tr", {key: idx, style: {borderBottom: "1px solid " + M.borderLight, background: idx % 2 === 0 ? M.bgCard : M.bgCardAlt}},
+                /*#__PURE__*/React.createElement("td", {style: tdStyle}, /*#__PURE__*/React.createElement("span", {style: {fontSize: 10, color: M.textLight}}, new Date(c.date + "T12:00:00").toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"}))),
+                /*#__PURE__*/React.createElement("td", {style: tdStyle}, /*#__PURE__*/React.createElement("strong", {style: {color: M.text}}, c.creator)),
+                /*#__PURE__*/React.createElement("td", {style: tdStyle}, /*#__PURE__*/React.createElement("span", {style: {fontSize: 10, color: M.textMuted}}, c.agency || "\u2014"))
+              )
+            )
+          )
+        )
+      )
+    )
+  );
+})(), (() => {
     const now = new Date("2026-02-27");
     const dayOfWeek = now.getDay();
     const monday = new Date(now);
