@@ -16408,7 +16408,8 @@ function Dashboard() {
       month: "short",
       day: "numeric"
     })}`;
-    const callSetThisWeek = deals.filter(d => d.stage === "Call Set" && d.createDate && d.createDate >= monday && d.createDate <= friday).length;
+    const callSetDeals = deals.filter(d => d.stage === "Call Set" && d.createDate && d.createDate >= monday && d.createDate <= friday);
+    const getName = d => d.name.replace(" - Mavely VIP", "").replace(" - mavely VIP", "").replace(" - Mavely VIP 12 Month", "").replace(" - MVP", "").trim();
     return /*#__PURE__*/React.createElement("div", {
       style: {
         display: "flex",
@@ -16418,7 +16419,7 @@ function Dashboard() {
       }
     }, /*#__PURE__*/React.createElement("div", {
       style: {
-        flex: "1 1 200px",
+        flex: "1 1 180px",
         background: M.bgCard,
         borderRadius: 12,
         padding: 14,
@@ -16440,7 +16441,7 @@ function Dashboard() {
       }
     }, weekLabel)), /*#__PURE__*/React.createElement("div", {
       style: {
-        flex: "1 1 200px",
+        flex: "1 1 220px",
         background: M.bgCard,
         borderRadius: 12,
         padding: 14,
@@ -16460,7 +16461,28 @@ function Dashboard() {
         color: M.green,
         marginTop: 2
       }
-    }, callSetThisWeek)));
+    }, callSetDeals.length), callSetDeals.length > 0 && /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginTop: 6,
+        borderTop: `1px solid ${M.borderLight}`,
+        paddingTop: 6
+      }
+    }, callSetDeals.map((d, i) => /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: {
+        fontSize: 10,
+        color: M.text,
+        marginBottom: 2
+      }
+    }, "\u2713 ", getName(d), " ", /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: M.textMuted,
+        fontSize: 9
+      }
+    }, d.createDate.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric"
+    })))))));
   })(), /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
     style: {
       maxHeight: 600,
