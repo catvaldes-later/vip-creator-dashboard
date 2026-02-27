@@ -16884,6 +16884,8 @@ function Dashboard() {
     style: thStyle
   }, "Owner"), /*#__PURE__*/React.createElement("th", {
     style: thStyle
+  }, "Close Date"), /*#__PURE__*/React.createElement("th", {
+    style: thStyle
   }, "Onboarding"), /*#__PURE__*/React.createElement("th", {
     style: thStyle
   }, "Last Updated"))), /*#__PURE__*/React.createElement("tbody", null, (() => {
@@ -16942,6 +16944,10 @@ function Dashboard() {
           color: M.textMuted
         }
       }, "Lauren")), /*#__PURE__*/React.createElement("td", {
+        style: tdStyle
+      }, /*#__PURE__*/React.createElement("span", {
+        style: {fontSize: 10, color: M.textLight}
+      }, d.closeDate ? d.closeDate.toLocaleDateString("en-US", {month: "short", day: "numeric", year: "numeric"}) : "\u2014")), /*#__PURE__*/React.createElement("td", {
         style: tdStyle
       }, (() => {
         const status = getOnboardingStatus(d.id, d.stage);
