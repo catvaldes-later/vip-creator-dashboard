@@ -14857,6 +14857,41 @@ const getOnboardingStatus = (dealId, stage) => {
   if (daysSinceClose > 8) return "ghosted";
   return "scheduling";
 };
+const WALMART_CATEGORIES = [
+  {name:"Miscellaneous",data:{"2026-Feb":7547140.9,"2026-Jan":8740073.15,"2025-Dec":15550135.01,"2025-Nov":19491036.2,"2025-Oct":16866003.56,"2025-Sep":8677706.66}},
+  {name:"Household Paper/Household Chemicals",data:{"2026-Feb":3705654.1,"2026-Jan":3658249.76,"2025-Dec":5685307.04,"2025-Nov":4222020.04,"2025-Oct":3072590.82,"2025-Sep":3355494.15}},
+  {name:"Electronics",data:{"2026-Feb":3208278.36,"2026-Jan":1648328.29,"2025-Dec":5356617.74,"2025-Nov":9351208.0,"2025-Oct":3100230.17,"2025-Sep":1460152.03}},
+  {name:"Furniture",data:{"2026-Feb":2674469.9,"2026-Jan":1632073.89,"2025-Dec":3452535.38,"2025-Nov":3269968.45,"2025-Oct":1482347.19,"2025-Sep":1257782.02}},
+  {name:"Pets and Supplies",data:{"2026-Feb":2016135.36,"2026-Jan":2167528.06,"2025-Dec":2971404.05,"2025-Nov":2284407.51,"2025-Oct":1743908.4,"2025-Sep":1995481.26}},
+  {name:"Intimate Apparel/Womens Apparel",data:{"2026-Feb":1716057.93,"2026-Jan":1273026.61,"2025-Dec":3041425.34,"2025-Nov":2718053.79,"2025-Oct":1560802.37,"2025-Sep":1492740.06}},
+  {name:"Personal Care",data:{"2026-Feb":1683891.74}},
+  {name:"Home Management",data:{"2026-Feb":1634902.97,"2026-Jan":1496526.95,"2025-Dec":2881663.05,"2025-Nov":3400017.01,"2025-Oct":1527083.74,"2025-Sep":1179446.51}},
+  {name:"Cook and Dine",data:{"2026-Feb":1491263.85,"2026-Jan":1541656.45,"2025-Dec":3263710.18,"2025-Nov":2694485.16,"2025-Oct":1333614.58,"2025-Sep":1073437.75}},
+  {name:"Beauty",data:{"2026-Feb":1457949.43,"2026-Jan":1287752.85,"2025-Dec":2230973.66,"2025-Nov":2060839.44,"2025-Oct":1200103.7,"2025-Sep":1210696.77}},
+  {name:"Baby/Toddler/Boys/Girls Apparel",data:{"2026-Feb":1429615.42,"2026-Jan":1161843.55,"2025-Dec":2428948.69,"2025-Nov":1815131.53,"2025-Oct":1132698.94,"2025-Sep":1109416.49}},
+  {name:"Pharmacy/OTC",data:{"2026-Feb":1385771.14,"2026-Jan":1358738.84,"2025-Dec":1860752.73,"2025-Nov":1490988.28,"2025-Oct":1202773.05,"2025-Sep":1203614.98}},
+  {name:"Toys",data:{"2026-Feb":1078196.65,"2026-Jan":1054756.32,"2025-Dec":4455752.43,"2025-Nov":4204709.7,"2025-Oct":2176437.99,"2025-Sep":823753.23}},
+  {name:"Automotive",data:{"2026-Feb":1013441.81,"2026-Jan":1089665.5,"2025-Dec":1466936.71,"2025-Nov":1227862.11,"2025-Oct":918972.99,"2025-Sep":785497.39}},
+  {name:"Flash Deals SKUs",data:{"2026-Feb":765133.0,"2026-Jan":733927.88,"2025-Dec":1287000.0,"2025-Nov":1123000.0}},
+  {name:"Bedding",data:{"2026-Feb":747986.53,"2026-Jan":620085.33,"2025-Dec":1379379.77,"2025-Nov":1157474.77,"2025-Oct":551757.49,"2025-Sep":556803.06}},
+  {name:"Shoes",data:{"2026-Feb":736224.83,"2026-Jan":528759.97,"2025-Dec":1178076.22,"2025-Nov":976958.66,"2025-Oct":604571.55,"2025-Sep":604936.6}},
+  {name:"Home Decor",data:{"2026-Feb":718555.64,"2026-Jan":539534.03,"2025-Dec":1198826.0,"2025-Nov":912424.37,"2025-Oct":471685.26,"2025-Sep":447870.44}},
+  {name:"Bath and Shower",data:{"2026-Feb":712816.15,"2026-Jan":551009.52,"2025-Dec":1030949.14,"2025-Nov":867768.33,"2025-Oct":490143.07,"2025-Sep":408476.93}},
+  {name:"Mens Apparel",data:{"2026-Feb":688764.04,"2026-Jan":526671.58,"2025-Dec":1133820.64,"2025-Nov":958447.04,"2025-Oct":611069.77,"2025-Sep":572710.44}},
+  {name:"Patio and Garden",data:{"2026-Feb":674783.4,"2026-Jan":352397.47,"2025-Dec":697832.17,"2025-Nov":612694.74,"2025-Oct":405003.97,"2025-Sep":427000.12}},
+  {name:"Sporting Goods",data:{"2026-Feb":567610.84,"2026-Jan":456261.15,"2025-Dec":860427.03,"2025-Nov":742853.27,"2025-Oct":454966.38,"2025-Sep":364476.23}},
+  {name:"Hardware and Tools/DIY",data:{"2026-Feb":446627.82,"2026-Jan":407574.38,"2025-Dec":672178.5,"2025-Nov":610827.84,"2025-Oct":393618.87,"2025-Sep":351908.75}},
+  {name:"Arts Crafts Sewing and Fabrics",data:{"2026-Feb":411073.09,"2026-Jan":340803.54,"2025-Dec":654289.74,"2025-Nov":547963.7,"2025-Oct":297527.42,"2025-Sep":269843.38}},
+  {name:"Horticulture",data:{"2026-Feb":390204.54,"2026-Jan":225279.97,"2025-Dec":311810.02,"2025-Nov":271893.1,"2025-Oct":185263.31,"2025-Sep":277613.73}},
+  {name:"Wireless",data:{"2026-Feb":349782.47,"2026-Jan":287652.14,"2025-Dec":553929.35,"2025-Nov":543760.58,"2025-Oct":326116.22,"2025-Sep":252025.72}},
+  {name:"Stationery",data:{"2026-Feb":309100.55,"2026-Jan":241889.2,"2025-Dec":460027.83,"2025-Nov":344791.68,"2025-Oct":289447.63,"2025-Sep":254197.14}},
+  {name:"Jewelry",data:{"2026-Feb":266696.29,"2026-Jan":194419.48,"2025-Dec":673085.62,"2025-Nov":419853.22,"2025-Oct":177555.68,"2025-Sep":149399.98}},
+  {name:"Media and Gaming",data:{"2026-Feb":254853.03,"2026-Jan":224693.76,"2025-Dec":595652.89,"2025-Nov":595478.46,"2025-Oct":281729.47,"2025-Sep":162849.0}},
+  {name:"Cameras and Supplies",data:{"2026-Feb":220997.72,"2026-Jan":112458.07,"2025-Dec":334774.27,"2025-Nov":175965.83,"2025-Oct":70653.77,"2025-Sep":78553.6}},
+  {name:"Books and Magazines",data:{"2026-Feb":159789.25,"2026-Jan":142696.85,"2025-Dec":252499.26,"2025-Nov":192207.66,"2025-Oct":120792.83,"2025-Sep":90006.33}},
+  {name:"Accessories",data:{"2026-Feb":133775.72,"2026-Jan":95458.85,"2025-Dec":238779.2,"2025-Nov":196960.76,"2025-Oct":101779.42,"2025-Sep":98373.69}},
+  {name:"Optical Rx/Pharmacy Rx",data:{"2026-Feb":51541.4,"2026-Jan":35614.04,"2025-Dec":39131.23,"2025-Nov":21937.45,"2025-Oct":14478.37,"2025-Sep":14044.5}},
+];
 const parseCreators = rawData => {
   const today = new Date("2026-02-25");
   return rawData.filter(c => {
@@ -17122,7 +17157,44 @@ function Dashboard() {
     style: tdStyle
   }, /*#__PURE__*/React.createElement(RiskBadge, {
     risk: c.risk
-  }))))))))), tab === "Creator Rolodex" && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+  }))))))), /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      fontWeight: 700,
+      marginBottom: 14,
+      color: M.text
+    }
+  }, "Top Walmart Categories by GMV ", /*#__PURE__*/React.createElement("span", {
+    style: { fontSize: 11, color: M.textMuted, fontWeight: 400 }
+  }, "(Network \u2014 Feb 2026 vs Jan 2026)")), /*#__PURE__*/React.createElement("div", {
+    style: { overflowX: "auto" }
+  }, /*#__PURE__*/React.createElement("table", {
+    style: { width: "100%", borderCollapse: "collapse" }
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", {
+    style: { borderBottom: `1px solid ${M.border}` }
+  }, /*#__PURE__*/React.createElement("th", { style: {...thStyle, textAlign: "left"} }, "#"), /*#__PURE__*/React.createElement("th", { style: {...thStyle, textAlign: "left"} }, "Category"), /*#__PURE__*/React.createElement("th", { style: thStyle }, "Feb 2026 GMV"), /*#__PURE__*/React.createElement("th", { style: thStyle }, "Jan 2026 GMV"), /*#__PURE__*/React.createElement("th", { style: thStyle }, "MoM Change"), /*#__PURE__*/React.createElement("th", { style: thStyle }, "6mo Trend"))), /*#__PURE__*/React.createElement("tbody", null, WALMART_CATEGORIES.slice(0, 20).map((cat, idx) => {
+    const feb = cat.data["2026-Feb"] || 0;
+    const jan = cat.data["2026-Jan"] || 0;
+    const mom = jan > 0 ? ((feb - jan) / jan * 100) : 0;
+    const months = ["2025-Sep","2025-Oct","2025-Nov","2025-Dec","2026-Jan","2026-Feb"];
+    const vals = months.map(m => cat.data[m] || 0);
+    const maxV = Math.max(...vals);
+    return /*#__PURE__*/React.createElement("tr", {
+      key: idx,
+      style: { borderBottom: `1px solid ${M.borderLight}`, background: idx % 2 === 0 ? M.bgCard : M.bgCardAlt }
+    }, /*#__PURE__*/React.createElement("td", { style: {...tdStyle, color: M.textMuted, fontSize: 10} }, idx + 1), /*#__PURE__*/React.createElement("td", { style: tdStyle }, /*#__PURE__*/React.createElement("strong", {style:{fontSize:11}}, cat.name)), /*#__PURE__*/React.createElement("td", {
+      style: {...tdStyle, color: M.green}
+    }, "$" + (feb >= 1e6 ? (feb/1e6).toFixed(1) + "M" : (feb/1e3).toFixed(0) + "K")), /*#__PURE__*/React.createElement("td", {
+      style: {...tdStyle, color: M.textLight}
+    }, jan > 0 ? "$" + (jan >= 1e6 ? (jan/1e6).toFixed(1) + "M" : (jan/1e3).toFixed(0) + "K") : "\u2014"), /*#__PURE__*/React.createElement("td", {
+      style: {...tdStyle, color: mom > 0 ? M.green : mom < 0 ? M.red : M.textMuted, fontWeight: 600}
+    }, jan > 0 ? (mom > 0 ? "\u25B2 " : mom < 0 ? "\u25BC " : "") + Math.abs(mom).toFixed(1) + "%" : "\u2014"), /*#__PURE__*/React.createElement("td", { style: tdStyle }, /*#__PURE__*/React.createElement("div", {
+      style: { display: "flex", alignItems: "flex-end", gap: 2, height: 20 }
+    }, vals.map((v, i) => /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: { width: 8, background: i === 5 ? M.walmart : M.borderLight, borderRadius: 1, height: maxV > 0 ? Math.max(3, v / maxV * 20) : 3 }
+    })))));
+  })))))), tab === "Creator Rolodex" && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       alignItems: "center",
