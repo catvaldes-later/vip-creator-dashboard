@@ -14857,6 +14857,7 @@ const getOnboardingStatus = (dealId, stage) => {
   if (daysSinceClose > 8) return "ghosted";
   return "scheduling";
 };
+const WALMART_CREATOR_CATEGORIES = {"Abi Ayres":["Intimate Apparel/Womens Apparel","Home Management","Beauty"],"Alexandra Harper":["Seasonal","Intimate Apparel/Womens Apparel","Miscellaneous"],"Ali Propst":["Intimate Apparel/Womens Apparel"],"Alissa Wilson":["Intimate Apparel/Womens Apparel"],"Amanda Fouts":["Intimate Apparel/Womens Apparel","Shoes","Furniture"],"Amanda Miller":["Intimate Apparel/Womens Apparel","Cook and Dine","Shoes"],"Amanda Wagner":["Intimate Apparel/Womens Apparel","Cook and Dine","Home Management"],"Andrea De Silva":["Intimate Apparel/Womens Apparel","Toys","Miscellaneous"],"Andrea Vowels":["Baby/Toddler/Boys/Girls Apparel","Intimate Apparel/Womens Apparel","Miscellaneous"],"Angel Jackson":["Furniture"],"Ashley Savage":["Intimate Apparel/Womens Apparel","Miscellaneous","Seasonal"],"Bridget Kiene":["Intimate Apparel/Womens Apparel","Furniture","Baby/Toddler/Boys/Girls Apparel"],"Brooke Anderson":["Intimate Apparel/Womens Apparel"],"Brooke Havner":["Intimate Apparel/Womens Apparel"],"Candice Trevino":["Intimate Apparel/Womens Apparel"],"Cara Murtaugh":["Miscellaneous","Intimate Apparel/Womens Apparel","Baby/Toddler/Boys/Girls Apparel"],"Casey Southern":["Intimate Apparel/Womens Apparel","Cook and Dine"],"Danira Alihodzic":["Intimate Apparel/Womens Apparel"],"Deana Hoffman":["Intimate Apparel/Womens Apparel"],"Erica Hinthorne":["Intimate Apparel/Womens Apparel","Electronics","Baby/Toddler/Boys/Girls Apparel"],"Erin Vogelpohl":["Intimate Apparel/Womens Apparel","Seasonal","Home Decor"],"Jasmine Rae Snooks":["Intimate Apparel/Womens Apparel","Baby/Toddler/Boys/Girls Apparel","Miscellaneous"],"Jasmine Snooks":["Intimate Apparel/Womens Apparel","Baby/Toddler/Boys/Girls Apparel","Miscellaneous"],"Jen Taylor":["Intimate Apparel/Womens Apparel","Shoes","Miscellaneous"],"Jennifer Palpallatoc":["Intimate Apparel/Womens Apparel"],"Jenny Reimold":["Intimate Apparel/Womens Apparel"],"Jessica Barstow":["Home Decor"],"Jessica Orozco":["Intimate Apparel/Womens Apparel","Shoes","Baby/Toddler/Boys/Girls Apparel"],"Kait Curnow":["Intimate Apparel/Womens Apparel"],"Kallie Davis":["Intimate Apparel/Womens Apparel","Baby/Toddler/Boys/Girls Apparel","Mens Apparel"],"Katelyn Wilkes":["Intimate Apparel/Womens Apparel","Baby/Toddler/Boys/Girls Apparel"],"Katie Keever":["Intimate Apparel/Womens Apparel","Baby/Toddler/Boys/Girls Apparel"],"Kerry Johnston":["Furniture","Miscellaneous","Home Management"],"Kristen Fussell":["Intimate Apparel/Womens Apparel","Miscellaneous","Baby/Toddler/Boys/Girls Apparel"],"Krystal Smit":["Home Management","Cook and Dine","Furniture"],"Lauren Antonucci":["Intimate Apparel/Womens Apparel","Baby/Toddler/Boys/Girls Apparel","Miscellaneous"],"Lauren Hansen":["Furniture","Miscellaneous","Beauty"],"Lauren Oggs Gee":["Intimate Apparel/Womens Apparel","Shoes","Miscellaneous"],"Luke Nowak":["Miscellaneous"],"Marissa Manderfield":["Intimate Apparel/Womens Apparel","Patio and Garden","Shoes"],"Marnie Goldberg":["Intimate Apparel/Womens Apparel","Miscellaneous","Shoes"],"Megan Pizzi":["Intimate Apparel/Womens Apparel","Cook and Dine","Mens Apparel"],"Melissa Beeler":["Baby/Toddler/Boys/Girls Apparel","Miscellaneous"],"Melissa Gitt":["Intimate Apparel/Womens Apparel","Baby/Toddler/Boys/Girls Apparel","Home Management"],"Milena Prifti":["Intimate Apparel/Womens Apparel","Baby/Toddler/Boys/Girls Apparel","Shoes"],"Morgan Bullard":["Intimate Apparel/Womens Apparel","Baby/Toddler/Boys/Girls Apparel","Shoes"],"Nadira Kurtic":["Furniture","Home Decor","Miscellaneous"],"Natalie Keinan":["Intimate Apparel/Womens Apparel","Baby/Toddler/Boys/Girls Apparel","Shoes"],"Nicky Schmaderer":["Intimate Apparel/Womens Apparel","Baby/Toddler/Boys/Girls Apparel","Shoes"],"Nneka Kanu":["Intimate Apparel/Womens Apparel","Shoes"],"Olivia Adkins":["Intimate Apparel/Womens Apparel","Miscellaneous","Baby/Toddler/Boys/Girls Apparel"],"Olivia Tierney":["Intimate Apparel/Womens Apparel","Shoes","Baby/Toddler/Boys/Girls Apparel"],"Stephanie Trantham":["Intimate Apparel/Womens Apparel","Seasonal","Cook and Dine"],"Sydney Bass":["Toys","Baby/Toddler/Boys/Girls Apparel","Miscellaneous"],"Taylor Hardy":["Intimate Apparel/Womens Apparel"],"Tiffany Mulgrew":["Patio and Garden","Furniture"],"Tori Winkle":["Baby/Toddler/Boys/Girls Apparel","Cook and Dine"],"Whitney Rife Becker":["Cook and Dine"],"jennifer palpallatoc":["Intimate Apparel/Womens Apparel"]};
 const WALMART_CATEGORIES = [
   {name:"Miscellaneous",data:{"2026-Feb":7547140.9,"2026-Jan":8740073.15,"2025-Dec":15550135.01,"2025-Nov":19491036.2,"2025-Oct":16866003.56,"2025-Sep":8677706.66}},
   {name:"Household Paper/Household Chemicals",data:{"2026-Feb":3705654.1,"2026-Jan":3658249.76,"2025-Dec":5685307.04,"2025-Nov":4222020.04,"2025-Oct":3072590.82,"2025-Sep":3355494.15}},
@@ -17127,6 +17128,8 @@ function Dashboard() {
     style: thStyle
   }, "Conv. Rate (7d)"), /*#__PURE__*/React.createElement("th", {
     style: thStyle
+  }, "Top 3 Categories"), /*#__PURE__*/React.createElement("th", {
+    style: thStyle
   }, "Risk"))), /*#__PURE__*/React.createElement("tbody", null, creators.filter(c => c.topBrand === "Walmart").sort((a, b) => b.cgmv30d - a.cgmv30d).map((c, idx) => /*#__PURE__*/React.createElement("tr", {
     key: idx,
     style: {
@@ -17154,6 +17157,13 @@ function Dashboard() {
       color: c.convRate > 0 ? M.blue : M.textMuted
     }
   }, c.convRate > 0 ? c.convRate.toFixed(1) + "%" : "—")), /*#__PURE__*/React.createElement("td", {
+    style: tdStyle
+  }, /*#__PURE__*/React.createElement("div", {
+    style: { display: "flex", gap: 3, flexWrap: "wrap" }
+  }, (WALMART_CREATOR_CATEGORIES[c.name] || []).map((cat, ci) => /*#__PURE__*/React.createElement("span", {
+    key: ci,
+    style: { background: M.walmart + "20", color: M.walmart, padding: "2px 6px", borderRadius: 6, fontSize: 9, fontWeight: 700 }
+  }, cat)))), /*#__PURE__*/React.createElement("td", {
     style: tdStyle
   }, /*#__PURE__*/React.createElement(RiskBadge, {
     risk: c.risk
