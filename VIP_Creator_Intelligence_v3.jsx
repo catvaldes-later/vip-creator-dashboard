@@ -447,6 +447,27 @@ const VIP_LEADS_RAW = [
   {name:"Meg Cusick",owner:"Ivana",cat:"—",created:"2025-03-31",social:"@megcusick",gmv90d:0}
 ];
 
+// ═══════ CHORUS CALL LOG DATA (from Chorus.ai daily recaps) ═══════
+const CHORUS_CALLS_RAW = [
+  // Week of Feb 23–27, 2026
+  {date:"2026-02-23",csm:"Lauren Vilips",creator:"Taryn Newton",meeting:"@Tarynnewton x Mavely",agency:"Hollingsworth Klaus Mgmt"},
+  {date:"2026-02-25",csm:"Lauren Vilips",creator:"Grace Ginex",meeting:"Grace Ginex and Lauren Vilips",agency:null},
+  {date:"2026-02-25",csm:"Lauren Vilips",creator:"Jen Alvarez",meeting:"Jen Alvarez x Mavely VIP",agency:"Parker Management"},
+  {date:"2026-02-25",csm:"Lauren Vilips",creator:"Whitney Rife Becker",meeting:"Whitney Rife Becker x Mavely VIP",agency:"Dress Up Buttercup"},
+  {date:"2026-02-25",csm:"Lauren Vilips",creator:"Yolande Kellt",meeting:"Yolande Kellt and Lauren Vilips",agency:null},
+  {date:"2026-02-25",csm:"Marguerite Meyers",creator:"Nicole Cantu",meeting:"Nicole Cantu and Marguerite Meyers",agency:null},
+  {date:"2026-02-25",csm:"Marguerite Meyers",creator:"Dominique Bird",meeting:"Dominique Bird and Marguerite Meyers",agency:"Sociable Society"},
+  {date:"2026-02-25",csm:"Amina Butt",creator:"Caitlyn Kirkland",meeting:"Mavely Strategy Session - Caitlyn Kirkland",agency:"Amberly Crast"},
+  {date:"2026-02-26",csm:"Amina Butt",creator:"Tori Winkle",meeting:"Mavely Strategy Session - Tori Winkle",agency:null},
+  {date:"2026-02-26",csm:"Lauren Vilips",creator:"Karlibree",meeting:"Karlibree x Mavely",agency:"CreatorX Agency"},
+  {date:"2026-02-26",csm:"Lauren Vilips",creator:"Amanda Ivanelli",meeting:"Amanda Ivanelli and Lauren Vilips",agency:"Desisto MGMT"},
+  {date:"2026-02-26",csm:"Lauren Vilips",creator:"Liza Adele",meeting:"@Liza_adele x Mavely",agency:null},
+  {date:"2026-02-26",csm:"Lauren Vilips",creator:"Allison Roman",meeting:"Romanfamilyhome x Mavely",agency:null},
+  {date:"2026-02-26",csm:"Lauren Vilips",creator:"Taylor",meeting:"Taylor x Mavely VIP Connect",agency:"The Digital Department"},
+  {date:"2026-02-26",csm:"Marguerite Meyers",creator:"Des & Lexi DFOAD",meeting:"Des & Lexi DFOAD and Marguerite Meyers",agency:null},
+  {date:"2026-02-26",csm:"Amina Butt",creator:"Mackenzie King",meeting:"Mavely Strategy Session - Mackenzie King",agency:"King Social Management"},
+];
+
 const parseCreators = (rawData) => {
   const today = new Date("2026-02-25");
 
@@ -939,6 +960,63 @@ export default function Dashboard() {
             ))}
           </div>
 
+          {/* ═══════ CALLS COMPLETED THIS WEEK ═══════ */}
+          {(() => {
+            const weekStart = new Date("2026-02-23");
+            const weekEnd = new Date("2026-02-27");
+            const weekCalls = CHORUS_CALLS_RAW.filter(c => {
+              const d = new Date(c.date);
+              return d >= weekStart && d <= weekEnd;
+            });
+            const CSM_COLORS = {"Lauren Vilips": M.purple, "Marguerite Meyers": M.orange, "Amina Butt": M.blue};
+            const csmNames = ["Lauren Vilips", "Marguerite Meyers", "Amina Butt"];
+            const csmCalls = csmNames.map(name => ({name, calls: weekCalls.filter(c => c.csm === name)}));
+            return <>
+              <div style={{ fontSize: 14, fontWeight: 700, color: M.purpleLight, marginBottom: 10 }}>Calls Completed This Week <span style={{ fontSize: 11, fontWeight: 500, color: M.textMuted }}>(Feb 23 – Feb 27)</span></div>
+              <div style={{ display: "flex", gap: 12, marginBottom: 12, flexWrap: "wrap" }}>
+                {csmCalls.map(({name, calls}) => (
+                  <div key={name} style={{ flex: "1 1 140px", background: M.bgCard, borderRadius: 12, padding: 14, border: `1px solid ${M.border}`, borderLeft: `4px solid ${CSM_COLORS[name]}` }}>
+                    <div style={{ fontSize: 10, color: M.textMuted, fontWeight: 600 }}>{name.split(" ")[0]}</div>
+                    <div style={{ fontSize: 28, fontWeight: 800, color: CSM_COLORS[name], marginTop: 2 }}>{calls.length}</div>
+                    <div style={{ fontSize: 9, color: M.textLight, marginTop: 2 }}>calls</div>
+                  </div>
+                ))}
+                <div style={{ flex: "1 1 140px", background: M.bgCard, borderRadius: 12, padding: 14, border: `1px solid ${M.border}`, borderLeft: `4px solid ${M.green}` }}>
+                  <div style={{ fontSize: 10, color: M.textMuted, fontWeight: 600 }}>Team Total</div>
+                  <div style={{ fontSize: 28, fontWeight: 800, color: M.green, marginTop: 2 }}>{weekCalls.length}</div>
+                  <div style={{ fontSize: 9, color: M.textLight, marginTop: 2 }}>calls</div>
+                </div>
+              </div>
+              <Card style={{ marginBottom: 20 }}>
+                <div style={{ maxHeight: 400, overflowY: "auto", borderRadius: 8 }}>
+                  <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                    <thead style={{ position: "sticky", top: 0, background: M.bgCard, zIndex: 1 }}>
+                      <tr style={{ borderBottom: `1px solid ${M.border}` }}>
+                        <th style={thStyle}>Date</th>
+                        <th style={thStyle}>CSM</th>
+                        <th style={thStyle}>Creator</th>
+                        <th style={thStyle}>Agency / Meeting</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {weekCalls.sort((a,b) => new Date(b.date) - new Date(a.date)).map((c, idx) => {
+                        const sc = CSM_COLORS[c.csm] || M.textMuted;
+                        return (
+                          <tr key={idx} style={{ borderBottom: `1px solid ${M.borderLight}`, background: idx % 2 === 0 ? M.bgCard : M.bgCardAlt }}>
+                            <td style={tdStyle}><span style={{ fontSize: 10, color: M.textLight }}>{new Date(c.date + "T12:00:00").toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"})}</span></td>
+                            <td style={tdStyle}><span style={{ background: `${sc}20`, color: sc, padding: "2px 8px", borderRadius: 6, fontSize: 9, fontWeight: 700 }}>{c.csm.split(" ")[0]}</span></td>
+                            <td style={tdStyle}><strong style={{ color: M.text }}>{c.creator}</strong></td>
+                            <td style={tdStyle}><span style={{ fontSize: 10, color: M.textMuted }}>{c.agency || "—"}</span></td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </Card>
+            </>;
+          })()}
+
           <Card style={{ marginBottom: 20 }}>
             <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 14, color: M.text }}>Performance Distribution (by Risk Status)</div>
             <ResponsiveContainer width="100%" height={240}>
@@ -1089,6 +1167,44 @@ export default function Dashboard() {
 
         {/* ═══════ VIP PIPELINE ═══════ */}
                 {tab === "VIP Leads Pipeline" && <>
+          {/* Lauren's Calls Completed */}
+          {(() => {
+            const weekStart = new Date("2026-02-23");
+            const weekEnd = new Date("2026-02-27");
+            const laurenCalls = CHORUS_CALLS_RAW.filter(c => c.csm === "Lauren Vilips" && new Date(c.date) >= weekStart && new Date(c.date) <= weekEnd);
+            return <>
+              <div style={{ fontSize: 14, fontWeight: 700, color: M.purpleLight, marginBottom: 6 }}>Lauren's Calls Completed <span style={{ fontSize: 11, fontWeight: 500, color: M.textMuted }}>(Feb 23 – Feb 27)</span></div>
+              <div style={{ display: "flex", gap: 12, marginBottom: 12, alignItems: "center" }}>
+                <div style={{ background: M.bgCard, borderRadius: 12, padding: "10px 18px", border: `1px solid ${M.border}`, borderLeft: `4px solid ${M.purple}` }}>
+                  <span style={{ fontSize: 22, fontWeight: 800, color: M.purple }}>{laurenCalls.length}</span>
+                  <span style={{ fontSize: 10, color: M.textMuted, marginLeft: 6 }}>calls this week</span>
+                </div>
+              </div>
+              <Card style={{ marginBottom: 20 }}>
+                <div style={{ maxHeight: 260, overflowY: "auto", borderRadius: 8 }}>
+                  <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                    <thead style={{ position: "sticky", top: 0, background: M.bgCard, zIndex: 1 }}>
+                      <tr style={{ borderBottom: `1px solid ${M.border}` }}>
+                        <th style={thStyle}>Date</th>
+                        <th style={thStyle}>Creator</th>
+                        <th style={thStyle}>Agency / Meeting</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {laurenCalls.sort((a,b) => new Date(b.date) - new Date(a.date)).map((c, idx) => (
+                        <tr key={idx} style={{ borderBottom: `1px solid ${M.borderLight}`, background: idx % 2 === 0 ? M.bgCard : M.bgCardAlt }}>
+                          <td style={tdStyle}><span style={{ fontSize: 10, color: M.textLight }}>{new Date(c.date + "T12:00:00").toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"})}</span></td>
+                          <td style={tdStyle}><strong style={{ color: M.text }}>{c.creator}</strong></td>
+                          <td style={tdStyle}><span style={{ fontSize: 10, color: M.textMuted }}>{c.agency || "—"}</span></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </Card>
+            </>;
+          })()}
+
           <div style={{ fontSize: 14, fontWeight: 700, color: M.purpleLight, marginBottom: 16 }}>VIP Leads Pipeline — Ivana's Prospects ({VIP_LEADS_RAW.length})</div>
           <Card>
             <div style={{ maxHeight: 600, overflowY: "auto", borderRadius: 8 }}>
@@ -1125,7 +1241,45 @@ export default function Dashboard() {
         </>}
         {tab === "VIP Deals Pipeline" && <>
           <div style={{ fontSize: 14, fontWeight: 700, color: M.purpleLight, marginBottom: 16 }}>VIP Deals Pipeline — Lauren's Acquisition</div>
-          
+
+          {/* Lauren's Calls Completed */}
+          {(() => {
+            const weekStart = new Date("2026-02-23");
+            const weekEnd = new Date("2026-02-27");
+            const laurenCalls = CHORUS_CALLS_RAW.filter(c => c.csm === "Lauren Vilips" && new Date(c.date) >= weekStart && new Date(c.date) <= weekEnd);
+            return <>
+              <div style={{ fontSize: 13, fontWeight: 700, color: M.purple, marginBottom: 6 }}>Calls Completed <span style={{ fontSize: 11, fontWeight: 500, color: M.textMuted }}>(Feb 23 – Feb 27)</span></div>
+              <div style={{ display: "flex", gap: 12, marginBottom: 16, alignItems: "center" }}>
+                <div style={{ background: M.bgCard, borderRadius: 12, padding: "10px 18px", border: `1px solid ${M.border}`, borderLeft: `4px solid ${M.purple}` }}>
+                  <span style={{ fontSize: 22, fontWeight: 800, color: M.purple }}>{laurenCalls.length}</span>
+                  <span style={{ fontSize: 10, color: M.textMuted, marginLeft: 6 }}>calls this week</span>
+                </div>
+              </div>
+              <Card style={{ marginBottom: 20 }}>
+                <div style={{ maxHeight: 260, overflowY: "auto", borderRadius: 8 }}>
+                  <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                    <thead style={{ position: "sticky", top: 0, background: M.bgCard, zIndex: 1 }}>
+                      <tr style={{ borderBottom: `1px solid ${M.border}` }}>
+                        <th style={thStyle}>Date</th>
+                        <th style={thStyle}>Creator</th>
+                        <th style={thStyle}>Agency / Meeting</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {laurenCalls.sort((a,b) => new Date(b.date) - new Date(a.date)).map((c, idx) => (
+                        <tr key={idx} style={{ borderBottom: `1px solid ${M.borderLight}`, background: idx % 2 === 0 ? M.bgCard : M.bgCardAlt }}>
+                          <td style={tdStyle}><span style={{ fontSize: 10, color: M.textLight }}>{new Date(c.date + "T12:00:00").toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"})}</span></td>
+                          <td style={tdStyle}><strong style={{ color: M.text }}>{c.creator}</strong></td>
+                          <td style={tdStyle}><span style={{ fontSize: 10, color: M.textMuted }}>{c.agency || "—"}</span></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </Card>
+            </>;
+          })()}
+
           <div style={{ display: "flex", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
             {(() => {
               const STAGE_ORDER = ["Contract Sent","Negotiating","Call Set","Closed Won","Closed Lost"];
