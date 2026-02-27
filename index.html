@@ -14693,7 +14693,40 @@ const CHORUS_CALLS_RAW = [
   {date:"2026-02-26",csm:"Marguerite Meyers",creator:"Des & Lexi DFOAD",meeting:"Des & Lexi DFOAD and Marguerite Meyers",agency:null},
   {date:"2026-02-26",csm:"Amina Butt",creator:"Mackenzie King",meeting:"Mavely Strategy Session - Mackenzie King",agency:"King Social Management"},
 ];
-
+// ═══════ ONBOARDING STATUS LOOKUP (from HubSpot meetings data) ═══════
+const ONBOARDING_STATUS = {
+  57031582503:{close:"2026-02-26",meeting:"2026-02-26"},
+  56549304363:{close:"2026-02-18",meeting:""},
+  56460926633:{close:"2026-02-17",meeting:""},
+  55682364486:{close:"2026-02-19",meeting:""},
+  55475436456:{close:"2026-02-05",meeting:""},
+  55433929386:{close:"2026-02-17",meeting:"2026-02-17"},
+  55389474385:{close:"2026-02-04",meeting:""},
+  55031357697:{close:"2026-01-29",meeting:""},
+  55035224893:{close:"2026-02-02",meeting:""},
+  55035040338:{close:"2026-02-18",meeting:""},
+  54955883786:{close:"2026-01-29",meeting:""},
+  54835535020:{close:"2026-01-27",meeting:""},
+  54615991134:{close:"2026-01-29",meeting:""},
+  54609664829:{close:"2026-02-21",meeting:""},
+  54314017629:{close:"2026-02-06",meeting:""},
+  54311564898:{close:"2026-01-27",meeting:"2026-01-22"},
+  54078564993:{close:"2026-01-20",meeting:""},
+  53500351095:{close:"2026-01-13",meeting:""},
+  53392943234:{close:"2026-01-09",meeting:"2026-01-08"},
+  53434720636:{close:"2026-01-08",meeting:""},
+  57038141509:{close:"2026-03-27",meeting:""},
+  57019397521:{close:"",meeting:""},
+};
+const getOnboardingStatus = (dealId, stage) => {
+  if (stage !== "Closed Won") return "";
+  const entry = ONBOARDING_STATUS[dealId];
+  if (!entry || !entry.close) return "";
+  if (entry.meeting) return "call set";
+  const daysSinceClose = Math.floor((new Date("2026-02-27") - new Date(entry.close)) / 86400000);
+  if (daysSinceClose > 14) return "ghosted";
+  return "scheduling";
+};
 const parseCreators = rawData => {
   const today = new Date("2026-02-25");
   return rawData.filter(c => {
@@ -16510,98 +16543,7 @@ function Dashboard() {
       color: M.purpleLight,
       marginBottom: 16
     }
-  }, "VIP Leads Pipeline \u2014 Ivana's Prospects (", VIP_LEADS_RAW.length, ")"), (() => {
-    const now = new Date("2026-02-27");
-    const dayOfWeek = now.getDay();
-    const monday = new Date(now);
-    monday.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
-    monday.setHours(0, 0, 0, 0);
-    const friday = new Date(monday);
-    friday.setDate(monday.getDate() + 4);
-    friday.setHours(23, 59, 59, 999);
-    const weekLabel = `${monday.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric"
-    })} – ${friday.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric"
-    })}`;
-    const callSetDeals = deals.filter(d => d.stage === "Call Set" && d.createDate && d.createDate >= monday && d.createDate <= friday);
-    const getName = d => d.name.replace(" - Mavely VIP", "").replace(" - mavely VIP", "").replace(" - Mavely VIP 12 Month", "").replace(" - MVP", "").trim();
-    return /*#__PURE__*/React.createElement("div", {
-      style: {
-        display: "flex",
-        gap: 12,
-        marginBottom: 16,
-        flexWrap: "wrap"
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        flex: "1 1 180px",
-        background: M.bgCard,
-        borderRadius: 12,
-        padding: 14,
-        border: `1px solid ${M.border}`,
-        borderLeft: `4px solid ${M.blue}`
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 10,
-        color: M.textMuted,
-        fontWeight: 600
-      }
-    }, "This Week"), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 16,
-        fontWeight: 800,
-        color: M.text,
-        marginTop: 2
-      }
-    }, weekLabel)), /*#__PURE__*/React.createElement("div", {
-      style: {
-        flex: "1 1 220px",
-        background: M.bgCard,
-        borderRadius: 12,
-        padding: 14,
-        border: `1px solid ${M.border}`,
-        borderLeft: `4px solid ${M.green}`
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 10,
-        color: M.textMuted,
-        fontWeight: 600
-      }
-    }, "Meetings Set with Lauren"), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 24,
-        fontWeight: 800,
-        color: M.green,
-        marginTop: 2
-      }
-    }, callSetDeals.length), callSetDeals.length > 0 && /*#__PURE__*/React.createElement("div", {
-      style: {
-        marginTop: 6,
-        borderTop: `1px solid ${M.borderLight}`,
-        paddingTop: 6
-      }
-    }, callSetDeals.map((d, i) => /*#__PURE__*/React.createElement("div", {
-      key: i,
-      style: {
-        fontSize: 10,
-        color: M.text,
-        marginBottom: 2
-      }
-    }, "\u2713 ", getName(d), " ", /*#__PURE__*/React.createElement("span", {
-      style: {
-        color: M.textMuted,
-        fontSize: 9
-      }
-    }, d.createDate.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric"
-    })))))));
-  })(), /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
+  }, "VIP Leads Pipeline \u2014 Ivana's Prospects (", VIP_LEADS_RAW.length, ")), /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
     style: {
       maxHeight: 600,
       overflowY: "auto",
@@ -16744,145 +16686,7 @@ function Dashboard() {
       )
     )
   );
-})(), (() => {
-    const now = new Date("2026-02-27");
-    const dayOfWeek = now.getDay();
-    const monday = new Date(now);
-    monday.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
-    monday.setHours(0, 0, 0, 0);
-    const friday = new Date(monday);
-    friday.setDate(monday.getDate() + 4);
-    friday.setHours(23, 59, 59, 999);
-    const weekLabel = `${monday.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric"
-    })} – ${friday.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric"
-    })}`;
-    const completedDeals = deals.filter(d => (d.stage === "Negotiating" || d.stage === "Contract Sent" || d.stage === "Closed Won") && d.createDate && d.createDate >= monday && d.createDate <= friday);
-    const missedDeals = deals.filter(d => d.stage === "Call Set" && d.createDate && d.createDate < monday);
-    const getName = d => d.name.replace(" - Mavely VIP", "").replace(" - mavely VIP", "").replace(" - Mavely VIP 12 Month", "").replace(" - MVP", "").trim();
-    return /*#__PURE__*/React.createElement("div", {
-      style: {
-        display: "flex",
-        gap: 12,
-        marginBottom: 16,
-        flexWrap: "wrap"
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        flex: "1 1 180px",
-        background: M.bgCard,
-        borderRadius: 12,
-        padding: 14,
-        border: `1px solid ${M.border}`,
-        borderLeft: `4px solid ${M.blue}`
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 10,
-        color: M.textMuted,
-        fontWeight: 600
-      }
-    }, "This Week"), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 16,
-        fontWeight: 800,
-        color: M.text,
-        marginTop: 2
-      }
-    }, weekLabel)), /*#__PURE__*/React.createElement("div", {
-      style: {
-        flex: "1 1 220px",
-        background: M.bgCard,
-        borderRadius: 12,
-        padding: 14,
-        border: `1px solid ${M.border}`,
-        borderLeft: `4px solid ${M.green}`
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 10,
-        color: M.textMuted,
-        fontWeight: 600
-      }
-    }, "Meetings Completed"), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 24,
-        fontWeight: 800,
-        color: M.green,
-        marginTop: 2
-      }
-    }, completedDeals.length), completedDeals.length > 0 && /*#__PURE__*/React.createElement("div", {
-      style: {
-        marginTop: 6,
-        borderTop: `1px solid ${M.borderLight}`,
-        paddingTop: 6
-      }
-    }, completedDeals.map((d, i) => /*#__PURE__*/React.createElement("div", {
-      key: i,
-      style: {
-        fontSize: 10,
-        color: M.text,
-        marginBottom: 2
-      }
-    }, "\u2713 ", getName(d), " ", /*#__PURE__*/React.createElement("span", {
-      style: {
-        color: M.textMuted,
-        fontSize: 9
-      }
-    }, "\u2192 ", d.stage))))), /*#__PURE__*/React.createElement("div", {
-      style: {
-        flex: "1 1 220px",
-        background: M.bgCard,
-        borderRadius: 12,
-        padding: 14,
-        border: `1px solid ${M.border}`,
-        borderLeft: `4px solid ${M.red}`
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 10,
-        color: M.textMuted,
-        fontWeight: 600
-      }
-    }, "Calls Not Completed"), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 9,
-        color: M.textLight,
-        marginTop: 1
-      }
-    }, "Set but still in Call Set"), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 24,
-        fontWeight: 800,
-        color: M.red,
-        marginTop: 2
-      }
-    }, missedDeals.length), missedDeals.length > 0 && /*#__PURE__*/React.createElement("div", {
-      style: {
-        marginTop: 6,
-        borderTop: `1px solid ${M.borderLight}`,
-        paddingTop: 6
-      }
-    }, missedDeals.map((d, i) => /*#__PURE__*/React.createElement("div", {
-      key: i,
-      style: {
-        fontSize: 10,
-        color: M.textMuted,
-        marginBottom: 2
-      }
-    }, "\u2717 ", getName(d), " ", /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 9,
-        color: M.textLight
-      }
-    }, "since ", d.createDate.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric"
-    })))))));
-  })(), /*#__PURE__*/React.createElement("div", {
+})(), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       gap: 12,
@@ -16957,6 +16761,8 @@ function Dashboard() {
     style: thStyle
   }, "Owner"), /*#__PURE__*/React.createElement("th", {
     style: thStyle
+  }, "Onboarding"), /*#__PURE__*/React.createElement("th", {
+    style: thStyle
   }, "Last Updated"))), /*#__PURE__*/React.createElement("tbody", null, (() => {
     const STAGE_PRIORITY = {
       "Contract Sent": 1,
@@ -17013,6 +16819,16 @@ function Dashboard() {
           color: M.textMuted
         }
       }, "Lauren")), /*#__PURE__*/React.createElement("td", {
+        style: tdStyle
+      }, (() => {
+        const status = getOnboardingStatus(d.id, d.stage);
+        if (!status) return null;
+        const statusColors = {"call set": M.green, "scheduling": M.orange, "ghosted": M.red};
+        const sc2 = statusColors[status] || M.textMuted;
+        return /*#__PURE__*/React.createElement("span", {
+          style: {background: sc2 + "20", color: sc2, padding: "2px 8px", borderRadius: 6, fontSize: 9, fontWeight: 700}
+        }, status);
+      })()), /*#__PURE__*/React.createElement("td", {
         style: tdStyle
       }, /*#__PURE__*/React.createElement("span", {
         style: {
