@@ -14781,7 +14781,8 @@ const parseDeals = rawData => {
     stage: stageMap[d.properties.dealstage] || "Unknown",
     amount: parseFloat(d.properties.amount) || 0,
     closeDate: d.properties.closedate ? new Date(d.properties.closedate) : null,
-    lastModified: d.properties.hs_lastmodifieddate ? new Date(d.properties.hs_lastmodifieddate) : null
+    lastModified: d.properties.hs_lastmodifieddate ? new Date(d.properties.hs_lastmodifieddate) : null,
+    createDate: d.properties.createdate ? new Date(d.properties.createdate) : null
   }));
 };
 
@@ -16391,7 +16392,76 @@ function Dashboard() {
       color: M.purpleLight,
       marginBottom: 16
     }
-  }, "VIP Leads Pipeline \u2014 Ivana's Prospects (", VIP_LEADS_RAW.length, ")"), /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
+  }, "VIP Leads Pipeline \u2014 Ivana's Prospects (", VIP_LEADS_RAW.length, ")"), (() => {
+    const now = new Date("2026-02-27");
+    const dayOfWeek = now.getDay();
+    const monday = new Date(now);
+    monday.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+    monday.setHours(0, 0, 0, 0);
+    const friday = new Date(monday);
+    friday.setDate(monday.getDate() + 4);
+    friday.setHours(23, 59, 59, 999);
+    const weekLabel = `${monday.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric"
+    })} – ${friday.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric"
+    })}`;
+    const callSetThisWeek = deals.filter(d => d.stage === "Call Set" && d.createDate && d.createDate >= monday && d.createDate <= friday).length;
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 12,
+        marginBottom: 16,
+        flexWrap: "wrap"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: "1 1 200px",
+        background: M.bgCard,
+        borderRadius: 12,
+        padding: 14,
+        border: `1px solid ${M.border}`,
+        borderLeft: `4px solid ${M.blue}`
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 10,
+        color: M.textMuted,
+        fontWeight: 600
+      }
+    }, "This Week"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 16,
+        fontWeight: 800,
+        color: M.text,
+        marginTop: 2
+      }
+    }, weekLabel)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: "1 1 200px",
+        background: M.bgCard,
+        borderRadius: 12,
+        padding: 14,
+        border: `1px solid ${M.border}`,
+        borderLeft: `4px solid ${M.green}`
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 10,
+        color: M.textMuted,
+        fontWeight: 600
+      }
+    }, "Meetings Set with Lauren"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 24,
+        fontWeight: 800,
+        color: M.green,
+        marginTop: 2
+      }
+    }, callSetThisWeek)));
+  })(), /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
     style: {
       maxHeight: 600,
       overflowY: "auto",
@@ -16425,7 +16495,7 @@ function Dashboard() {
     style: thStyle
   }, "Social"), /*#__PURE__*/React.createElement("th", {
     style: thStyle
-  }, "Added"))), /*#__PURE__*/React.createElement("tbody", null, VIP_LEADS_RAW.map((lead, idx) => {
+  }, "Added"))), /*#__PURE__*/React.createElement("tbody", null, [...VIP_LEADS_RAW].sort((a, b) => new Date(b.created) - new Date(a.created)).map((lead, idx) => {
     const catColors = {
       "Fashion": "#A855F7",
       "Home decor": "#FBBF24",
@@ -16495,7 +16565,145 @@ function Dashboard() {
       color: M.purpleLight,
       marginBottom: 16
     }
-  }, "VIP Deals Pipeline \u2014 Lauren's Acquisition"), /*#__PURE__*/React.createElement("div", {
+  }, "VIP Deals Pipeline \u2014 Lauren's Acquisition"), (() => {
+    const now = new Date("2026-02-27");
+    const dayOfWeek = now.getDay();
+    const monday = new Date(now);
+    monday.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+    monday.setHours(0, 0, 0, 0);
+    const friday = new Date(monday);
+    friday.setDate(monday.getDate() + 4);
+    friday.setHours(23, 59, 59, 999);
+    const weekLabel = `${monday.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric"
+    })} – ${friday.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric"
+    })}`;
+    const completedDeals = deals.filter(d => (d.stage === "Negotiating" || d.stage === "Contract Sent" || d.stage === "Closed Won") && d.createDate && d.createDate >= monday && d.createDate <= friday);
+    const missedDeals = deals.filter(d => d.stage === "Call Set" && d.createDate && d.createDate < monday);
+    const getName = d => d.name.replace(" - Mavely VIP", "").replace(" - mavely VIP", "").replace(" - Mavely VIP 12 Month", "").replace(" - MVP", "").trim();
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 12,
+        marginBottom: 16,
+        flexWrap: "wrap"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: "1 1 180px",
+        background: M.bgCard,
+        borderRadius: 12,
+        padding: 14,
+        border: `1px solid ${M.border}`,
+        borderLeft: `4px solid ${M.blue}`
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 10,
+        color: M.textMuted,
+        fontWeight: 600
+      }
+    }, "This Week"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 16,
+        fontWeight: 800,
+        color: M.text,
+        marginTop: 2
+      }
+    }, weekLabel)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: "1 1 220px",
+        background: M.bgCard,
+        borderRadius: 12,
+        padding: 14,
+        border: `1px solid ${M.border}`,
+        borderLeft: `4px solid ${M.green}`
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 10,
+        color: M.textMuted,
+        fontWeight: 600
+      }
+    }, "Meetings Completed"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 24,
+        fontWeight: 800,
+        color: M.green,
+        marginTop: 2
+      }
+    }, completedDeals.length), completedDeals.length > 0 && /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginTop: 6,
+        borderTop: `1px solid ${M.borderLight}`,
+        paddingTop: 6
+      }
+    }, completedDeals.map((d, i) => /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: {
+        fontSize: 10,
+        color: M.text,
+        marginBottom: 2
+      }
+    }, "\u2713 ", getName(d), " ", /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: M.textMuted,
+        fontSize: 9
+      }
+    }, "\u2192 ", d.stage))))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: "1 1 220px",
+        background: M.bgCard,
+        borderRadius: 12,
+        padding: 14,
+        border: `1px solid ${M.border}`,
+        borderLeft: `4px solid ${M.red}`
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 10,
+        color: M.textMuted,
+        fontWeight: 600
+      }
+    }, "Calls Not Completed"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 9,
+        color: M.textLight,
+        marginTop: 1
+      }
+    }, "Set but still in Call Set"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 24,
+        fontWeight: 800,
+        color: M.red,
+        marginTop: 2
+      }
+    }, missedDeals.length), missedDeals.length > 0 && /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginTop: 6,
+        borderTop: `1px solid ${M.borderLight}`,
+        paddingTop: 6
+      }
+    }, missedDeals.map((d, i) => /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: {
+        fontSize: 10,
+        color: M.textMuted,
+        marginBottom: 2
+      }
+    }, "\u2717 ", getName(d), " ", /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 9,
+        color: M.textLight
+      }
+    }, "since ", d.createDate.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric"
+    })))))));
+  })(), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       gap: 12,
