@@ -61,6 +61,13 @@ The dashboard is a **single `index.html` file** containing:
 - Match by: exact lowercase match first, then first+last name match
 - ~30% of VIP creators may not match due to different display names across systems — this is expected. Show blank for unmatched.
 
+#### Known Name Aliases (Domo → HubSpot):
+| Domo Name | HubSpot Name |
+|---|---|
+| Taylor Moore | Taylor Mitchell |
+
+*Add new aliases here as they're discovered.*
+
 ### 2c. Walmart Network Category GMV (Domo)
 - **Source:** Domo dashboard "Walmart Categories / Products - Weekly Reporting" at `mavely-life.domo.com`
 - **How:** Scheduled Domo email report → CSV attachment arrives in Gmail
