@@ -1278,7 +1278,19 @@ export default function Dashboard() {
         <div key={idx} style={{ background: M.bgCard, border: `1px solid ${M.borderLight}`, borderRadius: 10, padding: 16 }}>
           {/* Top: avatar + name + niche */}
           <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 14 }}>
-            <div style={{ width: 44, height: 44, borderRadius: "50%", background: M.bgHover, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 700, color: M.blue, flexShrink: 0 }}>
+            {(() => {
+              const handle = r.igHandle ? r.igHandle.replace("@","").replace("https://instagram.com/","").replace("https://www.instagram.com/","").split("/").filter(Boolean).pop() : null;
+              const initials = r.name.split(" ").map(w => w[0]).join("").slice(0,2);
+              const avatarStyle = { width: 44, height: 44, borderRadius: "50%", background: M.bgHover, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 700, color: M.blue, flexShrink: 0 };
+              if (!handle) return <div style={avatarStyle}>{initials}</div>;
+              return <img
+                src={`https://unavatar.io/instagram/${handle}`}
+                alt={r.name}
+                style={{ width: 44, height: 44, borderRadius: "50%", objectFit: "cover", flexShrink: 0, background: M.bgHover }}
+                onError={e => { e.target.style.display = "none"; e.target.nextSibling.style.display = "flex"; }}
+              />;
+            })()}
+            <div style={{ width: 44, height: 44, borderRadius: "50%", background: M.bgHover, display: r.igHandle ? "none" : "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 700, color: M.blue, flexShrink: 0 }}>
               {r.name.split(" ").map(w => w[0]).join("").slice(0,2)}
             </div>
             <div>
