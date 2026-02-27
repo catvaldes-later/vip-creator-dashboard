@@ -1258,6 +1258,7 @@ export default function Dashboard() {
               </table>
             </div>
           </Card>
+        </>}
 
         {tab === "Creator Rolodex" && (
   <div>
@@ -1324,8 +1325,6 @@ export default function Dashboard() {
     </div>
   </div>
 )}
-
-        </>}
 
       </div>
     </div>
