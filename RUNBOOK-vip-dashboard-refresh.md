@@ -3,7 +3,7 @@
 **Owner:** Cat Valdes
 **Dashboard URL:** https://catvaldes-later.github.io/vip-creator-dashboard/
 **Live File:** `index.html` (single-file React 18 app, GitHub Pages)
-**Last Updated:** 2026-02-27
+**Last Updated:** 2026-03-02
 
 ---
 
@@ -186,6 +186,17 @@ Both steps must succeed. If acorn reports an error, **do not deliver the file.**
 - **What happened:** User uploaded new index.html but saw the old version. GitHub Pages serves cached content aggressively.
 - **Rule:** Always remind the user to hard refresh (Cmd+Shift+R) or check in Incognito after uploading to GitHub.
 - **Severity:** Low — causes confusion but no data risk.
+
+### Pitfall #7: Scheduled task failed — couldn't locate data sources
+- **What happened:** The nightly scheduled task ran but got confused about where data comes from. It asked "where does the data come from?" instead of following procedure. Dashboard stayed stale for 5 days (Last sync: 2026-02-25) until manual intervention on 2026-03-02.
+- **Rule:** The scheduled task MUST read this runbook FIRST before doing anything. Section 2 documents every data source, how to pull it, and the exact format. The task should never ask the user where data comes from — it's all documented here.
+- **Additional rule:** HUBSPOT_CREATORS_RAW comes from HubSpot **CONTACTS** (filter: `mvp_contract_start_date HAS_PROPERTY`), NOT from deals. HUBSPOT_PIPELINE_RAW comes from HubSpot **DEALS** (query: `Mavely VIP`). Getting these mixed up returns null values for all creator metrics.
+- **Severity:** Critical — dashboard went 5 days without data updates, user lost trust in automation.
+
+### Pitfall #8: Gmail MCP cannot download attachments
+- **What happened:** Attempted to download Domo CSV attachments from Gmail during manual refresh. The Gmail MCP tool can read messages and list attachments but cannot download attachment content programmatically.
+- **Rule:** For Domo CSV data, either (a) use previously uploaded CSVs from the user if recent enough, or (b) ask the user to upload the latest CSVs from their email. The Gmail tool is useful for confirming reports arrived but cannot extract the actual CSV data.
+- **Severity:** Medium — blocks automated data refresh from Domo email reports.
 
 ---
 
