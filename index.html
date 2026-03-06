@@ -17542,8 +17542,1192 @@ const VIP_LEADS_RAW = [{
   social: "@megcusick",
   gmv90d: 0
 }];
+// ═══════ CHORUS CALL LOG DATA (from Chorus.ai daily recaps) ═══════
+const CHORUS_CALLS_RAW = [
+  {date:"2026-02-23",csm:"Lauren Vilips",creator:"Taryn Newton",meeting:"@Tarynnewton x Mavely",agency:"Hollingsworth Klaus Mgmt"},
+  {date:"2026-02-25",csm:"Lauren Vilips",creator:"Grace Ginex",meeting:"Grace Ginex and Lauren Vilips",agency:null},
+  {date:"2026-02-25",csm:"Lauren Vilips",creator:"Jen Alvarez",meeting:"Jen Alvarez x Mavely VIP",agency:"Parker Management"},
+  {date:"2026-02-25",csm:"Lauren Vilips",creator:"Whitney Rife Becker",meeting:"Whitney Rife Becker x Mavely VIP",agency:"Dress Up Buttercup"},
+  {date:"2026-02-25",csm:"Lauren Vilips",creator:"Yolande Kellt",meeting:"Yolande Kellt and Lauren Vilips",agency:null},
+  {date:"2026-02-25",csm:"Marguerite Meyers",creator:"Nicole Cantu",meeting:"Nicole Cantu and Marguerite Meyers",agency:null},
+  {date:"2026-02-25",csm:"Marguerite Meyers",creator:"Dominique Bird",meeting:"Dominique Bird and Marguerite Meyers",agency:"Sociable Society"},
+  {date:"2026-02-25",csm:"Amina Butt",creator:"Caitlyn Kirkland",meeting:"Mavely Strategy Session - Caitlyn Kirkland",agency:"Amberly Crast"},
+  {date:"2026-02-26",csm:"Amina Butt",creator:"Tori Winkle",meeting:"Mavely Strategy Session - Tori Winkle",agency:null},
+  {date:"2026-02-26",csm:"Lauren Vilips",creator:"Karlibree",meeting:"Karlibree x Mavely",agency:"CreatorX Agency"},
+  {date:"2026-02-26",csm:"Lauren Vilips",creator:"Amanda Ivanelli",meeting:"Amanda Ivanelli and Lauren Vilips",agency:"Desisto MGMT"},
+  {date:"2026-02-26",csm:"Lauren Vilips",creator:"Liza Adele",meeting:"@Liza_adele x Mavely",agency:null},
+  {date:"2026-02-26",csm:"Lauren Vilips",creator:"Allison Roman",meeting:"Romanfamilyhome x Mavely",agency:null},
+  {date:"2026-02-26",csm:"Lauren Vilips",creator:"Taylor",meeting:"Taylor x Mavely VIP Connect",agency:"The Digital Department"},
+  {date:"2026-02-26",csm:"Marguerite Meyers",creator:"Des & Lexi DFOAD",meeting:"Des & Lexi DFOAD and Marguerite Meyers",agency:null},
+  {date:"2026-02-26",csm:"Amina Butt",creator:"Mackenzie King",meeting:"Mavely Strategy Session - Mackenzie King",agency:"King Social Management"},
+];
+// ═══════ ONBOARDING STATUS LOOKUP (from HubSpot meetings data) ═══════
+const ONBOARDING_STATUS = {
+  57031582503:{close:"2026-02-26",meeting:"2026-02-26"},
+  56549304363:{close:"2026-02-18",meeting:""},
+  56460926633:{close:"2026-02-17",meeting:""},
+  55682364486:{close:"2026-02-19",meeting:""},
+  55475436456:{close:"2026-02-05",meeting:"2026-02-11"},
+  55433929386:{close:"2026-02-17",meeting:"2026-02-17"},
+  55389474385:{close:"2026-02-04",meeting:"2026-02-19"},
+  55031357697:{close:"2026-01-29",meeting:""},
+  55035224893:{close:"2026-02-02",meeting:"2026-03-03"},
+  55035040338:{close:"2026-02-18",meeting:""},
+  54955883786:{close:"2026-01-29",meeting:"2026-01-30"},
+  54835535020:{close:"2026-01-27",meeting:"2026-02-02"},
+  54615991134:{close:"2026-01-29",meeting:""},
+  54609664829:{close:"2026-02-21",meeting:""},
+  54314017629:{close:"2026-02-06",meeting:""},
+  54311564898:{close:"2026-01-27",meeting:"2026-01-22"},
+  54078564993:{close:"2026-01-20",meeting:"2026-02-25"},
+  53500351095:{close:"2026-01-13",meeting:""},
+  53392943234:{close:"2026-01-09",meeting:"2026-01-08"},
+  53434720636:{close:"2026-01-08",meeting:""},
+  52083792451:{close:"2025-12-18",meeting:""},
+  51514668953:{close:"2025-12-17",meeting:""},
+  51317342384:{close:"2025-12-11",meeting:"2026-02-09"},
+  51315680913:{close:"2025-12-14",meeting:""},
+  51075873540:{close:"2026-01-28",meeting:""},
+  50770731011:{close:"2025-12-03",meeting:"2026-01-30"},
+  50713016672:{close:"2025-12-01",meeting:"2025-12-05"},
+  50324322391:{close:"2025-12-01",meeting:"2025-12-08"},
+  49647248170:{close:"2025-12-10",meeting:"2026-02-26"},
+  49624646434:{close:"2025-11-18",meeting:""},
+  49134559016:{close:"2025-11-17",meeting:""},
+  48988323219:{close:"2025-11-13",meeting:""},
+  48988135542:{close:"2025-12-09",meeting:"2026-01-12"},
+  48886903303:{close:"2025-11-14",meeting:""},
+  48943114168:{close:"2025-11-18",meeting:"2026-02-09"},
+  48939060519:{close:"2025-11-13",meeting:"2026-01-20"},
+  48799228575:{close:"2025-11-10",meeting:""},
+  48790966813:{close:"2025-11-17",meeting:""},
+  48536472834:{close:"2025-11-10",meeting:"2026-02-03"},
+  48541556662:{close:"2025-11-19",meeting:""},
+  48474047778:{close:"2025-11-08",meeting:"2026-02-26"},
+  48265397349:{close:"2025-11-04",meeting:""},
+  47659850363:{close:"2025-10-30",meeting:"2026-02-06"},
+  47567856749:{close:"2025-11-25",meeting:"2026-02-04"},
+  47567856724:{close:"2025-12-01",meeting:""},
+  47567916327:{close:"2025-10-29",meeting:"2026-02-25"},
+  47453494363:{close:"2025-10-28",meeting:""},
+  47210321750:{close:"2025-10-28",meeting:""},
+  46902409348:{close:"2025-10-28",meeting:""},
+  46709564851:{close:"2025-10-30",meeting:""},
+  46207044906:{close:"2025-10-20",meeting:"2025-10-23"},
+  45881103130:{close:"2025-10-24",meeting:""},
+  45806682494:{close:"2025-10-24",meeting:"2025-10-14"},
+  45489231930:{close:"2025-10-15",meeting:""},
+  45326987385:{close:"2025-10-21",meeting:""},
+  45329906544:{close:"2025-10-15",meeting:""},
+  45193067667:{close:"2025-10-15",meeting:""},
+  45144992092:{close:"2025-10-15",meeting:""},
+  45092350776:{close:"2025-11-03",meeting:"2026-02-11"},
+  44865614160:{close:"2025-09-29",meeting:"2026-02-02"},
+  44631753038:{close:"2025-10-04",meeting:""},
+  44451870528:{close:"2025-11-10",meeting:""},
+  44166193454:{close:"2025-10-15",meeting:"2025-10-22"},
+  43898926102:{close:"2025-09-29",meeting:""},
+  43827752120:{close:"2025-09-29",meeting:""},
+  43697660853:{close:"2025-09-16",meeting:""},
+  43404073784:{close:"2025-09-29",meeting:""},
+  43380570400:{close:"2025-09-29",meeting:"2025-09-26"},
+  43214710592:{close:"2025-09-29",meeting:"2025-09-26"},
+  42985626740:{close:"2025-09-15",meeting:""},
+  42828481422:{close:"2025-09-29",meeting:"2025-09-25"},
+  42403539823:{close:"2025-09-17",meeting:"2025-10-06"},
+  42403502634:{close:"2025-09-15",meeting:""},
+  42229016722:{close:"2025-08-18",meeting:""},
+  42229009045:{close:"2025-08-22",meeting:""},
+  41475183879:{close:"2025-08-06",meeting:"2025-08-06"},
+  41451953414:{close:"2025-08-06",meeting:"2025-08-05"},
+  41348606807:{close:"2025-08-05",meeting:""},
+  41185538901:{close:"2025-08-04",meeting:""},
+  40985473842:{close:"2025-07-29",meeting:""},
+  40768610837:{close:"2025-07-29",meeting:""},
+  40715638808:{close:"2025-07-24",meeting:""},
+  40670365978:{close:"2025-07-24",meeting:""},
+  39908184172:{close:"2025-07-10",meeting:""},
+  39869098282:{close:"2025-07-15",meeting:"2026-02-06"},
+  39508999991:{close:"2025-07-25",meeting:""},
+  38992936864:{close:"2025-07-24",meeting:"2025-06-18"},
+  38985206411:{close:"2025-07-17",meeting:""},
+  38979838136:{close:"2025-06-19",meeting:""},
+  38851995009:{close:"2025-07-08",meeting:""},
+  38847269044:{close:"2025-06-13",meeting:""},
+  38556502893:{close:"2025-06-20",meeting:"2025-06-16"},
+  38580924584:{close:"2025-06-06",meeting:""},
+  38393698977:{close:"2025-06-18",meeting:""},
+  38372994684:{close:"2025-06-12",meeting:""},
+  38318472825:{close:"2025-06-03",meeting:"2025-06-03"},
+  38319257743:{close:"2025-06-27",meeting:"2025-06-11"},
+  38057180970:{close:"2025-06-16",meeting:"2025-06-12"},
+  38067548279:{close:"2025-06-26",meeting:""},
+  38055727218:{close:"2025-06-04",meeting:"2025-05-29"},
+  37367195046:{close:"2025-06-14",meeting:""},
+  37238215582:{close:"2025-05-15",meeting:""},
+  36858473388:{close:"2025-05-07",meeting:""},
+  36530851604:{close:"2025-04-29",meeting:""},
+  36530844504:{close:"2025-06-01",meeting:""},
+  36510359048:{close:"2025-05-04",meeting:""},
+  35898187068:{close:"2025-04-21",meeting:""},
+  35852473905:{close:"2025-04-21",meeting:""},
+  35574015856:{close:"2025-04-12",meeting:""},
+  35539703628:{close:"2025-04-21",meeting:""},
+  35389620578:{close:"2025-04-11",meeting:"2025-04-15"},
+  35299583884:{close:"2025-03-31",meeting:"2025-04-09"},
+  35185509701:{close:"2025-04-09",meeting:""},
+  35152291949:{close:"2025-07-22",meeting:""},
+  35135642410:{close:"2025-03-27",meeting:""},
+  34652694824:{close:"2025-03-15",meeting:""},
+  34606801026:{close:"2025-03-17",meeting:""},
+  33900191926:{close:"2025-03-17",meeting:"2025-02-27"},
+  33774324324:{close:"2025-02-20",meeting:""},
+  33741895459:{close:"2025-02-28",meeting:""},
+  33398073716:{close:"2025-02-24",meeting:""},
+  32736355237:{close:"2025-01-29",meeting:""},
+  32731056714:{close:"2025-01-29",meeting:""},
+  32088985404:{close:"2025-04-21",meeting:""},
+  31360167436:{close:"2025-01-03",meeting:""},
+  30737379621:{close:"2024-12-19",meeting:""},
+  29957913182:{close:"2025-05-09",meeting:""},
+  29874513572:{close:"2025-01-28",meeting:""},
+  28757537572:{close:"2024-11-21",meeting:""},
+  28584200203:{close:"2024-11-01",meeting:""},
+  22884198954:{close:"2024-11-06",meeting:"2024-10-11"},
+  22873848690:{close:"2024-10-14",meeting:""},
+  22571838342:{close:"2024-09-24",meeting:""},
+  22391558779:{close:"2024-10-30",meeting:"2024-10-03"},
+  22377971493:{close:"2024-09-29",meeting:"2024-09-25"},
+  22388706331:{close:"2024-09-23",meeting:""},
+  22387852804:{close:"2024-10-11",meeting:"2024-10-03"},
+  22387336274:{close:"2024-10-16",meeting:"2024-09-30"},
+  22368345923:{close:"2024-10-08",meeting:"2024-10-08"},
+  22372878660:{close:"2024-09-19",meeting:"2024-09-18"},
+  22367734016:{close:"2024-10-01",meeting:"2024-09-30"},
+  22343083563:{close:"2024-09-24",meeting:"2024-09-23"},
+  22368699793:{close:"2024-10-01",meeting:"2024-09-20"},
+  22367428442:{close:"2024-10-24",meeting:""},
+  22369310844:{close:"2024-09-19",meeting:"2024-09-19"},
+  22372868879:{close:"2024-10-01",meeting:"2024-09-26"},
+  22354254253:{close:"2024-09-20",meeting:"2024-09-19"},
+  22314874029:{close:"2024-09-16",meeting:""},
+  22117560454:{close:"2024-09-16",meeting:""},
+  22092528810:{close:"2024-09-11",meeting:"2024-09-11"},
+  22080170074:{close:"2024-09-26",meeting:"2024-09-23"},
+  21589398701:{close:"2025-08-12",meeting:"2025-06-25"},
+};
+const getOnboardingStatus = (dealId, stage) => {
+  if (stage !== "Closed Won") return "";
+  const entry = ONBOARDING_STATUS[dealId];
+  if (!entry || !entry.close) return "";
+  if (entry.meeting) return "call set";
+  const daysSinceClose = Math.floor((new Date("2026-03-03") - new Date(entry.close)) / 86400000);
+  if (daysSinceClose > 8) return "ghosted";
+  return "scheduling";
+};
+const WALMART_CREATOR_CATEGORIES = {
+  "Taylor Mitchell": [
+    "Intimate Apparel/Womens Apparel",
+    "Baby/Toddler/Boys/Girls Apparel",
+    "Miscellaneous"
+  ],
+  "Lauren Oggs Gee": [
+    "Intimate Apparel/Womens Apparel",
+    "Shoes",
+    "Miscellaneous"
+  ],
+  "Milena Prifti": [
+    "Intimate Apparel/Womens Apparel",
+    "Baby/Toddler/Boys/Girls Apparel",
+    "Shoes"
+  ],
+  "Stephanie Trantham": [
+    "Intimate Apparel/Womens Apparel",
+    "Seasonal",
+    "Cook and Dine"
+  ],
+  "Olivia Adkins": [
+    "Intimate Apparel/Womens Apparel",
+    "Miscellaneous",
+    "Baby/Toddler/Boys/Girls Apparel"
+  ],
+  "Marnie Goldberg": [
+    "Intimate Apparel/Womens Apparel",
+    "Miscellaneous",
+    "Shoes"
+  ],
+  "Nadira Kurtic": [
+    "Furniture",
+    "Home Decor",
+    "Miscellaneous"
+  ],
+  "Jasmine Rae Snooks": [
+    "Intimate Apparel/Womens Apparel",
+    "Baby/Toddler/Boys/Girls Apparel",
+    "Miscellaneous"
+  ],
+  "Morgan Bullard": [
+    "Intimate Apparel/Womens Apparel",
+    "Baby/Toddler/Boys/Girls Apparel",
+    "Shoes"
+  ],
+  "Amanda Fouts": [
+    "Intimate Apparel/Womens Apparel",
+    "Shoes",
+    "Furniture"
+  ],
+  "Erin Vogelpohl": [
+    "Intimate Apparel/Womens Apparel",
+    "Seasonal",
+    "Home Decor"
+  ],
+  "Lauren Hansen": [
+    "Furniture",
+    "Miscellaneous",
+    "Beauty"
+  ],
+  "Lauren Antonucci": [
+    "Intimate Apparel/Womens Apparel",
+    "Baby/Toddler/Boys/Girls Apparel",
+    "Miscellaneous"
+  ],
+  "Danira Alihodzic": [
+    "Intimate Apparel/Womens Apparel"
+  ],
+  "Marissa Manderfield": [
+    "Intimate Apparel/Womens Apparel",
+    "Patio and Garden",
+    "Shoes"
+  ],
+  "Krystal Smit": [
+    "Home Management",
+    "Cook and Dine",
+    "Furniture"
+  ],
+  "Amanda Wagner": [
+    "Intimate Apparel/Womens Apparel",
+    "Cook and Dine",
+    "Home Management"
+  ],
+  "Casey Southern": [
+    "Intimate Apparel/Womens Apparel",
+    "Cook and Dine"
+  ],
+  "Ashley Savage": [
+    "Intimate Apparel/Womens Apparel",
+    "Miscellaneous",
+    "Seasonal"
+  ],
+  "Andrea De Silva": [
+    "Intimate Apparel/Womens Apparel",
+    "Toys",
+    "Miscellaneous"
+  ],
+  "Deana Hoffman": [
+    "Intimate Apparel/Womens Apparel"
+  ],
+  "Brooke Havner": [
+    "Intimate Apparel/Womens Apparel"
+  ],
+  "Cara Murtaugh": [
+    "Miscellaneous",
+    "Intimate Apparel/Womens Apparel",
+    "Baby/Toddler/Boys/Girls Apparel"
+  ],
+  "Ali Propst": [
+    "Intimate Apparel/Womens Apparel"
+  ],
+  "Whitney Rife Becker": [
+    "Cook and Dine"
+  ],
+  "Katie Keever": [
+    "Intimate Apparel/Womens Apparel",
+    "Baby/Toddler/Boys/Girls Apparel"
+  ],
+  "Luke Nowak": [
+    "Miscellaneous"
+  ],
+  "Tori Winkle": [
+    "Baby/Toddler/Boys/Girls Apparel",
+    "Cook and Dine",
+    "Intimate Apparel/Womens Apparel"
+  ],
+  "Jessica Barstow": [
+    "Intimate Apparel/Womens Apparel",
+    "Home Decor"
+  ],
+  "Taylor Hardy": [
+    "Intimate Apparel/Womens Apparel"
+  ],
+  "Kait Curnow": [
+    "Intimate Apparel/Womens Apparel"
+  ],
+  "Greer Gagnier": [
+    "Furniture"
+  ]
+};
+const WALMART_CATEGORIES = [
+  {
+    "name": "Miscellaneous",
+    "data": {
+      "2025-Oct": 16873226.61,
+      "2025-Nov": 19498446.48,
+      "2025-Dec": 15555462.24,
+      "2026-Jan": 8736619.01,
+      "2026-Feb": 7951860.11,
+      "2026-Mar": 1624640.54
+    }
+  },
+  {
+    "name": "Electronics",
+    "data": {
+      "2025-Oct": 3102670.17,
+      "2025-Nov": 9378647.85,
+      "2025-Dec": 5377526.5,
+      "2026-Jan": 1643405.16,
+      "2026-Feb": 3668929.87,
+      "2026-Mar": 684192.74
+    }
+  },
+  {
+    "name": "Household Paper/Household Chemicals",
+    "data": {
+      "2025-Oct": 3072590.82,
+      "2025-Nov": 4222020.04,
+      "2025-Dec": 5685307.04,
+      "2026-Jan": 3657922.69,
+      "2026-Feb": 4168398.88,
+      "2026-Mar": 675223.83
+    }
+  },
+  {
+    "name": "Furniture",
+    "data": {
+      "2025-Oct": 1482347.19,
+      "2025-Nov": 3269968.45,
+      "2025-Dec": 3452309.39,
+      "2026-Jan": 1625625.25,
+      "2026-Feb": 3117634.76,
+      "2026-Mar": 589900.73
+    }
+  },
+  {
+    "name": "Home Management",
+    "data": {
+      "2025-Oct": 1534231.76,
+      "2025-Nov": 3414106.95,
+      "2025-Dec": 2896571.99,
+      "2026-Jan": 1495678.15,
+      "2026-Feb": 1865273.82,
+      "2026-Mar": 372479.09
+    }
+  },
+  {
+    "name": "Pets and Supplies",
+    "data": {
+      "2025-Oct": 1744342.66,
+      "2025-Nov": 2285070.4,
+      "2025-Dec": 2972317.59,
+      "2026-Jan": 2167823.44,
+      "2026-Feb": 2260987.51,
+      "2026-Mar": 339533.29
+    }
+  },
+  {
+    "name": "Intimate Apparel/Womens Apparel",
+    "data": {
+      "2025-Oct": 1561177.3,
+      "2025-Nov": 2718872.42,
+      "2025-Dec": 3042311.52,
+      "2026-Jan": 1262225.58,
+      "2026-Feb": 1918509.23,
+      "2026-Mar": 320408.05
+    }
+  },
+  {
+    "name": "Personal Care",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 1903531.46,
+      "2026-Mar": 314403.57
+    }
+  },
+  {
+    "name": "Cook and Dine",
+    "data": {
+      "2025-Oct": 1464564.94,
+      "2025-Nov": 4297353.09,
+      "2025-Dec": 3394873.67,
+      "2026-Jan": 1541193.11,
+      "2026-Feb": 1669904.55,
+      "2026-Mar": 290467.49
+    }
+  },
+  {
+    "name": "CIC | Master Exclusion List",
+    "data": {
+      "2025-Oct": 699345.9,
+      "2025-Nov": 4168201.16,
+      "2025-Dec": 3700539.95,
+      "2026-Jan": 305062.0,
+      "2026-Feb": 882350.09,
+      "2026-Mar": 287228.64
+    }
+  },
+  {
+    "name": "Baby/Toddler/Boys/Girls Apparel",
+    "data": {
+      "2025-Oct": 1379607.83,
+      "2025-Nov": 2782350.12,
+      "2025-Dec": 3113622.79,
+      "2026-Jan": 843065.88,
+      "2026-Feb": 1577263.17,
+      "2026-Mar": 264183.48
+    }
+  },
+  {
+    "name": "Pharmacy/OTC",
+    "data": {
+      "2025-Oct": 1128902.12,
+      "2025-Nov": 1345903.11,
+      "2025-Dec": 1582767.78,
+      "2026-Jan": 1358468.78,
+      "2026-Feb": 1541824.08,
+      "2026-Mar": 263607.15
+    }
+  },
+  {
+    "name": "Beauty",
+    "data": {
+      "2025-Oct": 1184293.87,
+      "2025-Nov": 2009871.84,
+      "2025-Dec": 2637610.2,
+      "2026-Jan": 1290961.24,
+      "2026-Feb": 1647570.94,
+      "2026-Mar": 257153.4
+    }
+  },
+  {
+    "name": "Automotive",
+    "data": {
+      "2025-Oct": 762900.18,
+      "2025-Nov": 1571601.2,
+      "2025-Dec": 1396185.74,
+      "2026-Jan": 715564.47,
+      "2026-Feb": 1150822.09,
+      "2026-Mar": 225811.7
+    }
+  },
+  {
+    "name": "Toys",
+    "data": {
+      "2025-Oct": 1078968.56,
+      "2025-Nov": 5274977.53,
+      "2025-Dec": 7729357.38,
+      "2026-Jan": 829508.65,
+      "2026-Feb": 1230109.58,
+      "2026-Mar": 220856.92
+    }
+  },
+  {
+    "name": "Patio and Garden",
+    "data": {
+      "2025-Oct": 739788.41,
+      "2025-Nov": 1390174.41,
+      "2025-Dec": 938724.73,
+      "2026-Jan": 536788.69,
+      "2026-Feb": 821600.37,
+      "2026-Mar": 176514.75
+    }
+  },
+  {
+    "name": "Home Decor",
+    "data": {
+      "2025-Oct": 638888.85,
+      "2025-Nov": 1154926.0,
+      "2025-Dec": 1167222.78,
+      "2026-Jan": 552490.52,
+      "2026-Feb": 826273.4,
+      "2026-Mar": 160033.75
+    }
+  },
+  {
+    "name": "Hardware & Tools/Do It Yourself",
+    "data": {
+      "2025-Oct": 719651.44,
+      "2025-Nov": 1494330.37,
+      "2025-Dec": 1377135.9,
+      "2026-Jan": 842771.89,
+      "2026-Feb": 802440.78,
+      "2026-Mar": 151333.38
+    }
+  },
+  {
+    "name": "Bedding",
+    "data": {
+      "2025-Oct": 746789.46,
+      "2025-Nov": 1386098.68,
+      "2025-Dec": 1555848.94,
+      "2026-Jan": 488699.37,
+      "2026-Feb": 859401.72,
+      "2026-Mar": 148314.03
+    }
+  },
+  {
+    "name": "Baby Hardlines",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 682600.13,
+      "2026-Mar": 132650.79
+    }
+  },
+  {
+    "name": "Shoes",
+    "data": {
+      "2025-Oct": 482789.7,
+      "2025-Nov": 1024633.64,
+      "2025-Dec": 1248210.48,
+      "2026-Jan": 450024.33,
+      "2026-Feb": 832611.37,
+      "2026-Mar": 128971.02
+    }
+  },
+  {
+    "name": "Sporting Goods",
+    "data": {
+      "2025-Oct": 744605.3,
+      "2025-Nov": 1746704.41,
+      "2025-Dec": 2048914.34,
+      "2026-Jan": 838592.64,
+      "2026-Feb": 711112.48,
+      "2026-Mar": 126975.49
+    }
+  },
+  {
+    "name": "Media & Gaming",
+    "data": {
+      "2025-Oct": 448713.76,
+      "2025-Nov": 2504474.36,
+      "2025-Dec": 3190896.57,
+      "2026-Jan": 401548.95,
+      "2026-Feb": 675760.03,
+      "2026-Mar": 113552.14
+    }
+  },
+  {
+    "name": "Mens Apparel",
+    "data": {
+      "2025-Oct": 570889.09,
+      "2025-Nov": 1590419.75,
+      "2025-Dec": 1619036.37,
+      "2026-Jan": 388098.5,
+      "2026-Feb": 551706.5,
+      "2026-Mar": 106543.37
+    }
+  },
+  {
+    "name": "Flash Deals SKUs",
+    "data": {
+      "2025-Oct": 419006.3,
+      "2025-Nov": 846945.14,
+      "2025-Dec": 539059.07,
+      "2026-Jan": 0,
+      "2026-Feb": 897068.44,
+      "2026-Mar": 94212.56
+    }
+  },
+  {
+    "name": "Wireless",
+    "data": {
+      "2025-Oct": 287849.59,
+      "2025-Nov": 1033027.9,
+      "2025-Dec": 1155107.55,
+      "2026-Jan": 333989.39,
+      "2026-Feb": 597649.36,
+      "2026-Mar": 89347.82
+    }
+  },
+  {
+    "name": "Stationery",
+    "data": {
+      "2025-Oct": 228189.75,
+      "2025-Nov": 377209.86,
+      "2025-Dec": 644966.4,
+      "2026-Jan": 305804.51,
+      "2026-Feb": 333388.46,
+      "2026-Mar": 53165.65
+    }
+  },
+  {
+    "name": "Arts, Crafts, Sewing & Fabric",
+    "data": {
+      "2025-Oct": 268929.11,
+      "2025-Nov": 646360.71,
+      "2025-Dec": 739899.77,
+      "2026-Jan": 246544.51,
+      "2026-Feb": 319321.42,
+      "2026-Mar": 51844.31
+    }
+  },
+  {
+    "name": "Bath and Shower",
+    "data": {
+      "2025-Oct": 127561.01,
+      "2025-Nov": 225355.4,
+      "2025-Dec": 304976.32,
+      "2026-Jan": 311281.24,
+      "2026-Feb": 271976.64,
+      "2026-Mar": 50802.61
+    }
+  },
+  {
+    "name": "Seasonal",
+    "data": {
+      "2025-Oct": 1156741.41,
+      "2025-Nov": 2672415.99,
+      "2025-Dec": 2392377.78,
+      "2026-Jan": 233851.28,
+      "2026-Feb": 350007.2,
+      "2026-Mar": 36664.31
+    }
+  },
+  {
+    "name": "Accessories",
+    "data": {
+      "2025-Oct": 106883.76,
+      "2025-Nov": 234501.7,
+      "2025-Dec": 352310.34,
+      "2026-Jan": 80051.25,
+      "2026-Feb": 123520.09,
+      "2026-Mar": 35238.46
+    }
+  },
+  {
+    "name": "Celebration",
+    "data": {
+      "2025-Oct": 188616.44,
+      "2025-Nov": 247337.95,
+      "2025-Dec": 427733.67,
+      "2026-Jan": 180194.96,
+      "2026-Feb": 294368.96,
+      "2026-Mar": 33834.7
+    }
+  },
+  {
+    "name": "Horticulture",
+    "data": {
+      "2025-Oct": 46287.22,
+      "2025-Nov": 38047.16,
+      "2025-Dec": 47084.87,
+      "2026-Jan": 60802.7,
+      "2026-Feb": 115253.05,
+      "2026-Mar": 31461.14
+    }
+  },
+  {
+    "name": "Jewelry",
+    "data": {
+      "2025-Oct": 122890.62,
+      "2025-Nov": 479810.82,
+      "2025-Dec": 613557.58,
+      "2026-Jan": 107376.57,
+      "2026-Feb": 196922.84,
+      "2026-Mar": 25010.62
+    }
+  },
+  {
+    "name": "Cameras and Supplies",
+    "data": {
+      "2025-Oct": 59990.24,
+      "2025-Nov": 468478.64,
+      "2025-Dec": 406470.78,
+      "2026-Jan": 55965.85,
+      "2026-Feb": 71897.65,
+      "2026-Mar": 12447.1
+    }
+  },
+  {
+    "name": "Precious Metals Ecomm",
+    "data": {
+      "2025-Oct": 105719.64,
+      "2025-Nov": 40057.63,
+      "2025-Dec": 45399.13,
+      "2026-Jan": 64995.73,
+      "2026-Feb": 36993.35,
+      "2026-Mar": 12208.62
+    }
+  },
+  {
+    "name": "Books & Magazines",
+    "data": {
+      "2025-Oct": 52611.52,
+      "2025-Nov": 150526.05,
+      "2025-Dec": 158769.29,
+      "2026-Jan": 51823.26,
+      "2026-Feb": 70252.0,
+      "2026-Mar": 10662.85
+    }
+  },
+  {
+    "name": "Pharmacy RX/Optical",
+    "data": {
+      "2025-Oct": 2806.29,
+      "2025-Nov": 2300.07,
+      "2025-Dec": 4392.41,
+      "2026-Jan": 4135.86,
+      "2026-Feb": 4873.14,
+      "2026-Mar": 873.59
+    }
+  },
+  {
+    "name": "FY26 SMC Toys Q2/Q3 Campaign",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "SKU exclusions",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "Automotive Tires",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "Photo Services",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "Video Game Hardware",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "SKU Exclusions (C&I)",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "FY23 AE Exclusion List",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "FOOD L0",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "14 COOK AND DINE",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "74 HOME MANAGEMENT",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "72 ELECTRONICS",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "04 HOUSEHOLD PAPER 13 HOUSEHOLD CHEMICALS",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "07 TOYS",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "71 FURNITURE",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "08 PETS AND SUPPLIES",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "40 PHARMACY OTC",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "09 SPORTING GOODS",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "16 PATIO AND GARDEN",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "46 BEAUTY",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "22 BEDDING",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "29 INTIMATE APPAREL 34 WOMENS APPAREL",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "11 HARDWARE AND TOOLS 12 DO IT YOURSELF",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "VIDEO GAME HARDWARE L3",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "17 HOME DECOR",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "87 WIRELESS",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "AUTOMOTIVE TIRES",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "19 ARTS CRAFTS SEWING AND FABRICS",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "26 BABY AND TODDLER APPAREL 24 BOYS APPAREL 33 GIRLS APPAREL",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "03 STATIONERY",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "05 MEDIA AND GAMING",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "23 MENS APPAREL",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "25 SHOES",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "20 BATH AND SHOWER",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "06 CAMERAS AND SUPPLIES",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "32 JEWELRY",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "21 BOOKS AND MAGAZINES",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "ACCESSORIES",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "38 PHARMACY RX 49 OPTICAL RX",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "56 HORTICULTURE",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  },
+  {
+    "name": "PRECIOUS METALS ECOMM L2",
+    "data": {
+      "2025-Oct": 0,
+      "2025-Nov": 0,
+      "2025-Dec": 0,
+      "2026-Jan": 0,
+      "2026-Feb": 0,
+      "2026-Mar": 0
+    }
+  }
+];
 const parseCreators = rawData => {
-  const today = new Date("2026-03-05");
+  const today = new Date("2026-02-25");
   return rawData.filter(c => {
     const endDate = c.properties.mvp_contract_end_date ? new Date(c.properties.mvp_contract_end_date) : null;
     const startDate = c.properties.mvp_contract_start_date ? new Date(c.properties.mvp_contract_start_date) : null;
@@ -18718,7 +19902,7 @@ function Dashboard() {
       fontSize: 10,
       color: M.purpleLight
     }
-  }, "Last sync: 2026-02-25"), /*#__PURE__*/React.createElement("button", {
+  }, "Last sync: 2026-03-06"), /*#__PURE__*/React.createElement("button", {
     onClick: exportCSV,
     style: {
       background: "rgba(255,255,255,0.12)",
@@ -18858,7 +20042,59 @@ function Dashboard() {
       color: M.textMuted,
       lineHeight: 1.5
     }
-  }, s.detail)))), /*#__PURE__*/React.createElement(Card, {
+  }, s.detail)))), (() => {
+  const weekStart = new Date("2026-02-23");
+  const weekEnd = new Date("2026-02-27");
+  const weekCalls = CHORUS_CALLS_RAW.filter(c => { const d = new Date(c.date); return d >= weekStart && d <= weekEnd; });
+  const CSM_COLORS = {"Lauren Vilips": M.purple, "Marguerite Meyers": M.orange, "Amina Butt": M.blue};
+  const csmNames = ["Lauren Vilips", "Marguerite Meyers", "Amina Butt"];
+  const csmCalls = csmNames.map(name => ({name, calls: weekCalls.filter(c => c.csm === name)}));
+  return /*#__PURE__*/React.createElement(React.Fragment, null,
+    /*#__PURE__*/React.createElement("div", {style: {fontSize: 14, fontWeight: 700, color: M.purpleLight, marginBottom: 10}},
+      "Calls Completed This Week ",
+      /*#__PURE__*/React.createElement("span", {style: {fontSize: 11, fontWeight: 500, color: M.textMuted}}, "(Feb 23 – Feb 27)")
+    ),
+    /*#__PURE__*/React.createElement("div", {style: {display: "flex", gap: 12, marginBottom: 12, flexWrap: "wrap"}},
+      csmCalls.map(({name, calls}) =>
+        /*#__PURE__*/React.createElement("div", {key: name, style: {flex: "1 1 140px", background: M.bgCard, borderRadius: 12, padding: 14, border: "1px solid " + M.border, borderLeft: "4px solid " + CSM_COLORS[name]}},
+          /*#__PURE__*/React.createElement("div", {style: {fontSize: 10, color: M.textMuted, fontWeight: 600}}, name.split(" ")[0]),
+          /*#__PURE__*/React.createElement("div", {style: {fontSize: 28, fontWeight: 800, color: CSM_COLORS[name], marginTop: 2}}, calls.length),
+          /*#__PURE__*/React.createElement("div", {style: {fontSize: 9, color: M.textLight, marginTop: 2}}, "calls")
+        )
+      ),
+      /*#__PURE__*/React.createElement("div", {style: {flex: "1 1 140px", background: M.bgCard, borderRadius: 12, padding: 14, border: "1px solid " + M.border, borderLeft: "4px solid " + M.green}},
+        /*#__PURE__*/React.createElement("div", {style: {fontSize: 10, color: M.textMuted, fontWeight: 600}}, "Team Total"),
+        /*#__PURE__*/React.createElement("div", {style: {fontSize: 28, fontWeight: 800, color: M.green, marginTop: 2}}, weekCalls.length),
+        /*#__PURE__*/React.createElement("div", {style: {fontSize: 9, color: M.textLight, marginTop: 2}}, "calls")
+      )
+    ),
+    /*#__PURE__*/React.createElement(Card, {style: {marginBottom: 20}},
+      /*#__PURE__*/React.createElement("div", {style: {maxHeight: 400, overflowY: "auto", borderRadius: 8}},
+        /*#__PURE__*/React.createElement("table", {style: {width: "100%", borderCollapse: "collapse"}},
+          /*#__PURE__*/React.createElement("thead", {style: {position: "sticky", top: 0, background: M.bgCard, zIndex: 1}},
+            /*#__PURE__*/React.createElement("tr", {style: {borderBottom: "1px solid " + M.border}},
+              /*#__PURE__*/React.createElement("th", {style: thStyle}, "Date"),
+              /*#__PURE__*/React.createElement("th", {style: thStyle}, "CSM"),
+              /*#__PURE__*/React.createElement("th", {style: thStyle}, "Creator"),
+              /*#__PURE__*/React.createElement("th", {style: thStyle}, "Agency / Meeting")
+            )
+          ),
+          /*#__PURE__*/React.createElement("tbody", null,
+            weekCalls.sort((a,b) => new Date(b.date) - new Date(a.date)).map((c, idx) => {
+              const sc = CSM_COLORS[c.csm] || M.textMuted;
+              return /*#__PURE__*/React.createElement("tr", {key: idx, style: {borderBottom: "1px solid " + M.borderLight, background: idx % 2 === 0 ? M.bgCard : M.bgCardAlt}},
+                /*#__PURE__*/React.createElement("td", {style: tdStyle}, /*#__PURE__*/React.createElement("span", {style: {fontSize: 10, color: M.textLight}}, new Date(c.date + "T12:00:00").toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"}))),
+                /*#__PURE__*/React.createElement("td", {style: tdStyle}, /*#__PURE__*/React.createElement("span", {style: {background: sc + "20", color: sc, padding: "2px 8px", borderRadius: 6, fontSize: 9, fontWeight: 700}}, c.csm.split(" ")[0])),
+                /*#__PURE__*/React.createElement("td", {style: tdStyle}, /*#__PURE__*/React.createElement("strong", {style: {color: M.text}}, c.creator)),
+                /*#__PURE__*/React.createElement("td", {style: tdStyle}, /*#__PURE__*/React.createElement("span", {style: {fontSize: 10, color: M.textMuted}}, c.agency || "—"))
+              );
+            })
+          )
+        )
+      )
+    )
+  );
+})(), /*#__PURE__*/React.createElement(Card, {
     style: {
       marginBottom: 20
     }
@@ -19261,97 +20497,45 @@ function Dashboard() {
       marginBottom: 16
     }
   }, "VIP Leads Pipeline \u2014 Ivana's Prospects (", VIP_LEADS_RAW.length, ")"), (() => {
-    const now = new Date("2026-02-27");
-    const dayOfWeek = now.getDay();
-    const monday = new Date(now);
-    monday.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
-    monday.setHours(0, 0, 0, 0);
-    const friday = new Date(monday);
-    friday.setDate(monday.getDate() + 4);
-    friday.setHours(23, 59, 59, 999);
-    const weekLabel = `${monday.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric"
-    })} – ${friday.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric"
-    })}`;
-    const callSetDeals = deals.filter(d => d.stage === "Call Set" && d.createDate && d.createDate >= monday && d.createDate <= friday);
-    const getName = d => d.name.replace(" - Mavely VIP", "").replace(" - mavely VIP", "").replace(" - Mavely VIP 12 Month", "").replace(" - MVP", "").trim();
-    return /*#__PURE__*/React.createElement("div", {
-      style: {
-        display: "flex",
-        gap: 12,
-        marginBottom: 16,
-        flexWrap: "wrap"
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        flex: "1 1 180px",
-        background: M.bgCard,
-        borderRadius: 12,
-        padding: 14,
-        border: `1px solid ${M.border}`,
-        borderLeft: `4px solid ${M.blue}`
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 10,
-        color: M.textMuted,
-        fontWeight: 600
-      }
-    }, "This Week"), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 16,
-        fontWeight: 800,
-        color: M.text,
-        marginTop: 2
-      }
-    }, weekLabel)), /*#__PURE__*/React.createElement("div", {
-      style: {
-        flex: "1 1 220px",
-        background: M.bgCard,
-        borderRadius: 12,
-        padding: 14,
-        border: `1px solid ${M.border}`,
-        borderLeft: `4px solid ${M.green}`
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 10,
-        color: M.textMuted,
-        fontWeight: 600
-      }
-    }, "Meetings Set with Lauren"), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 24,
-        fontWeight: 800,
-        color: M.green,
-        marginTop: 2
-      }
-    }, callSetDeals.length), callSetDeals.length > 0 && /*#__PURE__*/React.createElement("div", {
-      style: {
-        marginTop: 6,
-        borderTop: `1px solid ${M.borderLight}`,
-        paddingTop: 6
-      }
-    }, callSetDeals.map((d, i) => /*#__PURE__*/React.createElement("div", {
-      key: i,
-      style: {
-        fontSize: 10,
-        color: M.text,
-        marginBottom: 2
-      }
-    }, "\u2713 ", getName(d), " ", /*#__PURE__*/React.createElement("span", {
-      style: {
-        color: M.textMuted,
-        fontSize: 9
-      }
-    }, d.createDate.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric"
-    })))))));
-  })(), /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
+  const weekStart = new Date("2026-02-23");
+  const weekEnd = new Date("2026-02-27");
+  const laurenCalls = CHORUS_CALLS_RAW.filter(c => { const d = new Date(c.date); return c.csm === "Lauren Vilips" && d >= weekStart && d <= weekEnd; });
+  return /*#__PURE__*/React.createElement(React.Fragment, null,
+    /*#__PURE__*/React.createElement("div", {style: {fontSize: 14, fontWeight: 700, color: M.purpleLight, marginBottom: 10}},
+      "Lauren\u2019s Calls Completed ",
+      /*#__PURE__*/React.createElement("span", {style: {fontSize: 11, fontWeight: 500, color: M.textMuted}}, "(Feb 23 \u2013 Feb 27)")
+    ),
+    /*#__PURE__*/React.createElement("div", {style: {display: "flex", gap: 12, marginBottom: 12}},
+      /*#__PURE__*/React.createElement("div", {style: {flex: "0 0 auto", background: M.bgCard, borderRadius: 12, padding: 14, border: "1px solid " + M.border, borderLeft: "4px solid " + M.purple}},
+        /*#__PURE__*/React.createElement("div", {style: {fontSize: 10, color: M.textMuted, fontWeight: 600}}, "Lauren"),
+        /*#__PURE__*/React.createElement("div", {style: {fontSize: 28, fontWeight: 800, color: M.purple, marginTop: 2}}, laurenCalls.length),
+        /*#__PURE__*/React.createElement("div", {style: {fontSize: 9, color: M.textLight, marginTop: 2}}, "calls this week")
+      )
+    ),
+    /*#__PURE__*/React.createElement(Card, {style: {marginBottom: 16}},
+      /*#__PURE__*/React.createElement("div", {style: {maxHeight: 260, overflowY: "auto", borderRadius: 8}},
+        /*#__PURE__*/React.createElement("table", {style: {width: "100%", borderCollapse: "collapse"}},
+          /*#__PURE__*/React.createElement("thead", {style: {position: "sticky", top: 0, background: M.bgCard, zIndex: 1}},
+            /*#__PURE__*/React.createElement("tr", {style: {borderBottom: "1px solid " + M.border}},
+              /*#__PURE__*/React.createElement("th", {style: thStyle}, "Date"),
+              /*#__PURE__*/React.createElement("th", {style: thStyle}, "Creator"),
+              /*#__PURE__*/React.createElement("th", {style: thStyle}, "Agency")
+            )
+          ),
+          /*#__PURE__*/React.createElement("tbody", null,
+            laurenCalls.sort((a,b) => new Date(b.date) - new Date(a.date)).map((c, idx) =>
+              /*#__PURE__*/React.createElement("tr", {key: idx, style: {borderBottom: "1px solid " + M.borderLight, background: idx % 2 === 0 ? M.bgCard : M.bgCardAlt}},
+                /*#__PURE__*/React.createElement("td", {style: tdStyle}, /*#__PURE__*/React.createElement("span", {style: {fontSize: 10, color: M.textLight}}, new Date(c.date + "T12:00:00").toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"}))),
+                /*#__PURE__*/React.createElement("td", {style: tdStyle}, /*#__PURE__*/React.createElement("strong", {style: {color: M.text}}, c.creator)),
+                /*#__PURE__*/React.createElement("td", {style: tdStyle}, /*#__PURE__*/React.createElement("span", {style: {fontSize: 10, color: M.textMuted}}, c.agency || "\u2014"))
+              )
+            )
+          )
+        )
+      )
+    )
+  );
+})(), /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
     style: {
       maxHeight: 600,
       overflowY: "auto",
@@ -19456,144 +20640,45 @@ function Dashboard() {
       marginBottom: 16
     }
   }, "VIP Deals Pipeline \u2014 Lauren's Acquisition"), (() => {
-    const now = new Date("2026-02-27");
-    const dayOfWeek = now.getDay();
-    const monday = new Date(now);
-    monday.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
-    monday.setHours(0, 0, 0, 0);
-    const friday = new Date(monday);
-    friday.setDate(monday.getDate() + 4);
-    friday.setHours(23, 59, 59, 999);
-    const weekLabel = `${monday.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric"
-    })} – ${friday.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric"
-    })}`;
-    const completedDeals = deals.filter(d => (d.stage === "Negotiating" || d.stage === "Contract Sent" || d.stage === "Closed Won") && d.createDate && d.createDate >= monday && d.createDate <= friday);
-    const missedDeals = deals.filter(d => d.stage === "Call Set" && d.createDate && d.createDate < monday);
-    const getName = d => d.name.replace(" - Mavely VIP", "").replace(" - mavely VIP", "").replace(" - Mavely VIP 12 Month", "").replace(" - MVP", "").trim();
-    return /*#__PURE__*/React.createElement("div", {
-      style: {
-        display: "flex",
-        gap: 12,
-        marginBottom: 16,
-        flexWrap: "wrap"
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        flex: "1 1 180px",
-        background: M.bgCard,
-        borderRadius: 12,
-        padding: 14,
-        border: `1px solid ${M.border}`,
-        borderLeft: `4px solid ${M.blue}`
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 10,
-        color: M.textMuted,
-        fontWeight: 600
-      }
-    }, "This Week"), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 16,
-        fontWeight: 800,
-        color: M.text,
-        marginTop: 2
-      }
-    }, weekLabel)), /*#__PURE__*/React.createElement("div", {
-      style: {
-        flex: "1 1 220px",
-        background: M.bgCard,
-        borderRadius: 12,
-        padding: 14,
-        border: `1px solid ${M.border}`,
-        borderLeft: `4px solid ${M.green}`
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 10,
-        color: M.textMuted,
-        fontWeight: 600
-      }
-    }, "Meetings Completed"), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 24,
-        fontWeight: 800,
-        color: M.green,
-        marginTop: 2
-      }
-    }, completedDeals.length), completedDeals.length > 0 && /*#__PURE__*/React.createElement("div", {
-      style: {
-        marginTop: 6,
-        borderTop: `1px solid ${M.borderLight}`,
-        paddingTop: 6
-      }
-    }, completedDeals.map((d, i) => /*#__PURE__*/React.createElement("div", {
-      key: i,
-      style: {
-        fontSize: 10,
-        color: M.text,
-        marginBottom: 2
-      }
-    }, "\u2713 ", getName(d), " ", /*#__PURE__*/React.createElement("span", {
-      style: {
-        color: M.textMuted,
-        fontSize: 9
-      }
-    }, "\u2192 ", d.stage))))), /*#__PURE__*/React.createElement("div", {
-      style: {
-        flex: "1 1 220px",
-        background: M.bgCard,
-        borderRadius: 12,
-        padding: 14,
-        border: `1px solid ${M.border}`,
-        borderLeft: `4px solid ${M.red}`
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 10,
-        color: M.textMuted,
-        fontWeight: 600
-      }
-    }, "Calls Not Completed"), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 9,
-        color: M.textLight,
-        marginTop: 1
-      }
-    }, "Set but still in Call Set"), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 24,
-        fontWeight: 800,
-        color: M.red,
-        marginTop: 2
-      }
-    }, missedDeals.length), missedDeals.length > 0 && /*#__PURE__*/React.createElement("div", {
-      style: {
-        marginTop: 6,
-        borderTop: `1px solid ${M.borderLight}`,
-        paddingTop: 6
-      }
-    }, missedDeals.map((d, i) => /*#__PURE__*/React.createElement("div", {
-      key: i,
-      style: {
-        fontSize: 10,
-        color: M.textMuted,
-        marginBottom: 2
-      }
-    }, "\u2717 ", getName(d), " ", /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 9,
-        color: M.textLight
-      }
-    }, "since ", d.createDate.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric"
-    })))))));
-  })(), /*#__PURE__*/React.createElement("div", {
+  const weekStart = new Date("2026-02-23");
+  const weekEnd = new Date("2026-02-27");
+  const laurenCalls = CHORUS_CALLS_RAW.filter(c => { const d = new Date(c.date); return c.csm === "Lauren Vilips" && d >= weekStart && d <= weekEnd; });
+  return /*#__PURE__*/React.createElement(React.Fragment, null,
+    /*#__PURE__*/React.createElement("div", {style: {fontSize: 13, fontWeight: 700, color: M.purpleLight, marginBottom: 10}},
+      "Calls Completed ",
+      /*#__PURE__*/React.createElement("span", {style: {fontSize: 11, fontWeight: 500, color: M.textMuted}}, "(Feb 23 \u2013 Feb 27)")
+    ),
+    /*#__PURE__*/React.createElement("div", {style: {display: "flex", gap: 12, marginBottom: 12}},
+      /*#__PURE__*/React.createElement("div", {style: {flex: "0 0 auto", background: M.bgCard, borderRadius: 12, padding: 14, border: "1px solid " + M.border, borderLeft: "4px solid " + M.purple}},
+        /*#__PURE__*/React.createElement("div", {style: {fontSize: 10, color: M.textMuted, fontWeight: 600}}, "Lauren"),
+        /*#__PURE__*/React.createElement("div", {style: {fontSize: 28, fontWeight: 800, color: M.purple, marginTop: 2}}, laurenCalls.length),
+        /*#__PURE__*/React.createElement("div", {style: {fontSize: 9, color: M.textLight, marginTop: 2}}, "calls this week")
+      )
+    ),
+    /*#__PURE__*/React.createElement(Card, {style: {marginBottom: 16}},
+      /*#__PURE__*/React.createElement("div", {style: {maxHeight: 260, overflowY: "auto", borderRadius: 8}},
+        /*#__PURE__*/React.createElement("table", {style: {width: "100%", borderCollapse: "collapse"}},
+          /*#__PURE__*/React.createElement("thead", {style: {position: "sticky", top: 0, background: M.bgCard, zIndex: 1}},
+            /*#__PURE__*/React.createElement("tr", {style: {borderBottom: "1px solid " + M.border}},
+              /*#__PURE__*/React.createElement("th", {style: thStyle}, "Date"),
+              /*#__PURE__*/React.createElement("th", {style: thStyle}, "Creator"),
+              /*#__PURE__*/React.createElement("th", {style: thStyle}, "Agency")
+            )
+          ),
+          /*#__PURE__*/React.createElement("tbody", null,
+            laurenCalls.sort((a,b) => new Date(b.date) - new Date(a.date)).map((c, idx) =>
+              /*#__PURE__*/React.createElement("tr", {key: idx, style: {borderBottom: "1px solid " + M.borderLight, background: idx % 2 === 0 ? M.bgCard : M.bgCardAlt}},
+                /*#__PURE__*/React.createElement("td", {style: tdStyle}, /*#__PURE__*/React.createElement("span", {style: {fontSize: 10, color: M.textLight}}, new Date(c.date + "T12:00:00").toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"}))),
+                /*#__PURE__*/React.createElement("td", {style: tdStyle}, /*#__PURE__*/React.createElement("strong", {style: {color: M.text}}, c.creator)),
+                /*#__PURE__*/React.createElement("td", {style: tdStyle}, /*#__PURE__*/React.createElement("span", {style: {fontSize: 10, color: M.textMuted}}, c.agency || "\u2014"))
+              )
+            )
+          )
+        )
+      )
+    )
+  );
+})(), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       gap: 12,
@@ -19668,6 +20753,10 @@ function Dashboard() {
     style: thStyle
   }, "Owner"), /*#__PURE__*/React.createElement("th", {
     style: thStyle
+  }, "Close Date"), /*#__PURE__*/React.createElement("th", {
+    style: thStyle
+  }, "Onboarding"), /*#__PURE__*/React.createElement("th", {
+    style: thStyle
   }, "Last Updated"))), /*#__PURE__*/React.createElement("tbody", null, (() => {
     const STAGE_PRIORITY = {
       "Contract Sent": 1,
@@ -19724,6 +20813,20 @@ function Dashboard() {
           color: M.textMuted
         }
       }, "Lauren")), /*#__PURE__*/React.createElement("td", {
+        style: tdStyle
+      }, /*#__PURE__*/React.createElement("span", {
+        style: {fontSize: 10, color: M.textLight}
+      }, d.closeDate ? d.closeDate.toLocaleDateString("en-US", {month: "short", day: "numeric", year: "numeric"}) : "\u2014")), /*#__PURE__*/React.createElement("td", {
+        style: tdStyle
+      }, (() => {
+        const status = getOnboardingStatus(d.id, d.stage);
+        if (!status) return null;
+        const statusColors = {"call set": M.green, "scheduling": M.orange, "ghosted": M.red};
+        const sc2 = statusColors[status] || M.textMuted;
+        return /*#__PURE__*/React.createElement("span", {
+          style: {background: sc2 + "20", color: sc2, padding: "2px 8px", borderRadius: 6, fontSize: 9, fontWeight: 700}
+        }, status);
+      })()), /*#__PURE__*/React.createElement("td", {
         style: tdStyle
       }, /*#__PURE__*/React.createElement("span", {
         style: {
@@ -19858,6 +20961,8 @@ function Dashboard() {
     style: thStyle
   }, "Conv. Rate (7d)"), /*#__PURE__*/React.createElement("th", {
     style: thStyle
+  }, "Top 3 Categories"), /*#__PURE__*/React.createElement("th", {
+    style: thStyle
   }, "Risk"))), /*#__PURE__*/React.createElement("tbody", null, creators.filter(c => c.topBrand === "Walmart").sort((a, b) => b.cgmv30d - a.cgmv30d).map((c, idx) => /*#__PURE__*/React.createElement("tr", {
     key: idx,
     style: {
@@ -19886,9 +20991,53 @@ function Dashboard() {
     }
   }, c.convRate > 0 ? c.convRate.toFixed(1) + "%" : "—")), /*#__PURE__*/React.createElement("td", {
     style: tdStyle
+  }, /*#__PURE__*/React.createElement("div", {
+    style: { display: "flex", gap: 3, flexWrap: "wrap" }
+  }, (WALMART_CREATOR_CATEGORIES[c.name] || []).map((cat, ci) => /*#__PURE__*/React.createElement("span", {
+    key: ci,
+    style: { background: M.walmart + "20", color: M.walmart, padding: "2px 6px", borderRadius: 6, fontSize: 9, fontWeight: 700 }
+  }, cat)))), /*#__PURE__*/React.createElement("td", {
+    style: tdStyle
   }, /*#__PURE__*/React.createElement(RiskBadge, {
     risk: c.risk
-  }))))))))), tab === "Creator Rolodex" && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+  }))))))), /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      fontWeight: 700,
+      marginBottom: 14,
+      color: M.text
+    }
+  }, "Top Walmart Categories by GMV ", /*#__PURE__*/React.createElement("span", {
+    style: { fontSize: 11, color: M.textMuted, fontWeight: 400 }
+  }, "(Network \u2014 Feb 2026 vs Jan 2026)")), /*#__PURE__*/React.createElement("div", {
+    style: { overflowX: "auto" }
+  }, /*#__PURE__*/React.createElement("table", {
+    style: { width: "100%", borderCollapse: "collapse" }
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", {
+    style: { borderBottom: `1px solid ${M.border}` }
+  }, /*#__PURE__*/React.createElement("th", { style: {...thStyle, textAlign: "left"} }, "#"), /*#__PURE__*/React.createElement("th", { style: {...thStyle, textAlign: "left"} }, "Category"), /*#__PURE__*/React.createElement("th", { style: thStyle }, "Feb 2026 GMV"), /*#__PURE__*/React.createElement("th", { style: thStyle }, "Jan 2026 GMV"), /*#__PURE__*/React.createElement("th", { style: thStyle }, "MoM Change"), /*#__PURE__*/React.createElement("th", { style: thStyle }, "6mo Trend"))), /*#__PURE__*/React.createElement("tbody", null, WALMART_CATEGORIES.slice(0, 20).map((cat, idx) => {
+    const feb = cat.data["2026-Feb"] || 0;
+    const jan = cat.data["2026-Jan"] || 0;
+    const mom = jan > 0 ? ((feb - jan) / jan * 100) : 0;
+    const months = ["2025-Sep","2025-Oct","2025-Nov","2025-Dec","2026-Jan","2026-Feb"];
+    const vals = months.map(m => cat.data[m] || 0);
+    const maxV = Math.max(...vals);
+    return /*#__PURE__*/React.createElement("tr", {
+      key: idx,
+      style: { borderBottom: `1px solid ${M.borderLight}`, background: idx % 2 === 0 ? M.bgCard : M.bgCardAlt }
+    }, /*#__PURE__*/React.createElement("td", { style: {...tdStyle, color: M.textMuted, fontSize: 10} }, idx + 1), /*#__PURE__*/React.createElement("td", { style: tdStyle }, /*#__PURE__*/React.createElement("strong", {style:{fontSize:11}}, cat.name)), /*#__PURE__*/React.createElement("td", {
+      style: {...tdStyle, color: M.green}
+    }, "$" + (feb >= 1e6 ? (feb/1e6).toFixed(1) + "M" : (feb/1e3).toFixed(0) + "K")), /*#__PURE__*/React.createElement("td", {
+      style: {...tdStyle, color: M.textLight}
+    }, jan > 0 ? "$" + (jan >= 1e6 ? (jan/1e6).toFixed(1) + "M" : (jan/1e3).toFixed(0) + "K") : "\u2014"), /*#__PURE__*/React.createElement("td", {
+      style: {...tdStyle, color: mom > 0 ? M.green : mom < 0 ? M.red : M.textMuted, fontWeight: 600}
+    }, jan > 0 ? (mom > 0 ? "\u25B2 " : mom < 0 ? "\u25BC " : "") + Math.abs(mom).toFixed(1) + "%" : "\u2014"), /*#__PURE__*/React.createElement("td", { style: tdStyle }, /*#__PURE__*/React.createElement("div", {
+      style: { display: "flex", alignItems: "flex-end", gap: 2, height: 20 }
+    }, vals.map((v, i) => /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: { width: 8, background: i === 5 ? M.walmart : M.borderLight, borderRadius: 1, height: maxV > 0 ? Math.max(3, v / maxV * 20) : 3 }
+    })))));
+  }))))))), tab === "Creator Rolodex" && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       alignItems: "center",
